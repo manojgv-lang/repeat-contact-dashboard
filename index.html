@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Repeat Contact Dashboard — Demo</title>
+
+  <title>Repeat Contact Dashboard</title>
 
   <style>
     :root {
@@ -17,6 +18,8 @@
 
     * { box-sizing: border-box; }
 
+    [hidden] { display: none !important; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -28,20 +31,21 @@
       font: inherit;
     }
 
-    button, select {
+    button {
+      padding: 11px 15px;
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       cursor: pointer;
     }
 
-    button {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: white;
-      color: var(--text);
-      padding: 10px 14px;
-    }
-
     button:hover { background: #eef4ff; }
-    button:disabled { cursor: not-allowed; opacity: .55; }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
 
     .primary {
       background: var(--blue);
@@ -51,79 +55,173 @@
 
     .primary:hover { background: #1d4ed8; }
 
-    header {
-      background: var(--navy);
-      color: white;
-      padding: 24px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    h1 { margin: 0 0 7px; font-size: 25px; }
-    h2 { margin-top: 0; }
-    p { line-height: 1.5; }
-
-    header p {
-      margin: 0;
-      color: #c8d7ef;
-      font-size: 14px;
-    }
-
-    .preview {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .preview select {
-      padding: 9px;
-      border-radius: 7px;
-      border: none;
-    }
-
-    main {
-      max-width: 1500px;
-      margin: auto;
-      padding: 24px;
-    }
-
-    .notice {
-      background: #fff8e8;
-      border: 1px solid #efd395;
-      border-radius: 10px;
-      padding: 13px 16px;
-      margin-bottom: 22px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(120px, 1fr));
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .card {
-      background: white;
+    input, select, textarea {
+      padding: 11px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 19px;
+      border-radius: 8px;
+      color: var(--text);
+      background: white;
     }
 
-    .card span {
+    input:focus, select:focus, textarea:focus,
+    button:focus-visible {
+      outline: 2px solid #7aa7ff;
+      outline-offset: 2px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 7px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    p { line-height: 1.6; }
+
+    h1, h2, h3 { margin-top: 0; }
+
+    .muted {
       color: var(--muted);
       font-size: 13px;
     }
 
+    .notice {
+      padding: 14px 16px;
+      border: 1px solid #efd395;
+      background: #fff8e8;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .error { color: #b42318; }
+
+    /* LOGIN */
+
+    .login-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      width: min(490px, 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 16px 50px #10264a12;
+    }
+
+    .login-heading {
+      padding: 28px;
+      background: var(--navy);
+      color: white;
+    }
+
+    .login-heading h1 {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .login-heading p {
+      color: #c8d7ef;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .login-content { padding: 25px; }
+
+    .login-content input,
+    .login-content button {
+      width: 100%;
+    }
+
+    .divider {
+      text-align: center;
+      color: var(--muted);
+      margin: 23px 0;
+      font-size: 12px;
+    }
+
+    .login-submit { margin-top: 18px; }
+
+    /* DASHBOARD */
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 24px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #c8d7ef;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .account {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .account-info {
+      text-align: right;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    main {
+      max-width: 1550px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(110px, 1fr));
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+    }
+
+    .card span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
     .card strong {
       display: block;
-      margin-top: 10px;
       font-size: 29px;
+      margin-top: 10px;
     }
 
     .panel {
@@ -135,30 +233,25 @@
 
     .panel-top {
       padding: 20px;
-      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 15px;
       flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
     }
 
-    .panel-top h2 { margin: 0; font-size: 19px; }
+    .panel-top h2 {
+      font-size: 19px;
+      margin: 0;
+    }
 
     .filters {
       display: flex;
-      flex-wrap: wrap;
       gap: 12px;
-      padding: 18px 20px;
+      flex-wrap: wrap;
+      padding: 18px;
       background: #fbfcfe;
-    }
-
-    input, select, textarea {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px;
-      background: white;
-      color: var(--text);
     }
 
     .filters input[type="search"] {
@@ -175,16 +268,16 @@
     }
 
     th, td {
-      padding: 15px 18px;
       text-align: left;
+      padding: 15px 17px;
       border-bottom: 1px solid #edf1f6;
       font-size: 14px;
     }
 
     th {
       background: #f6f8fc;
-      font-size: 12px;
       color: var(--muted);
+      font-size: 12px;
     }
 
     td small {
@@ -194,212 +287,289 @@
     }
 
     .badge {
+      display: inline-block;
       padding: 6px 10px;
       border-radius: 20px;
-      font-size: 12px;
       background: #e8efff;
       color: #244a9b;
-      display: inline-block;
+      font-size: 12px;
     }
 
-    .badge.resolved { background: #def5e8; color: #14683a; }
-    .badge.pending { background: #fff0cf; color: #8b5c00; }
+    .badge.pending {
+      background: #fff0cf;
+      color: #8b5c00;
+    }
 
-    .muted { color: var(--muted); font-size: 13px; }
+    .badge.resolved {
+      background: #def5e8;
+      color: #14683a;
+    }
 
     .footer {
       padding: 16px 20px;
       color: var(--muted);
       font-size: 13px;
+      line-height: 1.6;
     }
 
+    /* CASE DIALOG */
+
     dialog {
-      border: none;
-      border-radius: 14px;
-      width: min(760px, 94vw);
-      padding: 0;
-      color: var(--text);
+      width: min(780px, 94vw);
       max-height: 90vh;
+      padding: 0;
+      border: 0;
+      border-radius: 14px;
+      color: var(--text);
       overflow-y: auto;
     }
 
     dialog::backdrop { background: #10264a99; }
 
     .modal-head {
+      padding: 21px;
       background: var(--navy);
       color: white;
-      padding: 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 15px;
     }
 
-    .modal-head h2 { margin: 0; font-size: 20px; }
+    .modal-head h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
     .modal-body { padding: 22px; }
 
     .details {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-bottom: 22px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .detail {
       padding: 12px;
-      border-radius: 8px;
       background: #f5f8fc;
+      border-radius: 8px;
       overflow-wrap: anywhere;
+      line-height: 1.5;
     }
 
     .detail small {
       display: block;
+      color: var(--muted);
       margin-bottom: 6px;
-      color: var(--muted);
     }
 
-    label {
-      display: block;
-      font-size: 13px;
-      margin: 14px 0 7px;
-      color: var(--muted);
-    }
-
+    .modal-body input,
     .modal-body select,
-    .modal-body textarea,
-    .modal-body input {
+    .modal-body textarea {
       width: 100%;
     }
 
-    textarea { min-height: 85px; resize: vertical; }
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
 
     .actions {
-      margin-top: 18px;
       display: flex;
       gap: 10px;
       justify-content: flex-end;
       flex-wrap: wrap;
+      margin-top: 18px;
     }
 
     .activity {
-      margin-top: 20px;
-      padding-top: 15px;
       border-top: 1px solid var(--border);
+      padding-top: 18px;
+      margin-top: 22px;
     }
 
     .activity p {
-      background: #f5f8fc;
       padding: 12px;
       border-radius: 8px;
+      background: #f5f8fc;
       font-size: 13px;
       overflow-wrap: anywhere;
     }
 
     @media (max-width: 800px) {
       .cards { grid-template-columns: repeat(2, 1fr); }
+      .details { grid-template-columns: 1fr; }
       main { padding: 14px; }
       header { padding: 20px; }
-      .details { grid-template-columns: 1fr; }
+      .account-info { text-align: left; }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div>
-      <h1>Repeat Contact Dashboard</h1>
-      <p>Daily customer contacts and follow-up case management</p>
-    </div>
-
-    <div class="preview">
-      <label for="role" style="color:white;margin:0">
-        Demo preview
-      </label>
-
-      <select id="role">
-        <option value="admin">Admin preview</option>
-        <option value="agent">Agent preview — Demo Agent A</option>
-      </select>
-    </div>
-  </header>
-
-  <main>
-    <div class="notice">
-      DEMO · UNDER DEVELOPMENT.
-      Fictional sample data only. No Firebase login, live Sheets connection,
-      real assignment scheduler or persistent storage is connected.
-      The preview switch is not an access-control system.
-    </div>
-
-    <section class="cards" id="cards"></section>
-
-    <section class="panel">
-      <div class="panel-top">
-        <h2 id="listTitle">All cases</h2>
-        <span class="muted">
-          Daily assignment target: 5 PM IST · Not connected
-        </span>
+  <section id="loginPage" class="login-page">
+    <div class="login-card">
+      <div class="login-heading">
+        <h1>Repeat Contact Dashboard</h1>
+        <p>Sign in to continue</p>
       </div>
 
-      <div class="filters">
-        <input id="search" type="search"
-          placeholder="Search customer, phone, email or case ID">
+      <div class="login-content">
+        <div class="notice">
+          UNDER DEVELOPMENT · Fictional sample dashboard only.
+          Login-ID authentication and sheet-based permissions require
+          the protected backend to be configured.
+        </div>
 
-        <input id="date" type="date" aria-label="Reporting date">
+        <button id="googleLogin" type="button" disabled>
+          Loading Google sign-in…
+        </button>
 
-        <select id="channel" aria-label="Channel">
-          <option value="">All channels</option>
-          <option>CALL</option>
-          <option>EMAIL</option>
-          <option>CHAT</option>
-        </select>
+        <div class="divider">OR SIGN IN WITH YOUR ASSIGNED LOGIN ID</div>
 
-        <select id="status" aria-label="Case status">
-          <option value="">All statuses</option>
-          <option>Open</option>
-          <option>Pending follow-up</option>
-          <option>Resolved</option>
-        </select>
+        <form id="passwordForm">
+          <label for="loginId">Login ID</label>
+          <input
+            id="loginId"
+            name="username"
+            autocomplete="username"
+            maxlength="100"
+            required
+          >
 
-        <button id="clear">Clear filters</button>
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            maxlength="256"
+            required
+          >
+
+          <button
+            id="passwordLogin"
+            class="primary login-submit"
+            type="submit"
+            disabled
+          >
+            Sign in
+          </button>
+        </form>
+
+        <p id="loginMessage" class="message"
+          role="status" aria-live="polite">
+          Initialising Firebase…
+        </p>
+
+        <p class="muted">
+          Google users do not need a separate application password.
+          Other users can use an administrator-provided login ID.
+          Passwords are never checked against a sheet in this browser.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div id="dashboard" hidden>
+    <header>
+      <div>
+        <h1>Repeat Contact Dashboard</h1>
+        <p>Daily customer contacts and follow-up case management</p>
       </div>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>REPORTING DATE</th>
-              <th>CUSTOMER</th>
-              <th>CHANNEL</th>
-              <th>CONTACTS</th>
-              <th>FIRST / LAST — IST</th>
-              <th>CASE HANDLER</th>
-              <th>STATUS</th>
-              <th>ACTION</th>
-            </tr>
-          </thead>
+      <div class="account">
+        <div class="account-info">
+          <div id="accountName"></div>
+          <div id="accountRole"></div>
+        </div>
 
-          <tbody id="rows"></tbody>
-        </table>
+        <button id="logout" type="button">Sign out</button>
       </div>
+    </header>
 
-      <div class="footer" id="footer"></div>
-    </section>
-  </main>
+    <main>
+      <div id="dashboardNotice" class="notice"></div>
+
+      <section id="cards" class="cards"></section>
+
+      <section class="panel">
+        <div class="panel-top">
+          <h2 id="listTitle">Sample cases</h2>
+
+          <span class="muted">
+            Assignment target: 5 PM IST · Scheduler not connected
+          </span>
+        </div>
+
+        <div class="filters">
+          <input id="search" type="search"
+            placeholder="Search customer, phone, email or case ID">
+
+          <input id="date" type="date"
+            aria-label="Reporting date">
+
+          <select id="channel" aria-label="Channel">
+            <option value="">All channels</option>
+            <option>CALL</option>
+            <option>EMAIL</option>
+            <option>CHAT</option>
+          </select>
+
+          <select id="status" aria-label="Status">
+            <option value="">All statuses</option>
+            <option>Open</option>
+            <option>Pending follow-up</option>
+            <option>Resolved</option>
+          </select>
+
+          <button id="clear" type="button">Clear filters</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>REPORTING DATE</th>
+                <th>CUSTOMER</th>
+                <th>CHANNEL</th>
+                <th>CONTACTS</th>
+                <th>FIRST / LAST — IST</th>
+                <th>CASE HANDLER</th>
+                <th>STATUS</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+
+        <div id="footer" class="footer"></div>
+      </section>
+    </main>
+  </div>
 
   <dialog id="caseDialog">
     <div class="modal-head">
       <h2 id="caseTitle">Case details</h2>
-      <button id="closeDialog" aria-label="Close details">Close</button>
+      <button id="closeDialog" type="button">Close</button>
     </div>
 
     <div class="modal-body">
-      <div class="details" id="details"></div>
+      <div class="notice">
+        Sample record only. Changes made here are demonstrations
+        and reset when the page reloads or the user signs out.
+      </div>
 
-      <label for="handler">Case handler</label>
+      <div id="details" class="details"></div>
+
+      <label for="handler">Case handler — demo agents</label>
       <select id="handler">
         <option value="">Unassigned</option>
-        <option>Demo Agent A</option>
-        <option>Demo Agent B</option>
+        <option value="demo-agent-a">Demo Agent A</option>
+        <option value="demo-agent-b">Demo Agent B</option>
       </select>
 
       <label for="caseStatus">Status</label>
@@ -409,30 +579,33 @@
         <option>Resolved</option>
       </select>
 
-      <label for="followup">
-        Follow-up date and time — IST, when pending
-      </label>
+      <label for="followup">Follow-up date/time — IST</label>
       <input id="followup" type="datetime-local">
 
-      <label for="remark">
-        New remark / resolution / reopening reason
-      </label>
-      <textarea id="remark"
-        placeholder="Add a remark. Previous remarks are retained."></textarea>
+      <label for="remark">Remark / resolution / reopening reason</label>
+      <textarea id="remark" maxlength="2000"></textarea>
+
+      <p id="caseMessage" class="message"
+        role="status" aria-live="polite"></p>
 
       <div class="actions">
-        <button id="reopen">Reopen case — admin demo</button>
-        <button class="primary" id="save">Save demo changes</button>
+        <button id="reopen" type="button" hidden>
+          Reopen sample case
+        </button>
+
+        <button id="save" type="button" class="primary">
+          Save demo changes
+        </button>
       </div>
 
       <div class="activity">
-        <h3>Demo activity history</h3>
+        <h3>Sample activity history</h3>
         <div id="activity"></div>
       </div>
     </div>
   </dialog>
 
-  <script>
+  <script type="module">
     const $ = id => document.getElementById(id);
 
     const escapeHTML = value => String(value ?? "")
@@ -444,7 +617,17 @@
         "'": "&#39;"
       })[char]);
 
-    const cases = [
+    const firebaseConfig = {
+      apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
+      authDomain: "repeat-contact-dashboard.firebaseapp.com",
+      projectId: "repeat-contact-dashboard",
+      storageBucket:
+        "repeat-contact-dashboard.firebasestorage.app",
+      messagingSenderId: "527535186997",
+      appId: "1:527535186997:web:fdd746c7a7428f6695bd7c"
+    };
+
+    const sampleCases = [
       {
         id: "DEMO-001",
         date: "2026-11-07",
@@ -458,7 +641,7 @@
         owner: "Sample Ticket Owner",
         modified: "2026-11-07 16:25:00",
         ticket: "DEMO-TICKET-01",
-        handler: "Demo Agent A",
+        handlerId: "demo-agent-a",
         status: "Open",
         followup: "",
         activity: []
@@ -476,7 +659,7 @@
         owner: "Sample Form Submitter",
         modified: "2026-11-07 15:45:00",
         ticket: "",
-        handler: "",
+        handlerId: "",
         status: "Open",
         followup: "",
         activity: []
@@ -490,14 +673,17 @@
         count: 3,
         first: "11:10:00",
         last: "14:30:00",
-        disposition: "Post Loan → Foreclosure → Process Information",
+        disposition:
+          "Post Loan → Foreclosure → Process Information",
         owner: "Sample Ticket Owner",
         modified: "2026-11-07 14:35:00",
         ticket: "DEMO-TICKET-03",
-        handler: "Demo Agent B",
+        handlerId: "demo-agent-b",
         status: "Pending follow-up",
         followup: "2026-11-09T10:00",
-        activity: ["Demo setup: follow-up scheduled for 9 November, 10 AM IST."]
+        activity: [
+          "Demo setup: follow-up scheduled for 9 November, 10 AM IST."
+        ]
       },
       {
         id: "DEMO-004",
@@ -512,10 +698,10 @@
         owner: "Sample Form Submitter",
         modified: "2026-11-06 17:15:00",
         ticket: "",
-        handler: "Demo Agent A",
+        handlerId: "demo-agent-a",
         status: "Resolved",
         followup: "",
-        activity: ["Demo setup: case resolved with a sample resolution."]
+        activity: ["Demo setup: sample case resolved."]
       },
       {
         id: "DEMO-005",
@@ -530,23 +716,141 @@
         owner: "",
         modified: "",
         ticket: "",
-        handler: "Demo Agent A",
+        handlerId: "demo-agent-a",
         status: "Open",
         followup: "",
         activity: []
       }
     ];
 
+    const agentNames = {
+      "demo-agent-a": "Demo Agent A",
+      "demo-agent-b": "Demo Agent B"
+    };
+
+    let cases = structuredClone(sampleCases);
     let selectedId = null;
+    let auth = null;
+    let profile = null;
+    let sessionVersion = 0;
+    let backendMessage = "";
+    let signingIn = false;
+
+    function setLoginMessage(text, error = false) {
+      $("loginMessage").textContent = text;
+      $("loginMessage").classList.toggle("error", error);
+    }
+
+    function setBusy(busy) {
+      signingIn = busy;
+      $("googleLogin").disabled = busy;
+      $("passwordLogin").disabled = busy;
+    }
+
+    async function apiJSON(path, options = {}) {
+      const controller = new AbortController();
+
+      const timer = setTimeout(() => controller.abort(), 20000);
+
+      try {
+        const response = await fetch(path, {
+          ...options,
+          cache: "no-store",
+          signal: controller.signal
+        });
+
+        const type = response.headers.get("content-type") || "";
+
+        let data = {};
+
+        if (type.includes("application/json")) {
+          data = await response.json();
+        }
+
+        if (!response.ok) {
+          const error = new Error(
+            response.status === 404
+              ? "Backend endpoint is not deployed yet."
+              : data.message || "Request was not accepted."
+          );
+
+          error.status = response.status;
+          throw error;
+        }
+
+        if (!type.includes("application/json")) {
+          throw new Error(
+            "Backend is not configured: expected a JSON response."
+          );
+        }
+
+        return data;
+
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function authError(error) {
+      const errors = {
+        "auth/unauthorized-domain":
+          "Add repeat-contact-dashboard.vercel.app to " +
+          "Firebase Authentication → Settings → Authorized domains.",
+
+        "auth/operation-not-allowed":
+          "This Firebase sign-in method is not enabled.",
+
+        "auth/popup-blocked":
+          "Allow popups for this site, then try again.",
+
+        "auth/popup-closed-by-user":
+          "The Google sign-in window was closed.",
+
+        "auth/cancelled-popup-request":
+          "A sign-in window is already open.",
+
+        "auth/invalid-api-key":
+          "The Firebase Web API key is invalid.",
+
+        "auth/network-request-failed":
+          "The network request failed. Check your connection.",
+
+        "auth/invalid-custom-token":
+          "The login server returned an invalid Firebase token.",
+
+        "auth/custom-token-mismatch":
+          "The login token belongs to a different Firebase project."
+      };
+
+      return errors[error.code] ||
+        (error.name === "AbortError"
+          ? "The request timed out. Please retry."
+          : error.message || "Sign-in failed.");
+    }
 
     function isAdmin() {
-      return $("role").value === "admin";
+      return profile?.role === "admin";
     }
 
     function scopedCases() {
-      return isAdmin()
-        ? cases
-        : cases.filter(item => item.handler === "Demo Agent A");
+      if (!profile) return cases;
+
+      if (isAdmin()) return cases;
+
+      return cases.filter(
+        item => item.handlerId === profile.agentId
+      );
+    }
+
+    function canEdit(item) {
+      return Boolean(
+        profile &&
+        (isAdmin() || item.handlerId === profile.agentId)
+      );
+    }
+
+    function handlerName(id) {
+      return agentNames[id] || id || "Unassigned";
     }
 
     function badge(status) {
@@ -554,28 +858,61 @@
         ? "resolved"
         : status === "Pending follow-up" ? "pending" : "";
 
-      return `<span class="badge ${kind}">${escapeHTML(status)}</span>`;
+      return (
+        `<span class="badge ${kind}">` +
+        escapeHTML(status) +
+        "</span>"
+      );
     }
 
     function render() {
+      if (!auth?.currentUser) return;
+
+      const user = auth.currentUser;
       const scoped = scopedCases();
+
+      $("accountName").textContent =
+        profile?.name || user.email || user.displayName ||
+        "Signed-in user";
+
+      $("accountRole").textContent = profile
+        ? "Role: " + profile.role
+        : "Read-only sample preview · role setup pending";
+
+      $("dashboardNotice").textContent =
+        "UNDER DEVELOPMENT · All cases below are fictional samples. " +
+        "Real customer data, persistent remarks and the assignment " +
+        "scheduler are not connected. " +
+        (profile
+          ? "Permissions profile received from the backend. " +
+            "Enabled actions change samples in this browser only."
+          : "No application permissions have been granted. " +
+            "Sample records are read-only. " + backendMessage);
 
       const stats = [
         ["Case entries", scoped.length],
-        ["Unassigned", scoped.filter(c => !c.handler).length],
+        ["Unassigned", scoped.filter(c => !c.handlerId).length],
         ["Open", scoped.filter(c => c.status === "Open").length],
-        ["Pending follow-up",
-          scoped.filter(c => c.status === "Pending follow-up").length],
-        ["Resolved", scoped.filter(c => c.status === "Resolved").length]
+        [
+          "Pending follow-up",
+          scoped.filter(c => c.status === "Pending follow-up").length
+        ],
+        [
+          "Resolved",
+          scoped.filter(c => c.status === "Resolved").length
+        ]
       ];
 
       $("cards").innerHTML = stats.map(([label, count]) =>
-        `<div class="card"><span>${label}</span><strong>${count}</strong></div>`
+        `<div class="card"><span>${escapeHTML(label)}</span>` +
+        `<strong>${count}</strong></div>`
       ).join("");
 
-      $("listTitle").textContent = isAdmin()
-        ? "All cases"
-        : "My assigned cases — Demo Agent A";
+      $("listTitle").textContent = !profile
+        ? "Read-only sample cases"
+        : isAdmin()
+          ? "All sample cases"
+          : "Assigned sample cases";
 
       const query = $("search").value.trim().toLowerCase();
 
@@ -584,8 +921,10 @@
           [item.customer, item.identity, item.id]
             .join(" ").toLowerCase().includes(query)) &&
         (!$("date").value || item.date === $("date").value) &&
-        (!$("channel").value || item.channel === $("channel").value) &&
-        (!$("status").value || item.status === $("status").value)
+        (!$("channel").value ||
+          item.channel === $("channel").value) &&
+        (!$("status").value ||
+          item.status === $("status").value)
       );
 
       $("rows").innerHTML = filtered.map(item => `
@@ -599,39 +938,50 @@
           <td>${item.count}</td>
           <td>
             ${escapeHTML(item.first || "Not available")}
-            <small>Last: ${escapeHTML(item.last)}${
-              item.channel === "CHAT" ? " — closure time" : ""
-            }</small>
+            <small>
+              Last: ${escapeHTML(item.last)}
+              ${item.channel === "CHAT" ? " — closure time" : ""}
+            </small>
           </td>
-          <td>${escapeHTML(item.handler || "Unassigned")}</td>
+          <td>${escapeHTML(handlerName(item.handlerId))}</td>
           <td>${badge(item.status)}</td>
-          <td><button data-case="${item.id}">View case</button></td>
+          <td>
+            <button type="button" data-case="${item.id}">
+              View case
+            </button>
+          </td>
         </tr>
       `).join("") ||
-        `<tr><td colspan="8">No matching demo cases.</td></tr>`;
+        '<tr><td colspan="8">No matching sample cases.</td></tr>';
 
       $("footer").textContent =
-        `${filtered.length} displayed case entries. ` +
-        "Cards show the selected role's full demo scope, before filters. " +
-        "Demo changes reset on page reload.";
+        `${filtered.length} displayed sample case entries. ` +
+        "Summary cards show your full sample scope before filters. " +
+        "Demo changes are not saved to a server.";
     }
 
-    function getSelected() {
+    function selectedCase() {
       return scopedCases().find(item => item.id === selectedId);
     }
 
     function detail(label, value) {
-      return `<div class="detail"><small>${escapeHTML(label)}</small>${
-        escapeHTML(value || "Not available")
-      }</div>`;
+      return (
+        '<div class="detail"><small>' +
+        escapeHTML(label) +
+        "</small>" +
+        escapeHTML(value || "Not available") +
+        "</div>"
+      );
     }
 
     function openCase(id, showDialog = true) {
       selectedId = id;
-      const item = getSelected();
+
+      const item = selectedCase();
       if (!item) return;
 
-      $("caseTitle").textContent = `${item.id} · ${item.customer}`;
+      $("caseTitle").textContent =
+        item.id + " · " + item.customer;
 
       $("details").innerHTML = [
         detail("Reporting date", item.date),
@@ -648,27 +998,38 @@
         detail("Latest disposition", item.disposition),
         detail("Form submitter / ticket owner", item.owner),
         detail("Form time / ticket modified — demo IST", item.modified),
-        detail("Marvin ticket — demo", item.ticket)
+        detail("Marvin ticket — sample", item.ticket)
       ].join("");
 
-      $("handler").value = item.handler;
-      $("handler").disabled = !isAdmin();
-
+      $("handler").value = item.handlerId;
       $("caseStatus").value = item.status;
       $("followup").value = item.followup;
       $("remark").value = "";
+      $("caseMessage").textContent = "";
 
-      const locked = item.status === "Resolved";
-      $("caseStatus").disabled = locked;
-      $("followup").disabled = locked;
-      $("remark").disabled = locked && !isAdmin();
-      $("save").disabled = locked;
+      const editable = canEdit(item);
+      const resolved = item.status === "Resolved";
 
-      $("reopen").hidden = !(isAdmin() && locked);
+      $("handler").disabled = !isAdmin() || resolved;
+      $("caseStatus").disabled = !editable || resolved;
+      $("followup").disabled = !editable || resolved;
+
+      $("remark").disabled =
+        !editable || (resolved && !isAdmin());
+
+      $("save").disabled = !editable || resolved;
+      $("reopen").hidden = !(isAdmin() && resolved);
+
+      if (!editable) {
+        $("caseMessage").textContent =
+          "Read-only. No permission to change this sample case.";
+      }
 
       $("activity").innerHTML = item.activity.length
-        ? item.activity.map(text => `<p>${escapeHTML(text)}</p>`).join("")
-        : "<p>No demo remarks yet.</p>";
+        ? item.activity.map(text =>
+            "<p>" + escapeHTML(text) + "</p>"
+          ).join("")
+        : "<p>No sample activity yet.</p>";
 
       if (showDialog) $("caseDialog").showModal();
     }
@@ -686,62 +1047,97 @@
     });
 
     $("save").addEventListener("click", () => {
-      const item = getSelected();
-      if (!item || item.status === "Resolved") return;
+      const item = selectedCase();
 
-      const status = $("caseStatus").value;
+      if (
+        !auth?.currentUser ||
+        !item ||
+        !canEdit(item) ||
+        item.status === "Resolved"
+      ) return;
+
+      const nextStatus = $("caseStatus").value;
       const remark = $("remark").value.trim();
       const followup = $("followup").value;
 
       if (!remark) {
-        alert("Please enter a remark for this demo update.");
+        $("caseMessage").textContent = "Enter a remark.";
         return;
       }
 
-      if (status === "Pending follow-up" && !followup) {
-        alert("Select a follow-up date and time.");
-        return;
+      if (nextStatus === "Pending follow-up") {
+        const scheduled = new Date(followup + ":00+05:30");
+
+        if (
+          !followup ||
+          isNaN(scheduled.getTime()) ||
+          scheduled.getTime() <= Date.now()
+        ) {
+          $("caseMessage").textContent =
+            "Enter a future follow-up date/time in IST.";
+          return;
+        }
       }
 
-      const previous = item.status;
-      const oldHandler = item.handler;
-      const actor = isAdmin() ? "Demo Admin" : "Demo Agent A";
+      const oldStatus = item.status;
+      const oldHandler = item.handlerId;
 
-      if (isAdmin()) item.handler = $("handler").value;
+      if (isAdmin()) {
+        item.handlerId = $("handler").value;
+      }
 
-      item.status = status;
-      item.followup = status === "Pending follow-up" ? followup : "";
+      item.status = nextStatus;
+      item.followup = nextStatus === "Pending follow-up"
+        ? followup
+        : "";
+
+      const actor =
+        profile?.name || auth.currentUser.email || "User";
 
       item.activity.push(
-        `${stamp()} · ${actor} · ${previous} → ${status}` +
-        (oldHandler !== item.handler
-          ? ` · Handler: ${oldHandler || "Unassigned"} → ${
-              item.handler || "Unassigned"
-            }`
+        `${stamp()} · ${actor} · ${oldStatus} → ${nextStatus}` +
+        (oldHandler !== item.handlerId
+          ? ` · Handler: ${handlerName(oldHandler)} → ` +
+            handlerName(item.handlerId)
           : "") +
-        (item.followup ? ` · Follow-up: ${item.followup} IST` : "") +
+        (item.followup
+          ? ` · Follow-up: ${item.followup} IST`
+          : "") +
         ` · ${remark}`
       );
 
       render();
-      openCase(item.id, false);
+
+      if (selectedCase()) {
+        openCase(item.id, false);
+      } else {
+        $("caseDialog").close();
+      }
     });
 
     $("reopen").addEventListener("click", () => {
-      const item = getSelected();
-      if (!isAdmin() || !item || item.status !== "Resolved") return;
+      const item = selectedCase();
+
+      if (
+        !auth?.currentUser ||
+        !isAdmin() ||
+        !item ||
+        item.status !== "Resolved"
+      ) return;
 
       const reason = $("remark").value.trim();
 
       if (!reason) {
-        alert("Enter a reopening reason in the remark box.");
+        $("caseMessage").textContent =
+          "Enter the reopening reason in the remark box.";
         return;
       }
 
       item.status = "Open";
 
       item.activity.push(
-        `${stamp()} · Demo Admin reopened the case · ${reason}`
+        `${stamp()} · ${profile.name || "Admin"} ` +
+        `reopened this sample case · ${reason}`
       );
 
       render();
@@ -756,18 +1152,269 @@
       $(id).addEventListener("input", render)
     );
 
-    $("role").addEventListener("change", () => {
-      $("caseDialog").close();
-      selectedId = null;
-      render();
-    });
-
     $("clear").addEventListener("click", () => {
-      ["search", "date", "channel", "status"].forEach(id => $(id).value = "");
+      ["search", "date", "channel", "status"].forEach(id => {
+        $(id).value = "";
+      });
+
       render();
     });
 
-    render();
+    async function loadProfile(user) {
+      const token = await user.getIdToken();
+
+      const data = await apiJSON("/api/me", {
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+
+      const result = data.user;
+
+      if (
+        !result ||
+        result.active !== true ||
+        !["admin", "agent"].includes(result.role) ||
+        typeof result.uid !== "string" ||
+        result.uid !== user.uid ||
+        (
+          result.role === "agent" &&
+          (
+            typeof result.agentId !== "string" ||
+            !result.agentId
+          )
+        )
+      ) {
+        const error = new Error(
+          "Your account is not approved for application access."
+        );
+
+        error.status = 403;
+        throw error;
+      }
+
+      return result;
+    }
+
+    try {
+      const { initializeApp } = await import(
+        "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js"
+      );
+
+      const {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signInWithCustomToken,
+        onAuthStateChanged,
+        signOut,
+        setPersistence,
+        browserSessionPersistence
+      } = await import(
+        "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js"
+      );
+
+      const app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+
+      await setPersistence(auth, browserSessionPersistence);
+
+      const provider = new GoogleAuthProvider();
+
+      provider.setCustomParameters({
+        prompt: "select_account"
+      });
+
+      $("googleLogin").textContent = "Continue with Google";
+      setBusy(false);
+
+      $("googleLogin").addEventListener("click", async () => {
+        if (signingIn) return;
+
+        setBusy(true);
+        setLoginMessage("Opening Google sign-in…");
+
+        try {
+          await signInWithPopup(auth, provider);
+
+        } catch (error) {
+          setLoginMessage(authError(error), true);
+
+        } finally {
+          setBusy(false);
+        }
+      });
+
+      $("passwordForm").addEventListener("submit", async event => {
+        event.preventDefault();
+
+        if (signingIn) return;
+
+        const loginId = $("loginId").value.trim();
+        const password = $("password").value;
+
+        if (!loginId || !password) return;
+
+        setBusy(true);
+        setLoginMessage("Checking your login…");
+
+        try {
+          /*
+            Backend contract:
+            POST /api/login
+            Body: { loginId, password }
+            Success: { customToken: "..." }
+
+            This endpoint must validate a salted password hash,
+            enforce rate limits, check Active status and create
+            the Firebase custom token on the server.
+          */
+          const data = await apiJSON("/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ loginId, password })
+          });
+
+          if (
+            typeof data.customToken !== "string" ||
+            !data.customToken
+          ) {
+            throw new Error(
+              "The authentication server did not return a login token."
+            );
+          }
+
+          await signInWithCustomToken(auth, data.customToken);
+
+        } catch (error) {
+          setLoginMessage(
+            error.status === 404
+              ? "Login-ID sign-in is not connected yet. " +
+                "The secured /api/login backend must be deployed first."
+              : authError(error),
+            true
+          );
+
+        } finally {
+          $("password").value = "";
+          setBusy(false);
+        }
+      });
+
+      $("logout").addEventListener("click", async () => {
+        $("logout").disabled = true;
+
+        try {
+          await signOut(auth);
+
+        } catch (error) {
+          $("dashboardNotice").textContent = authError(error);
+
+        } finally {
+          $("logout").disabled = false;
+        }
+      });
+
+      onAuthStateChanged(
+        auth,
+
+        async user => {
+          const version = ++sessionVersion;
+
+          profile = null;
+          selectedId = null;
+          cases = structuredClone(sampleCases);
+
+          if ($("caseDialog").open) {
+            $("caseDialog").close();
+          }
+
+          $("dashboard").hidden = true;
+          $("loginPage").hidden = false;
+
+          if (!user) {
+            $("password").value = "";
+            setLoginMessage("Choose a sign-in method.");
+            return;
+          }
+
+          setLoginMessage("Signed in. Checking application access…");
+
+          try {
+            const loadedProfile = await loadProfile(user);
+
+            if (
+              version !== sessionVersion ||
+              auth.currentUser?.uid !== user.uid
+            ) return;
+
+            profile = loadedProfile;
+            backendMessage = "";
+
+          } catch (error) {
+            if (
+              version !== sessionVersion ||
+              auth.currentUser?.uid !== user.uid
+            ) return;
+
+            if (error.status === 401 || error.status === 403) {
+              setLoginMessage(
+                "Your account is not approved, is inactive, " +
+                "or its session was rejected. No case access granted.",
+                true
+              );
+
+              await signOut(auth);
+
+              setLoginMessage(
+                "Access denied. Ask the administrator to review your account.",
+                true
+              );
+
+              return;
+            }
+
+            /*
+              Safe prototype fallback:
+              only fictional hardcoded samples are shown.
+              No real-data request or write is made.
+            */
+            profile = null;
+
+            backendMessage =
+              "The permission backend is unavailable or not deployed. " +
+              "Only fictional read-only samples are displayed.";
+          }
+
+          if (
+            version !== sessionVersion ||
+            auth.currentUser?.uid !== user.uid
+          ) return;
+
+          $("loginPage").hidden = true;
+          $("dashboard").hidden = false;
+
+          render();
+        },
+
+        error => {
+          setLoginMessage(authError(error), true);
+        }
+      );
+
+    } catch (error) {
+      $("googleLogin").textContent = "Sign-in unavailable";
+      $("googleLogin").disabled = true;
+      $("passwordLogin").disabled = true;
+
+      setLoginMessage(
+        "Firebase could not initialise. Check SDK loading, " +
+        "the Firebase configuration and network access.",
+        true
+      );
+    }
   </script>
 </body>
 </html>
