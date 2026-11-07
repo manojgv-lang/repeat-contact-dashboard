@@ -1,1 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repeat Contact Dashboard — Demo</title>
 
+  <style>
+    :root {
+      --navy: #10264a;
+      --blue: #2563eb;
+      --bg: #f3f6fb;
+      --border: #dce4ef;
+      --text: #172b4d;
+      --muted: #64748b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button, select {
+      cursor: pointer;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      color: var(--text);
+      padding: 10px 14px;
+    }
+
+    button:hover { background: #eef4ff; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+
+    .primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: white;
+    }
+
+    .primary:hover { background: #1d4ed8; }
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    h1 { margin: 0 0 7px; font-size: 25px; }
+    h2 { margin-top: 0; }
+    p { line-height: 1.5; }
+
+    header p {
+      margin: 0;
+      color: #c8d7ef;
+      font-size: 14px;
+    }
+
+    .preview {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .preview select {
+      padding: 9px;
+      border-radius: 7px;
+      border: none;
+    }
+
+    main {
+      max-width: 1500px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .notice {
+      background: #fff8e8;
+      border: 1px solid #efd395;
+      border-radius: 10px;
+      padding: 13px 16px;
+      margin-bottom: 22px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 19px;
+    }
+
+    .card span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .card strong {
+      display: block;
+      margin-top: 10px;
+      font-size: 29px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .panel-top {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .panel-top h2 { margin: 0; font-size: 19px; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 18px 20px;
+      background: #fbfcfe;
+    }
+
+    input, select, textarea {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px;
+      background: white;
+      color: var(--text);
+    }
+
+    .filters input[type="search"] {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+
+    th, td {
+      padding: 15px 18px;
+      text-align: left;
+      border-bottom: 1px solid #edf1f6;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f6f8fc;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    td small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      background: #e8efff;
+      color: #244a9b;
+      display: inline-block;
+    }
+
+    .badge.resolved { background: #def5e8; color: #14683a; }
+    .badge.pending { background: #fff0cf; color: #8b5c00; }
+
+    .muted { color: var(--muted); font-size: 13px; }
+
+    .footer {
+      padding: 16px 20px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    dialog {
+      border: none;
+      border-radius: 14px;
+      width: min(760px, 94vw);
+      padding: 0;
+      color: var(--text);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    dialog::backdrop { background: #10264a99; }
+
+    .modal-head {
+      background: var(--navy);
+      color: white;
+      padding: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-head h2 { margin: 0; font-size: 20px; }
+    .modal-body { padding: 22px; }
+
+    .details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .detail {
+      padding: 12px;
+      border-radius: 8px;
+      background: #f5f8fc;
+      overflow-wrap: anywhere;
+    }
+
+    .detail small {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin: 14px 0 7px;
+      color: var(--muted);
+    }
+
+    .modal-body select,
+    .modal-body textarea,
+    .modal-body input {
+      width: 100%;
+    }
+
+    textarea { min-height: 85px; resize: vertical; }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .activity {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+    }
+
+    .activity p {
+      background: #f5f8fc;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 800px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      main { padding: 14px; }
+      header { padding: 20px; }
+      .details { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div>
+      <h1>Repeat Contact Dashboard</h1>
+      <p>Daily customer contacts and follow-up case management</p>
+    </div>
+
+    <div class="preview">
+      <label for="role" style="color:white;margin:0">
+        Demo preview
+      </label>
+
+      <select id="role">
+        <option value="admin">Admin preview</option>
+        <option value="agent">Agent preview — Demo Agent A</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <div class="notice">
+      DEMO · UNDER DEVELOPMENT.
+      Fictional sample data only. No Firebase login, live Sheets connection,
+      real assignment scheduler or persistent storage is connected.
+      The preview switch is not an access-control system.
+    </div>
+
+    <section class="cards" id="cards"></section>
+
+    <section class="panel">
+      <div class="panel-top">
+        <h2 id="listTitle">All cases</h2>
+        <span class="muted">
+          Daily assignment target: 5 PM IST · Not connected
+        </span>
+      </div>
+
+      <div class="filters">
+        <input id="search" type="search"
+          placeholder="Search customer, phone, email or case ID">
+
+        <input id="date" type="date" aria-label="Reporting date">
+
+        <select id="channel" aria-label="Channel">
+          <option value="">All channels</option>
+          <option>CALL</option>
+          <option>EMAIL</option>
+          <option>CHAT</option>
+        </select>
+
+        <select id="status" aria-label="Case status">
+          <option value="">All statuses</option>
+          <option>Open</option>
+          <option>Pending follow-up</option>
+          <option>Resolved</option>
+        </select>
+
+        <button id="clear">Clear filters</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>REPORTING DATE</th>
+              <th>CUSTOMER</th>
+              <th>CHANNEL</th>
+              <th>CONTACTS</th>
+              <th>FIRST / LAST — IST</th>
+              <th>CASE HANDLER</th>
+              <th>STATUS</th>
+              <th>ACTION</th>
+            </tr>
+          </thead>
+
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <div class="footer" id="footer"></div>
+    </section>
+  </main>
+
+  <dialog id="caseDialog">
+    <div class="modal-head">
+      <h2 id="caseTitle">Case details</h2>
+      <button id="closeDialog" aria-label="Close details">Close</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="details" id="details"></div>
+
+      <label for="handler">Case handler</label>
+      <select id="handler">
+        <option value="">Unassigned</option>
+        <option>Demo Agent A</option>
+        <option>Demo Agent B</option>
+      </select>
+
+      <label for="caseStatus">Status</label>
+      <select id="caseStatus">
+        <option>Open</option>
+        <option>Pending follow-up</option>
+        <option>Resolved</option>
+      </select>
+
+      <label for="followup">
+        Follow-up date and time — IST, when pending
+      </label>
+      <input id="followup" type="datetime-local">
+
+      <label for="remark">
+        New remark / resolution / reopening reason
+      </label>
+      <textarea id="remark"
+        placeholder="Add a remark. Previous remarks are retained."></textarea>
+
+      <div class="actions">
+        <button id="reopen">Reopen case — admin demo</button>
+        <button class="primary" id="save">Save demo changes</button>
+      </div>
+
+      <div class="activity">
+        <h3>Demo activity history</h3>
+        <div id="activity"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const $ = id => document.getElementById(id);
+
+    const escapeHTML = value => String(value ?? "")
+      .replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+
+    const cases = [
+      {
+        id: "DEMO-001",
+        date: "2026-11-07",
+        customer: "Sample Customer One",
+        identity: "customer.one@example.com",
+        channel: "EMAIL",
+        count: 5,
+        first: "09:15:00",
+        last: "16:20:00",
+        disposition: "Post Loan → Repayment → Status Enquiry",
+        owner: "Sample Ticket Owner",
+        modified: "2026-11-07 16:25:00",
+        ticket: "DEMO-TICKET-01",
+        handler: "Demo Agent A",
+        status: "Open",
+        followup: "",
+        activity: []
+      },
+      {
+        id: "DEMO-002",
+        date: "2026-11-07",
+        customer: "Sample Customer Two",
+        identity: "DEMO-PHONE-002",
+        channel: "CALL",
+        count: 4,
+        first: "10:05:00",
+        last: "15:40:00",
+        disposition: "Post Loan → Withdrawal → Status Enquiry",
+        owner: "Sample Form Submitter",
+        modified: "2026-11-07 15:45:00",
+        ticket: "",
+        handler: "",
+        status: "Open",
+        followup: "",
+        activity: []
+      },
+      {
+        id: "DEMO-003",
+        date: "2026-11-07",
+        customer: "Sample Customer Three",
+        identity: "customer.three@example.com",
+        channel: "EMAIL",
+        count: 3,
+        first: "11:10:00",
+        last: "14:30:00",
+        disposition: "Post Loan → Foreclosure → Process Information",
+        owner: "Sample Ticket Owner",
+        modified: "2026-11-07 14:35:00",
+        ticket: "DEMO-TICKET-03",
+        handler: "Demo Agent B",
+        status: "Pending follow-up",
+        followup: "2026-11-09T10:00",
+        activity: ["Demo setup: follow-up scheduled for 9 November, 10 AM IST."]
+      },
+      {
+        id: "DEMO-004",
+        date: "2026-11-06",
+        customer: "Sample Customer Four",
+        identity: "DEMO-PHONE-004",
+        channel: "CALL",
+        count: 6,
+        first: "09:30:00",
+        last: "17:10:00",
+        disposition: "Details Update → Phone Number Update",
+        owner: "Sample Form Submitter",
+        modified: "2026-11-06 17:15:00",
+        ticket: "",
+        handler: "Demo Agent A",
+        status: "Resolved",
+        followup: "",
+        activity: ["Demo setup: case resolved with a sample resolution."]
+      },
+      {
+        id: "DEMO-005",
+        date: "2026-11-06",
+        customer: "Sample Customer Five",
+        identity: "DEMO-CHAT-005",
+        channel: "CHAT",
+        count: 3,
+        first: "",
+        last: "13:25:00",
+        disposition: "",
+        owner: "",
+        modified: "",
+        ticket: "",
+        handler: "Demo Agent A",
+        status: "Open",
+        followup: "",
+        activity: []
+      }
+    ];
+
+    let selectedId = null;
+
+    function isAdmin() {
+      return $("role").value === "admin";
+    }
+
+    function scopedCases() {
+      return isAdmin()
+        ? cases
+        : cases.filter(item => item.handler === "Demo Agent A");
+    }
+
+    function badge(status) {
+      const kind = status === "Resolved"
+        ? "resolved"
+        : status === "Pending follow-up" ? "pending" : "";
+
+      return `<span class="badge ${kind}">${escapeHTML(status)}</span>`;
+    }
+
+    function render() {
+      const scoped = scopedCases();
+
+      const stats = [
+        ["Case entries", scoped.length],
+        ["Unassigned", scoped.filter(c => !c.handler).length],
+        ["Open", scoped.filter(c => c.status === "Open").length],
+        ["Pending follow-up",
+          scoped.filter(c => c.status === "Pending follow-up").length],
+        ["Resolved", scoped.filter(c => c.status === "Resolved").length]
+      ];
+
+      $("cards").innerHTML = stats.map(([label, count]) =>
+        `<div class="card"><span>${label}</span><strong>${count}</strong></div>`
+      ).join("");
+
+      $("listTitle").textContent = isAdmin()
+        ? "All cases"
+        : "My assigned cases — Demo Agent A";
+
+      const query = $("search").value.trim().toLowerCase();
+
+      const filtered = scoped.filter(item =>
+        (!query ||
+          [item.customer, item.identity, item.id]
+            .join(" ").toLowerCase().includes(query)) &&
+        (!$("date").value || item.date === $("date").value) &&
+        (!$("channel").value || item.channel === $("channel").value) &&
+        (!$("status").value || item.status === $("status").value)
+      );
+
+      $("rows").innerHTML = filtered.map(item => `
+        <tr>
+          <td>${escapeHTML(item.date)}</td>
+          <td>
+            ${escapeHTML(item.customer)}
+            <small>${escapeHTML(item.identity)}</small>
+          </td>
+          <td>${escapeHTML(item.channel)}</td>
+          <td>${item.count}</td>
+          <td>
+            ${escapeHTML(item.first || "Not available")}
+            <small>Last: ${escapeHTML(item.last)}${
+              item.channel === "CHAT" ? " — closure time" : ""
+            }</small>
+          </td>
+          <td>${escapeHTML(item.handler || "Unassigned")}</td>
+          <td>${badge(item.status)}</td>
+          <td><button data-case="${item.id}">View case</button></td>
+        </tr>
+      `).join("") ||
+        `<tr><td colspan="8">No matching demo cases.</td></tr>`;
+
+      $("footer").textContent =
+        `${filtered.length} displayed case entries. ` +
+        "Cards show the selected role's full demo scope, before filters. " +
+        "Demo changes reset on page reload.";
+    }
+
+    function getSelected() {
+      return scopedCases().find(item => item.id === selectedId);
+    }
+
+    function detail(label, value) {
+      return `<div class="detail"><small>${escapeHTML(label)}</small>${
+        escapeHTML(value || "Not available")
+      }</div>`;
+    }
+
+    function openCase(id, showDialog = true) {
+      selectedId = id;
+      const item = getSelected();
+      if (!item) return;
+
+      $("caseTitle").textContent = `${item.id} · ${item.customer}`;
+
+      $("details").innerHTML = [
+        detail("Reporting date", item.date),
+        detail("Channel", item.channel),
+        detail("Customer phone / email", item.identity),
+        detail("Contacts on reporting date", item.count),
+        detail("First contact — IST", item.first),
+        detail(
+          item.channel === "CHAT"
+            ? "Last recorded closure — IST"
+            : "Last contact — IST",
+          item.last
+        ),
+        detail("Latest disposition", item.disposition),
+        detail("Form submitter / ticket owner", item.owner),
+        detail("Form time / ticket modified — demo IST", item.modified),
+        detail("Marvin ticket — demo", item.ticket)
+      ].join("");
+
+      $("handler").value = item.handler;
+      $("handler").disabled = !isAdmin();
+
+      $("caseStatus").value = item.status;
+      $("followup").value = item.followup;
+      $("remark").value = "";
+
+      const locked = item.status === "Resolved";
+      $("caseStatus").disabled = locked;
+      $("followup").disabled = locked;
+      $("remark").disabled = locked && !isAdmin();
+      $("save").disabled = locked;
+
+      $("reopen").hidden = !(isAdmin() && locked);
+
+      $("activity").innerHTML = item.activity.length
+        ? item.activity.map(text => `<p>${escapeHTML(text)}</p>`).join("")
+        : "<p>No demo remarks yet.</p>";
+
+      if (showDialog) $("caseDialog").showModal();
+    }
+
+    function stamp() {
+      return new Date().toLocaleString("en-GB", {
+        timeZone: "Asia/Kolkata",
+        hour12: false
+      }) + " IST";
+    }
+
+    $("rows").addEventListener("click", event => {
+      const button = event.target.closest("[data-case]");
+      if (button) openCase(button.dataset.case);
+    });
+
+    $("save").addEventListener("click", () => {
+      const item = getSelected();
+      if (!item || item.status === "Resolved") return;
+
+      const status = $("caseStatus").value;
+      const remark = $("remark").value.trim();
+      const followup = $("followup").value;
+
+      if (!remark) {
+        alert("Please enter a remark for this demo update.");
+        return;
+      }
+
+      if (status === "Pending follow-up" && !followup) {
+        alert("Select a follow-up date and time.");
+        return;
+      }
+
+      const previous = item.status;
+      const oldHandler = item.handler;
+      const actor = isAdmin() ? "Demo Admin" : "Demo Agent A";
+
+      if (isAdmin()) item.handler = $("handler").value;
+
+      item.status = status;
+      item.followup = status === "Pending follow-up" ? followup : "";
+
+      item.activity.push(
+        `${stamp()} · ${actor} · ${previous} → ${status}` +
+        (oldHandler !== item.handler
+          ? ` · Handler: ${oldHandler || "Unassigned"} → ${
+              item.handler || "Unassigned"
+            }`
+          : "") +
+        (item.followup ? ` · Follow-up: ${item.followup} IST` : "") +
+        ` · ${remark}`
+      );
+
+      render();
+      openCase(item.id, false);
+    });
+
+    $("reopen").addEventListener("click", () => {
+      const item = getSelected();
+      if (!isAdmin() || !item || item.status !== "Resolved") return;
+
+      const reason = $("remark").value.trim();
+
+      if (!reason) {
+        alert("Enter a reopening reason in the remark box.");
+        return;
+      }
+
+      item.status = "Open";
+
+      item.activity.push(
+        `${stamp()} · Demo Admin reopened the case · ${reason}`
+      );
+
+      render();
+      openCase(item.id, false);
+    });
+
+    $("closeDialog").addEventListener("click", () =>
+      $("caseDialog").close()
+    );
+
+    ["search", "date", "channel", "status"].forEach(id =>
+      $(id).addEventListener("input", render)
+    );
+
+    $("role").addEventListener("change", () => {
+      $("caseDialog").close();
+      selectedId = null;
+      render();
+    });
+
+    $("clear").addEventListener("click", () => {
+      ["search", "date", "channel", "status"].forEach(id => $(id).value = "");
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
