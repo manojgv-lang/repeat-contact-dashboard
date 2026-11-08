@@ -72,6 +72,11 @@
       border-color: #2563eb;
     }
 
+    .danger {
+      color: #b42318;
+      border-color: #b42318;
+    }
+
     .panel {
       background: white;
       border: 1px solid #dce4ef;
@@ -181,10 +186,17 @@
     #loginStatus {
       white-space: pre-line;
       line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
     small {
       color: #64748b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     dialog {
@@ -255,7 +267,9 @@
       </button>
     </form>
 
-    <p id="loginStatus" role="status"></p>
+    <p id="loginStatus"
+       role="status"
+       aria-live="polite"></p>
 
     <button id="switchAccount" hidden>
       Sign out / use another account
@@ -304,6 +318,7 @@
             <input
               id="search"
               placeholder="Search phone, email, name or handler"
+              aria-label="Search report"
             >
 
             <input
@@ -396,6 +411,7 @@
 
               <label id="idField" hidden>
                 Login ID
+
                 <input
                   id="newId"
                   autocomplete="off"
@@ -435,6 +451,15 @@
 
         <div class="panel">
           <h2>Application users</h2>
+
+          <div class="notice">
+            To delete an account, deactivate it first.
+            Deletion removes the login account and its
+            application-user entry. Historical case records,
+            logs and backups are not erased by this action.
+            Your own account and the bootstrap administrator
+            are protected.
+          </div>
 
           <button id="reloadUsers">
             Refresh users
@@ -487,13 +512,15 @@
         Share the replacement privately.
       </p>
 
-      <button class="primary">
-        Confirm password reset
-      </button>
+      <div class="flex">
+        <button id="resetSubmit" class="primary">
+          Confirm password reset
+        </button>
 
-      <button type="button" id="cancelReset">
-        Cancel
-      </button>
+        <button type="button" id="cancelReset">
+          Cancel
+        </button>
+      </div>
     </form>
   </dialog>
 
@@ -524,6 +551,21 @@
     function status(text, error = false) {
       $("status").textContent = text;
       $("status").classList.toggle("error", error);
+    }
+
+    function setBusy(value) {
+      busy = value;
+
+      $("createButton").disabled = value;
+      $("reloadUsers").disabled = value;
+      $("resetSubmit").disabled = value;
+      $("cancelReset").disabled = value;
+
+      $("userRows").querySelectorAll("button").forEach(
+        button => {
+          button.disabled = value;
+        }
+      );
     }
 
     async function api(path, options = {}) {
@@ -562,7 +604,7 @@
         if (!type.includes("application/json")) {
           throw new Error(
             "Backend returned a non-JSON response. " +
-            "Check Vercel runtime logs."
+            "Check Vercel runtime logs and API deployment."
           );
         }
 
@@ -575,6 +617,16 @@
         }
 
         return result;
+
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error(
+            "Request timed out. Refresh the relevant list " +
+            "before repeating a create, update or delete action."
+          );
+        }
+
+        throw error;
 
       } finally {
         clearTimeout(timer);
@@ -655,7 +707,7 @@
             <small>${escapeHTML(row.customer)}</small>
           </td>
 
-          <td>${row.count}</td>
+          <td>${escapeHTML(row.count)}</td>
 
           <td>
             ${escapeHTML(row.first || "Unavailable")}
@@ -670,13 +722,16 @@
           </td>
 
           <td>
-            <button data-detail="${row.id}">
+            <button
+              data-detail="${escapeHTML(row.id)}"
+              aria-expanded="false"
+            >
               View
             </button>
           </td>
         </tr>
 
-        <tr id="detail-${row.id}" hidden>
+        <tr id="detail-${escapeHTML(row.id)}" hidden>
           <td colspan="9" class="details">
             Disposition:
             ${escapeHTML(row.disposition || "Unavailable")}
@@ -707,11 +762,14 @@
 
     async function loadReport() {
       const currentGeneration = generation;
-
       const result = await api("/api/cases");
 
       if (currentGeneration !== generation) {
         return;
+      }
+
+      if (!Array.isArray(result.cases)) {
+        throw new Error("Invalid report response.");
       }
 
       records = result.cases;
@@ -724,7 +782,7 @@
       });
 
       $("reportInfo").textContent =
-        result.warning +
+        (result.warning || "") +
         " Loaded " + records.length + " entries." +
         " Fetched " + fetched + " IST." +
         " This is not the source-sync completion time." +
@@ -735,36 +793,49 @@
         );
     }
 
-    async function loadUsers() {
-      const currentGeneration = generation;
-      const result = await api("/api/users");
-
-      if (currentGeneration !== generation) {
-        return;
-      }
-
-      users = result.users;
-
+    function renderUsers() {
       $("userRows").innerHTML = users.map(user => {
         const protectedAccount =
-          user.bootstrap || user.uid === me.uid;
+          user.bootstrap || user.uid === me?.uid;
 
         const actions = protectedAccount
           ? "Protected"
           : `
-            <button data-active="${escapeHTML(user.uid)}">
-              ${user.active ? "Deactivate" : "Activate"}
-            </button>
+            <div class="actions">
+              <button
+                data-active="${escapeHTML(user.uid)}"
+                ${busy ? "disabled" : ""}
+              >
+                ${user.active ? "Deactivate" : "Activate"}
+              </button>
 
-            ${
-              user.loginMethod === "password"
-                ? `
-                  <button data-reset="${escapeHTML(user.uid)}">
-                    Reset password
-                  </button>
-                `
-                : ""
-            }
+              ${
+                user.loginMethod === "password"
+                  ? `
+                    <button
+                      data-reset="${escapeHTML(user.uid)}"
+                      ${busy ? "disabled" : ""}
+                    >
+                      Reset password
+                    </button>
+                  `
+                  : ""
+              }
+
+              ${
+                !user.active
+                  ? `
+                    <button
+                      class="danger"
+                      data-delete="${escapeHTML(user.uid)}"
+                      ${busy ? "disabled" : ""}
+                    >
+                      Delete user
+                    </button>
+                  `
+                  : ""
+              }
+            </div>
           `;
 
         return `
@@ -782,7 +853,24 @@
             <td>${actions}</td>
           </tr>
         `;
-      }).join("");
+      }).join("") ||
+        '<tr><td colspan="7">No application users found.</td></tr>';
+    }
+
+    async function loadUsers() {
+      const currentGeneration = generation;
+      const result = await api("/api/users");
+
+      if (currentGeneration !== generation) {
+        return;
+      }
+
+      if (!Array.isArray(result.users)) {
+        throw new Error("Invalid user-list response.");
+      }
+
+      users = result.users;
+      renderUsers();
     }
 
     function showTab(showUsers) {
@@ -799,17 +887,134 @@
       $("passField").hidden = !isPassword;
 
       $("newEmail").required = !isPassword;
+      $("newEmail").disabled = isPassword;
+
       $("newId").required = isPassword;
+      $("newId").disabled = !isPassword;
+
       $("newPassword").required = isPassword;
+      $("newPassword").disabled = !isPassword;
+    }
+
+    async function deleteSelectedUser(selectedUser) {
+      if (
+        selectedUser.bootstrap ||
+        selectedUser.uid === me?.uid
+      ) {
+        status(
+          "This account is protected from deletion.",
+          true
+        );
+        return;
+      }
+
+      if (selectedUser.active) {
+        status(
+          "Deactivate the account before deleting it.",
+          true
+        );
+        return;
+      }
+
+      const identity =
+        selectedUser.loginId || selectedUser.email;
+
+      if (!identity) {
+        status(
+          "Cannot identify this account. Refresh users.",
+          true
+        );
+        return;
+      }
+
+      const confirmation = prompt(
+        "Permanently delete this login account?\n\n" +
+        "Name: " + selectedUser.name + "\n" +
+        "Role: " + selectedUser.role + "\n" +
+        "Identity: " + identity + "\n\n" +
+        "The account will disappear from the user list.\n" +
+        "Historical case records, logs and backups " +
+        "will not be erased.\n\n" +
+        "Type this Login ID or email to confirm:\n" +
+        identity
+      );
+
+      if (confirmation === null) {
+        return;
+      }
+
+      if (
+        confirmation.trim().toLowerCase() !==
+        identity.trim().toLowerCase()
+      ) {
+        status(
+          "Deletion cancelled: confirmation did not match.",
+          true
+        );
+        return;
+      }
+
+      const currentGeneration = generation;
+      setBusy(true);
+
+      try {
+        const result = await api("/api/delete-user", {
+          method: "POST",
+
+          body: JSON.stringify({
+            uid: selectedUser.uid,
+            confirmation
+          })
+        });
+
+        if (currentGeneration !== generation) {
+          return;
+        }
+
+        // The server confirmed deletion. Remove the entry
+        // locally even if the following list refresh fails.
+        users = users.filter(
+          user => user.uid !== selectedUser.uid
+        );
+
+        renderUsers();
+        status(result.message);
+
+        try {
+          await loadUsers();
+        } catch {
+          if (currentGeneration === generation) {
+            status(
+              result.message +
+              " The list could not be refreshed. " +
+              "Click Refresh users.",
+              true
+            );
+          }
+        }
+
+      } catch (error) {
+        if (currentGeneration === generation) {
+          status(error.message, true);
+        }
+
+      } finally {
+        setBusy(false);
+      }
     }
 
     $("newMethod").onchange = updateMethodFields;
+    updateMethodFields();
 
     $("reportTab").onclick = () => {
       showTab(false);
     };
 
     $("usersTab").onclick = async () => {
+      if (me?.role !== "admin") {
+        return;
+      }
+
       showTab(true);
 
       try {
@@ -820,11 +1025,19 @@
     };
 
     $("reloadUsers").onclick = async () => {
+      if (busy) {
+        return;
+      }
+
+      $("reloadUsers").disabled = true;
+
       try {
         await loadUsers();
         status("User list refreshed.");
       } catch (error) {
         status(error.message, true);
+      } finally {
+        $("reloadUsers").disabled = busy;
       }
     };
 
@@ -866,14 +1079,23 @@
         "detail-" + button.dataset.detail
       );
 
+      if (!row) {
+        return;
+      }
+
       row.hidden = !row.hidden;
       button.textContent = row.hidden ? "View" : "Hide";
+
+      button.setAttribute(
+        "aria-expanded",
+        String(!row.hidden)
+      );
     };
 
     $("createUser").onsubmit = async event => {
       event.preventDefault();
 
-      if (busy) {
+      if (busy || me?.role !== "admin") {
         return;
       }
 
@@ -903,7 +1125,18 @@
             "lowercase, a number and a symbol.",
             true
           );
+          return;
+        }
 
+        if (
+          !/^[a-z0-9][a-z0-9._-]{2,39}$/.test(body.loginId)
+        ) {
+          status(
+            "Login ID must be 3–40 lowercase letters, " +
+            "numbers, dots, underscores or hyphens, " +
+            "and begin with a letter or number.",
+            true
+          );
           return;
         }
       }
@@ -922,36 +1155,73 @@
         return;
       }
 
-      busy = true;
-      $("createButton").disabled = true;
+      const currentGeneration = generation;
+      setBusy(true);
 
       try {
         const result = await postUser(body);
 
+        if (currentGeneration !== generation) {
+          return;
+        }
+
         $("createUser").reset();
         updateMethodFields();
-
         status(result.message);
-        await loadUsers();
+
+        try {
+          await loadUsers();
+        } catch {
+          if (currentGeneration === generation) {
+            status(
+              result.message +
+              " Click Refresh users to reload the list.",
+              true
+            );
+          }
+        }
 
       } catch (error) {
-        status(
-          error.message +
-          " If the request timed out, refresh the user " +
-          "list before retrying.",
-          true
-        );
+        if (currentGeneration === generation) {
+          status(
+            error.message +
+            " Refresh the user list before repeating " +
+            "a request that may have timed out.",
+            true
+          );
+        }
 
       } finally {
         delete body.password;
         $("newPassword").value = "";
-        busy = false;
-        $("createButton").disabled = false;
+        setBusy(false);
       }
     };
 
     $("userRows").onclick = async event => {
-      if (busy) {
+      if (busy || me?.role !== "admin") {
+        return;
+      }
+
+      const deleteButton = event.target.closest(
+        "[data-delete]"
+      );
+
+      if (deleteButton) {
+        const selectedUser = users.find(
+          user =>
+            user.uid === deleteButton.dataset.delete
+        );
+
+        if (!selectedUser) {
+          status(
+            "User is no longer in this list. Refresh users.",
+            true
+          );
+          return;
+        }
+
+        await deleteSelectedUser(selectedUser);
         return;
       }
 
@@ -961,8 +1231,17 @@
 
       if (resetButton) {
         resetTarget = users.find(
-          user => user.uid === resetButton.dataset.reset
+          user =>
+            user.uid === resetButton.dataset.reset
         );
+
+        if (!resetTarget) {
+          status(
+            "User is no longer in this list. Refresh users.",
+            true
+          );
+          return;
+        }
 
         $("resetName").textContent =
           resetTarget.name +
@@ -981,44 +1260,86 @@
         return;
       }
 
-      const user = users.find(
-        item => item.uid === activeButton.dataset.active
+      const selectedUser = users.find(
+        user =>
+          user.uid === activeButton.dataset.active
       );
 
+      if (!selectedUser) {
+        status(
+          "User is no longer in this list. Refresh users.",
+          true
+        );
+        return;
+      }
+
       const approved = confirm(
-        (user.active ? "Deactivate " : "Activate ") +
-        user.name +
-        " (" + (user.loginId || user.email) + ")?"
+        (selectedUser.active ? "Deactivate " : "Activate ") +
+        selectedUser.name +
+        " (" +
+        (selectedUser.loginId || selectedUser.email) +
+        ")?"
       );
 
       if (!approved) {
         return;
       }
 
-      busy = true;
+      const currentGeneration = generation;
+      setBusy(true);
 
       try {
         const result = await postUser({
           action: "active",
-          uid: user.uid,
-          active: !user.active
+          uid: selectedUser.uid,
+          active: !selectedUser.active
         });
 
+        if (currentGeneration !== generation) {
+          return;
+        }
+
+        selectedUser.active = !selectedUser.active;
+
+        renderUsers();
         status(result.message);
-        await loadUsers();
+
+        try {
+          await loadUsers();
+        } catch {
+          if (currentGeneration === generation) {
+            status(
+              result.message +
+              " Click Refresh users to reload the list.",
+              true
+            );
+          }
+        }
 
       } catch (error) {
-        status(error.message, true);
+        if (currentGeneration === generation) {
+          status(error.message, true);
+        }
+
       } finally {
-        busy = false;
+        setBusy(false);
       }
     };
 
     $("cancelReset").onclick = () => {
-      $("replacementPassword").value = "";
-      resetTarget = null;
-      $("resetDialog").close();
+      if (!busy) {
+        $("resetDialog").close();
+      }
     };
+
+    $("resetDialog").addEventListener(
+      "cancel",
+      event => {
+        if (busy) {
+          event.preventDefault();
+        }
+      }
+    );
 
     $("resetDialog").addEventListener("close", () => {
       $("replacementPassword").value = "";
@@ -1028,7 +1349,11 @@
     $("resetForm").onsubmit = async event => {
       event.preventDefault();
 
-      if (busy || !resetTarget) {
+      if (
+        busy ||
+        !resetTarget ||
+        me?.role !== "admin"
+      ) {
         return;
       }
 
@@ -1040,29 +1365,37 @@
           "Use 12–128 characters with uppercase, " +
           "lowercase, a number and a symbol."
         );
-
         return;
       }
 
-      busy = true;
+      const targetUid = resetTarget.uid;
+      const currentGeneration = generation;
+
+      setBusy(true);
 
       try {
         const result = await postUser({
           action: "resetPassword",
-          uid: resetTarget.uid,
+          uid: targetUid,
           password
         });
+
+        if (currentGeneration !== generation) {
+          return;
+        }
 
         $("resetDialog").close();
         status(result.message);
 
       } catch (error) {
-        $("resetDialog").close();
-        status(error.message, true);
+        if (currentGeneration === generation) {
+          $("resetDialog").close();
+          status(error.message, true);
+        }
 
       } finally {
-        busy = false;
         $("replacementPassword").value = "";
+        setBusy(false);
       }
     };
 
@@ -1086,7 +1419,10 @@
 
       const firebaseApp = initializeApp({
         apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
-        authDomain: "repeat-contact-dashboard.firebaseapp.com",
+
+        authDomain:
+          "repeat-contact-dashboard.firebaseapp.com",
+
         projectId: "repeat-contact-dashboard",
 
         storageBucket:
@@ -1142,7 +1478,6 @@
         ) {
           $("loginStatus").textContent =
             "Enter your assigned Login ID.";
-
           return;
         }
 
@@ -1170,10 +1505,22 @@
       };
 
       async function logout() {
+        if (busy) {
+          status(
+            "Wait for the current user-management request " +
+            "to finish before signing out.",
+            true
+          );
+          return;
+        }
+
         try {
           await signOut(auth);
         } catch {
-          status("Sign-out failed. Please retry.", true);
+          status(
+            "Sign-out failed. Please retry.",
+            true
+          );
         }
       }
 
@@ -1190,9 +1537,15 @@
         $("rows").innerHTML = "";
         $("cards").innerHTML = "";
         $("userRows").innerHTML = "";
+
         $("reportInfo").textContent = "";
         $("status").textContent = "";
+        $("account").textContent = "";
 
+        $("newPassword").value = "";
+        $("loginPassword").value = "";
+
+        $("usersTab").hidden = true;
         $("app").hidden = true;
         $("login").hidden = false;
         $("switchAccount").hidden = !user;
@@ -1204,7 +1557,6 @@
         if (!user) {
           $("loginStatus").textContent =
             "Sign in with an approved account.";
-
           return;
         }
 
@@ -1225,7 +1577,8 @@
             (me.loginId || me.email) + " · " +
             me.role;
 
-          $("usersTab").hidden = me.role !== "admin";
+          $("usersTab").hidden =
+            me.role !== "admin";
 
           showTab(false);
 
@@ -1238,21 +1591,3 @@
           if (currentGeneration !== generation) {
             return;
           }
-
-          if (me) {
-            status(error.message, true);
-          } else {
-            $("loginStatus").textContent =
-              error.message;
-          }
-        }
-      });
-
-    } catch {
-      $("loginStatus").textContent =
-        "Firebase could not initialise. " +
-        "Check SDK loading and configuration.";
-    }
-  </script>
-</body>
-</html>
