@@ -2,33 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Repeat Contact — Live Data Test</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <title>Repeat Contact Dashboard</title>
 
   <style>
-    * { box-sizing: border-box; }
-    [hidden] { display: none !important; }
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
       background: #f3f6fb;
       color: #172b4d;
+      font: 15px Arial, sans-serif;
     }
 
-    button, input, select { font: inherit; }
+    header {
+      background: #10264a;
+      color: white;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
 
-    button, input, select {
-      padding: 11px 14px;
-      border: 1px solid #dce4ef;
-      border-radius: 8px;
+    h1 {
+      margin: 0 0 12px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    main {
+      padding: 22px;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+      padding: 11px;
+      border: 1px solid #ccd7e7;
+      border-radius: 7px;
       background: white;
       color: #172b4d;
     }
 
-    button { cursor: pointer; }
-    button:disabled { opacity: .5; cursor: not-allowed; }
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
     .primary {
       background: #2563eb;
@@ -36,60 +72,97 @@
       border-color: #2563eb;
     }
 
-    #login {
-      max-width: 470px;
-      margin: 12vh auto;
-      padding: 30px;
-      border: 1px solid #dce4ef;
-      border-radius: 14px;
+    .panel {
       background: white;
+      border: 1px solid #dce4ef;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
     }
-
-    #login button { width: 100%; }
-
-    h1 { margin: 0 0 10px; font-size: 25px; }
-    p { line-height: 1.6; }
-
-    header {
-      padding: 24px;
-      background: #10264a;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    header p { margin: 0; color: #c8d7ef; }
-
-    main { padding: 22px; }
 
     .notice {
       background: #fff8e8;
       border: 1px solid #efd395;
-      padding: 14px;
+      padding: 15px;
+      line-height: 1.6;
       border-radius: 9px;
-      margin-bottom: 20px;
-      line-height: 1.7;
+      margin: 15px 0;
+    }
+
+    .error {
+      color: #b42318;
+    }
+
+    .flex {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+    }
+
+    #login {
+      max-width: 500px;
+      margin: 8vh auto;
+      padding: 28px;
+    }
+
+    #login input,
+    #login button {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    td,
+    th {
+      text-align: left;
+      padding: 13px;
+      border-bottom: 1px solid #e6edf5;
       font-size: 13px;
+    }
+
+    th {
+      background: #eef3fb;
+    }
+
+    .scroll {
+      overflow: auto;
+    }
+
+    #search {
+      min-width: 220px;
+      flex: 1;
     }
 
     .cards {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 20px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
     .card {
-      padding: 20px;
-      border-radius: 10px;
-      border: 1px solid #dce4ef;
       background: white;
+      border: 1px solid #dce4ef;
+      border-radius: 10px;
+      padding: 18px;
     }
-
-    .card span { color: #64748b; font-size: 13px; }
 
     .card strong {
       display: block;
@@ -97,86 +170,92 @@
       margin-top: 10px;
     }
 
-    .panel {
-      background: white;
-      border: 1px solid #dce4ef;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .filters {
-      padding: 16px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    #search { flex: 1; min-width: 230px; }
-
-    .table-wrap { overflow: auto; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      white-space: nowrap;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 13px 15px;
-      border-bottom: 1px solid #e8edf5;
-      font-size: 13px;
-    }
-
-    th {
-      background: #eef3fb;
-      color: #64748b;
-      font-size: 12px;
-    }
-
-    td small {
-      display: block;
-      margin-top: 5px;
-      color: #64748b;
-    }
-
-    .details td {
+    .details {
       white-space: normal;
-      background: #f7f9fd;
-      line-height: 1.8;
       overflow-wrap: anywhere;
+      line-height: 1.8;
+      background: #f7f9fd;
     }
 
-    #footer { padding: 16px; color: #64748b; font-size: 13px; }
-    #message { white-space: pre-line; overflow-wrap: anywhere; }
-    .error { color: #b42318; }
+    #status,
+    #loginStatus {
+      white-space: pre-line;
+      line-height: 1.6;
+    }
 
-    @media (max-width: 700px) {
-      .cards { grid-template-columns: repeat(2, 1fr); }
-      main { padding: 12px; }
-      #login { margin: 8vh 15px; }
+    small {
+      color: #64748b;
+    }
+
+    dialog {
+      width: min(480px, 95vw);
+      border: 1px solid #ccd7e7;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    dialog::backdrop {
+      background: #0006;
+    }
+
+    dialog input {
+      width: 100%;
+    }
+
+    @media (max-width: 650px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      #login {
+        margin: 20px 12px;
+      }
+
+      main {
+        padding: 12px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <section id="login">
+  <section id="login" class="panel">
     <h1>Repeat Contact Dashboard</h1>
 
-    <p>Administrator-only live Sheet connection test.</p>
+    <p>Sign in using your approved account.</p>
 
-    <div class="notice">
-      Read-only mode. This test cannot change cases,
-      assignments, remarks or spreadsheet records.
-    </div>
-
-    <button id="signIn" class="primary" disabled>
+    <button id="google" class="primary" disabled>
       Loading sign-in…
     </button>
 
-    <p id="message" role="status" aria-live="polite">
-      Initialising Firebase…
-    </p>
+    <p>Or use your administrator-issued Login ID</p>
+
+    <form id="passwordLogin">
+      <input
+        id="loginId"
+        placeholder="Login ID"
+        autocomplete="username"
+        required
+      >
+
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+        required
+      >
+
+      <button id="passwordButton" disabled>
+        Sign in
+      </button>
+    </form>
+
+    <p id="loginStatus" role="status"></p>
 
     <button id="switchAccount" hidden>
       Sign out / use another account
@@ -187,106 +266,292 @@
     <header>
       <div>
         <h1>Repeat Contact Dashboard</h1>
-        <p id="account"></p>
+        <div id="account"></div>
       </div>
 
-      <div>
-        <button id="refresh">Refresh data</button>
-        <button id="signOut">Sign out</button>
+      <div class="flex">
+        <button id="refresh">Refresh</button>
+        <button id="logout">Sign out</button>
       </div>
     </header>
 
     <main>
-      <div class="notice" id="notice">
-        LIVE DATA TEST · READ ONLY
+      <div class="notice">
+        Assignment mode: PAUSED.
+        Stage 1: user management only.
+        Go Live, manual assignment, case status, remarks and
+        Sheet history are not implemented yet.
+        The source report remains read-only.
       </div>
 
-      <section class="cards" id="cards"></section>
+      <div class="flex" style="margin-bottom:18px">
+        <button id="reportTab">Report</button>
 
-      <section class="panel">
-        <div class="filters">
-          <input id="search" type="search"
-            placeholder="Search phone, email, name or handler">
+        <button id="usersTab" hidden>
+          User management
+        </button>
+      </div>
 
-          <input id="date" type="date"
-            aria-label="Reporting date">
+      <p id="status"
+         role="status"
+         aria-live="polite"></p>
 
-          <select id="channel" aria-label="Channel">
-            <option value="">All channels</option>
-            <option>CALL</option>
-            <option>EMAIL</option>
-            <option>CHAT</option>
-          </select>
+      <section id="report">
+        <div id="cards" class="cards"></div>
 
-          <button id="clear">Clear filters</button>
+        <div class="panel">
+          <div class="flex">
+            <input
+              id="search"
+              placeholder="Search phone, email, name or handler"
+            >
+
+            <input
+              id="date"
+              type="date"
+              aria-label="Reporting date"
+            >
+
+            <select id="channel" aria-label="Channel">
+              <option value="">All channels</option>
+              <option>CALL</option>
+              <option>EMAIL</option>
+              <option>CHAT</option>
+            </select>
+
+            <button id="clear">Clear filters</button>
+          </div>
+
+          <div class="scroll" style="margin-top:18px">
+            <table>
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>WEEKDAY</th>
+                  <th>CHANNEL</th>
+                  <th>CUSTOMER</th>
+                  <th>CONTACTS</th>
+                  <th>FIRST — IST</th>
+                  <th>LAST — IST</th>
+                  <th>SOURCE HANDLER</th>
+                  <th>DETAILS</th>
+                </tr>
+              </thead>
+
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+
+          <p id="reportInfo"></p>
+        </div>
+      </section>
+
+      <section id="users" hidden>
+        <div class="panel">
+          <h2>Add / approve user</h2>
+
+          <p>
+            Select a login method for this user.
+            Agent customer access remains blocked until
+            case assignment is implemented.
+          </p>
+
+          <form id="createUser">
+            <div class="grid">
+              <label>
+                Name
+                <input id="newName" maxlength="100" required>
+              </label>
+
+              <label>
+                Agent ID — internal identifier
+                <input id="newAgent" maxlength="50" required>
+              </label>
+
+              <label>
+                Role
+                <select id="newRole">
+                  <option value="agent">Agent</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </label>
+
+              <label>
+                Login method
+                <select id="newMethod">
+                  <option value="google">
+                    Google work account
+                  </option>
+
+                  <option value="password">
+                    Login ID and password
+                  </option>
+                </select>
+              </label>
+
+              <label id="emailField">
+                Approved work email
+                <input id="newEmail" type="email" required>
+              </label>
+
+              <label id="idField" hidden>
+                Login ID
+                <input
+                  id="newId"
+                  autocomplete="off"
+                  placeholder="e.g. agent01"
+                >
+              </label>
+
+              <label id="passField" hidden>
+                Initial password
+
+                <input
+                  id="newPassword"
+                  type="password"
+                  autocomplete="new-password"
+                  minlength="12"
+                  maxlength="128"
+                >
+
+                <small>
+                  12–128 characters: uppercase, lowercase,
+                  number and symbol.
+                </small>
+              </label>
+            </div>
+
+            <p>
+              Administrators can see all report records and
+              manage other users. New accounts are active
+              after creation.
+            </p>
+
+            <button id="createButton" class="primary">
+              Review and create user
+            </button>
+          </form>
         </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>REPORTING DATE</th>
-                <th>WEEKDAY</th>
-                <th>CHANNEL</th>
-                <th>CUSTOMER</th>
-                <th>CONTACTS</th>
-                <th>FIRST CONTACT — IST</th>
-                <th>LAST CONTACT — IST</th>
-                <th>CASE HANDLER</th>
-                <th>DETAILS</th>
-              </tr>
-            </thead>
+        <div class="panel">
+          <h2>Application users</h2>
 
-            <tbody id="rows"></tbody>
-          </table>
+          <button id="reloadUsers">
+            Refresh users
+          </button>
+
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>AGENT ID</th>
+                  <th>ROLE</th>
+                  <th>LOGIN METHOD</th>
+                  <th>EMAIL / LOGIN ID</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+
+              <tbody id="userRows"></tbody>
+            </table>
+          </div>
         </div>
-
-        <div id="footer"></div>
       </section>
     </main>
   </div>
 
+  <dialog id="resetDialog">
+    <form id="resetForm">
+      <h2>Reset password</h2>
+
+      <p id="resetName"></p>
+
+      <label>
+        New password
+
+        <input
+          id="replacementPassword"
+          type="password"
+          autocomplete="new-password"
+          minlength="12"
+          maxlength="128"
+          required
+        >
+      </label>
+
+      <p>
+        Use uppercase, lowercase, a number and a symbol.
+        Existing sessions will be revoked.
+        Share the replacement privately.
+      </p>
+
+      <button class="primary">
+        Confirm password reset
+      </button>
+
+      <button type="button" id="cancelReset">
+        Cancel
+      </button>
+    </form>
+  </dialog>
+
   <script type="module">
     const $ = id => document.getElementById(id);
 
-    const escapeHTML = value => String(value ?? "")
-      .replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      })[char]);
-
-    let auth;
-    let records = [];
-    let fetchedAt = "";
-    let requestVersion = 0;
-    let refreshing = false;
-
-    function message(text, error = false) {
-      $("message").textContent = text;
-      $("message").classList.toggle("error", error);
+    function escapeHTML(value) {
+      return String(value ?? "").replace(
+        /[&<>"']/g,
+        character => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        })[character]
+      );
     }
 
-    async function api(path) {
+    let auth;
+    let me;
+    let records = [];
+    let users = [];
+    let generation = 0;
+    let resetTarget = null;
+    let busy = false;
+
+    function status(text, error = false) {
+      $("status").textContent = text;
+      $("status").classList.toggle("error", error);
+    }
+
+    async function api(path, options = {}) {
       if (!auth.currentUser) {
         throw new Error("Please sign in.");
       }
 
       const token = await auth.currentUser.getIdToken();
+
       const controller = new AbortController();
 
       const timer = setTimeout(
         () => controller.abort(),
-        25000
+        30000
       );
 
       try {
         const response = await fetch(path, {
+          ...options,
+
           headers: {
-            Authorization: "Bearer " + token
+            Authorization: "Bearer " + token,
+
+            ...(options.body
+              ? { "Content-Type": "application/json" }
+              : {})
           },
+
           cache: "no-store",
           signal: controller.signal
         });
@@ -296,8 +561,8 @@
 
         if (!type.includes("application/json")) {
           throw new Error(
-            "The backend is not deployed correctly. " +
-            "Check the /api files and Vercel deployment."
+            "Backend returned a non-JSON response. " +
+            "Check Vercel runtime logs."
           );
         }
 
@@ -316,35 +581,66 @@
       }
     }
 
-    function render() {
-      const query = $("search").value.trim().toLowerCase();
+    function postUser(body) {
+      return api("/api/users", {
+        method: "POST",
+        body: JSON.stringify(body)
+      });
+    }
+
+    function passwordValid(password) {
+      return (
+        password.length >= 12 &&
+        password.length <= 128 &&
+        /[a-z]/.test(password) &&
+        /[A-Z]/.test(password) &&
+        /[0-9]/.test(password) &&
+        /[^A-Za-z0-9]/.test(password)
+      );
+    }
+
+    function renderReport() {
+      const query =
+        $("search").value.trim().toLowerCase();
 
       const filtered = records.filter(row =>
-        (!$("date").value || row.date === $("date").value) &&
-        (!$("channel").value ||
-          row.channel === $("channel").value) &&
-        (!query ||
+        (
+          !$("date").value ||
+          row.date === $("date").value
+        ) &&
+        (
+          !$("channel").value ||
+          row.channel === $("channel").value
+        ) &&
+        (
+          !query ||
           [
             row.identity,
             row.customer,
             row.handler,
             row.ticket
-          ].join(" ").toLowerCase().includes(query))
+          ].join(" ").toLowerCase().includes(query)
+        )
       );
 
       const stats = [
-        ["Displayed case entries", filtered.length],
-        ["Call entries",
-          filtered.filter(r => r.channel === "CALL").length],
-        ["Email entries",
-          filtered.filter(r => r.channel === "EMAIL").length],
-        ["Chat entries",
-          filtered.filter(r => r.channel === "CHAT").length]
+        ["Displayed entries", filtered.length],
+
+        ...["CALL", "EMAIL", "CHAT"].map(channel => [
+          channel + " entries",
+          filtered.filter(
+            row => row.channel === channel
+          ).length
+        ])
       ];
 
-      $("cards").innerHTML = stats.map(([label, number]) =>
-        `<div class="card"><span>${escapeHTML(label)}</span>` +
-        `<strong>${number}</strong></div>`
+      $("cards").innerHTML = stats.map(
+        ([label, number]) => `
+          <div class="card">
+            ${escapeHTML(label)}
+            <strong>${number}</strong>
+          </div>
+        `
       ).join("");
 
       $("rows").innerHTML = filtered.map(row => `
@@ -352,158 +648,423 @@
           <td>${escapeHTML(row.date)}</td>
           <td>${escapeHTML(row.weekday)}</td>
           <td>${escapeHTML(row.channel)}</td>
+
           <td>
             ${escapeHTML(row.identity)}
+            <br>
             <small>${escapeHTML(row.customer)}</small>
           </td>
+
           <td>${row.count}</td>
-          <td>${escapeHTML(row.first || "Unavailable")}</td>
-          <td>${escapeHTML(row.last || "Unavailable")}</td>
-          <td>${escapeHTML(row.handler || "Unassigned")}</td>
+
           <td>
-            <button data-detail="${row.id}">View</button>
+            ${escapeHTML(row.first || "Unavailable")}
+          </td>
+
+          <td>
+            ${escapeHTML(row.last || "Unavailable")}
+          </td>
+
+          <td>
+            ${escapeHTML(row.handler || "Unassigned")}
+          </td>
+
+          <td>
+            <button data-detail="${row.id}">
+              View
+            </button>
           </td>
         </tr>
 
-        <tr class="details" id="detail-${row.id}" hidden>
-          <td colspan="9">
-            <div>
-              Disposition:
-              ${escapeHTML(row.disposition || "Not available")}
-            </div>
+        <tr id="detail-${row.id}" hidden>
+          <td colspan="9" class="details">
+            Disposition:
+            ${escapeHTML(row.disposition || "Unavailable")}
 
-            <div>
-              Form submitter / ticket owner:
-              ${escapeHTML(row.owner || "Not available")}
-            </div>
+            <br>
 
-            <div>
-              Form time — IST / Ticket modified — API raw:
-              ${escapeHTML(row.modified || "Not available")}
-            </div>
+            Source owner:
+            ${escapeHTML(row.owner || "Unavailable")}
 
-            <div>
-              Marvin ticket:
-              ${escapeHTML(row.ticket || "Not available")}
-            </div>
+            <br>
 
-            <div>
-              Workflow status and remarks: not connected.
-            </div>
+            Form time — IST / Ticket modified — API raw:
+            ${escapeHTML(row.modified || "Unavailable")}
+
+            <br>
+
+            Marvin ticket:
+            ${escapeHTML(row.ticket || "Unavailable")}
+
+            <br>
+
+            Workflow status and remarks: not enabled.
           </td>
         </tr>
       `).join("") ||
-        '<tr><td colspan="9">No matching report records.</td></tr>';
-
-      const fetched = fetchedAt
-        ? new Date(fetchedAt).toLocaleString("en-GB", {
-            timeZone: "Asia/Kolkata",
-            hour12: false
-          }) + " IST"
-        : "Not fetched";
-
-      $("footer").textContent =
-        `${filtered.length} displayed / ${records.length} loaded. ` +
-        `Fetched from Sheet: ${fetched}. ` +
-        "This is not the source-sync completion time.";
+        '<tr><td colspan="9">No visible records.</td></tr>';
     }
 
-    async function load() {
-      if (refreshing || !auth.currentUser) return;
+    async function loadReport() {
+      const currentGeneration = generation;
 
-      refreshing = true;
-      $("refresh").disabled = true;
+      const result = await api("/api/cases");
 
-      const version = ++requestVersion;
-      const uid = auth.currentUser.uid;
+      if (currentGeneration !== generation) {
+        return;
+      }
+
+      records = result.cases;
+      renderReport();
+
+      const fetched = new Date(
+        result.fetchedAt
+      ).toLocaleString("en-GB", {
+        timeZone: "Asia/Kolkata"
+      });
+
+      $("reportInfo").textContent =
+        result.warning +
+        " Loaded " + records.length + " entries." +
+        " Fetched " + fetched + " IST." +
+        " This is not the source-sync completion time." +
+        (
+          result.possiblyTruncated
+            ? " Read limit reached; data may be truncated."
+            : ""
+        );
+    }
+
+    async function loadUsers() {
+      const currentGeneration = generation;
+      const result = await api("/api/users");
+
+      if (currentGeneration !== generation) {
+        return;
+      }
+
+      users = result.users;
+
+      $("userRows").innerHTML = users.map(user => {
+        const protectedAccount =
+          user.bootstrap || user.uid === me.uid;
+
+        const actions = protectedAccount
+          ? "Protected"
+          : `
+            <button data-active="${escapeHTML(user.uid)}">
+              ${user.active ? "Deactivate" : "Activate"}
+            </button>
+
+            ${
+              user.loginMethod === "password"
+                ? `
+                  <button data-reset="${escapeHTML(user.uid)}">
+                    Reset password
+                  </button>
+                `
+                : ""
+            }
+          `;
+
+        return `
+          <tr>
+            <td>${escapeHTML(user.name)}</td>
+            <td>${escapeHTML(user.agentId)}</td>
+            <td>${escapeHTML(user.role)}</td>
+            <td>${escapeHTML(user.loginMethod)}</td>
+
+            <td>
+              ${escapeHTML(user.loginId || user.email)}
+            </td>
+
+            <td>${user.active ? "Active" : "Inactive"}</td>
+            <td>${actions}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function showTab(showUsers) {
+      $("users").hidden = !showUsers;
+      $("report").hidden = showUsers;
+    }
+
+    function updateMethodFields() {
+      const isPassword =
+        $("newMethod").value === "password";
+
+      $("emailField").hidden = isPassword;
+      $("idField").hidden = !isPassword;
+      $("passField").hidden = !isPassword;
+
+      $("newEmail").required = !isPassword;
+      $("newId").required = isPassword;
+      $("newPassword").required = isPassword;
+    }
+
+    $("newMethod").onchange = updateMethodFields;
+
+    $("reportTab").onclick = () => {
+      showTab(false);
+    };
+
+    $("usersTab").onclick = async () => {
+      showTab(true);
 
       try {
-        const identity = await api("/api/me");
-
-        if (
-          version !== requestVersion ||
-          auth.currentUser?.uid !== uid
-        ) return;
-
-        const result = await api("/api/cases");
-
-        if (
-          version !== requestVersion ||
-          auth.currentUser?.uid !== uid
-        ) return;
-
-        if (!Array.isArray(result.cases)) {
-          throw new Error("Invalid report response.");
-        }
-
-        records = result.cases;
-        fetchedAt = result.fetchedAt;
-
-        $("account").textContent =
-          identity.user.email + " · Read-only administrator test";
-
-        $("notice").textContent =
-          "LIVE SHEET DATA · READ ONLY. " +
-          result.warning +
-          (result.possiblyTruncated
-            ? " Read limit reached: the report may be truncated."
-            : "");
-
-        $("login").hidden = true;
-        $("app").hidden = false;
-
-        render();
-
+        await loadUsers();
       } catch (error) {
-        if (
-          version !== requestVersion ||
-          auth.currentUser?.uid !== uid
-        ) return;
+        status(error.message, true);
+      }
+    };
 
-        // Fail closed: never fall back to sample/private data.
-        records = [];
-        $("rows").innerHTML = "";
-        $("cards").innerHTML = "";
-        $("app").hidden = true;
-        $("login").hidden = false;
-        $("switchAccount").hidden = !auth.currentUser;
+    $("reloadUsers").onclick = async () => {
+      try {
+        await loadUsers();
+        status("User list refreshed.");
+      } catch (error) {
+        status(error.message, true);
+      }
+    };
 
-        message(
-          error.name === "AbortError"
-            ? "The report request timed out. Please retry."
-            : error.message,
-          true
-        );
+    $("refresh").onclick = async () => {
+      $("refresh").disabled = true;
 
+      try {
+        await loadReport();
+        status("Report refreshed.");
+      } catch (error) {
+        status(error.message, true);
       } finally {
-        refreshing = false;
         $("refresh").disabled = false;
       }
-    }
-
-    $("rows").addEventListener("click", event => {
-      const button = event.target.closest("[data-detail]");
-      if (!button) return;
-
-      const row = $("detail-" + button.dataset.detail);
-      row.hidden = !row.hidden;
-
-      button.textContent = row.hidden ? "View" : "Hide";
-    });
+    };
 
     ["search", "date", "channel"].forEach(id => {
-      $(id).addEventListener("input", render);
+      $(id).oninput = renderReport;
     });
 
-    $("clear").addEventListener("click", () => {
+    $("clear").onclick = () => {
       ["search", "date", "channel"].forEach(id => {
         $(id).value = "";
       });
 
-      render();
+      renderReport();
+    };
+
+    $("rows").onclick = event => {
+      const button = event.target.closest(
+        "[data-detail]"
+      );
+
+      if (!button) {
+        return;
+      }
+
+      const row = $(
+        "detail-" + button.dataset.detail
+      );
+
+      row.hidden = !row.hidden;
+      button.textContent = row.hidden ? "View" : "Hide";
+    };
+
+    $("createUser").onsubmit = async event => {
+      event.preventDefault();
+
+      if (busy) {
+        return;
+      }
+
+      const method = $("newMethod").value;
+
+      const body = {
+        action: "create",
+        name: $("newName").value.trim(),
+        agentId: $("newAgent").value.trim(),
+        role: $("newRole").value,
+        loginMethod: method
+      };
+
+      if (method === "google") {
+        body.email =
+          $("newEmail").value.trim().toLowerCase();
+
+      } else {
+        body.loginId =
+          $("newId").value.trim().toLowerCase();
+
+        body.password = $("newPassword").value;
+
+        if (!passwordValid(body.password)) {
+          status(
+            "Use 12–128 characters with uppercase, " +
+            "lowercase, a number and a symbol.",
+            true
+          );
+
+          return;
+        }
+      }
+
+      const approved = confirm(
+        "Create / approve this active account?\n\n" +
+        "Name: " + body.name + "\n" +
+        "Agent ID: " + body.agentId + "\n" +
+        "Role: " + body.role + "\n" +
+        "Login method: " + method + "\n" +
+        "Identity: " + (body.email || body.loginId) + "\n\n" +
+        "The password will not be displayed again."
+      );
+
+      if (!approved) {
+        return;
+      }
+
+      busy = true;
+      $("createButton").disabled = true;
+
+      try {
+        const result = await postUser(body);
+
+        $("createUser").reset();
+        updateMethodFields();
+
+        status(result.message);
+        await loadUsers();
+
+      } catch (error) {
+        status(
+          error.message +
+          " If the request timed out, refresh the user " +
+          "list before retrying.",
+          true
+        );
+
+      } finally {
+        delete body.password;
+        $("newPassword").value = "";
+        busy = false;
+        $("createButton").disabled = false;
+      }
+    };
+
+    $("userRows").onclick = async event => {
+      if (busy) {
+        return;
+      }
+
+      const resetButton = event.target.closest(
+        "[data-reset]"
+      );
+
+      if (resetButton) {
+        resetTarget = users.find(
+          user => user.uid === resetButton.dataset.reset
+        );
+
+        $("resetName").textContent =
+          resetTarget.name +
+          " (" + resetTarget.loginId + ")";
+
+        $("resetForm").reset();
+        $("resetDialog").showModal();
+        return;
+      }
+
+      const activeButton = event.target.closest(
+        "[data-active]"
+      );
+
+      if (!activeButton) {
+        return;
+      }
+
+      const user = users.find(
+        item => item.uid === activeButton.dataset.active
+      );
+
+      const approved = confirm(
+        (user.active ? "Deactivate " : "Activate ") +
+        user.name +
+        " (" + (user.loginId || user.email) + ")?"
+      );
+
+      if (!approved) {
+        return;
+      }
+
+      busy = true;
+
+      try {
+        const result = await postUser({
+          action: "active",
+          uid: user.uid,
+          active: !user.active
+        });
+
+        status(result.message);
+        await loadUsers();
+
+      } catch (error) {
+        status(error.message, true);
+      } finally {
+        busy = false;
+      }
+    };
+
+    $("cancelReset").onclick = () => {
+      $("replacementPassword").value = "";
+      resetTarget = null;
+      $("resetDialog").close();
+    };
+
+    $("resetDialog").addEventListener("close", () => {
+      $("replacementPassword").value = "";
+      resetTarget = null;
     });
 
-    $("refresh").addEventListener("click", load);
+    $("resetForm").onsubmit = async event => {
+      event.preventDefault();
+
+      if (busy || !resetTarget) {
+        return;
+      }
+
+      const password =
+        $("replacementPassword").value;
+
+      if (!passwordValid(password)) {
+        alert(
+          "Use 12–128 characters with uppercase, " +
+          "lowercase, a number and a symbol."
+        );
+
+        return;
+      }
+
+      busy = true;
+
+      try {
+        const result = await postUser({
+          action: "resetPassword",
+          uid: resetTarget.uid,
+          password
+        });
+
+        $("resetDialog").close();
+        status(result.message);
+
+      } catch (error) {
+        $("resetDialog").close();
+        status(error.message, true);
+
+      } finally {
+        busy = false;
+        $("replacementPassword").value = "";
+      }
+    };
 
     try {
       const { initializeApp } = await import(
@@ -514,6 +1075,7 @@
         getAuth,
         GoogleAuthProvider,
         signInWithPopup,
+        signInWithEmailAndPassword,
         onAuthStateChanged,
         signOut,
         setPersistence,
@@ -522,17 +1084,21 @@
         "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js"
       );
 
-      const app = initializeApp({
+      const firebaseApp = initializeApp({
         apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
         authDomain: "repeat-contact-dashboard.firebaseapp.com",
         projectId: "repeat-contact-dashboard",
+
         storageBucket:
           "repeat-contact-dashboard.firebasestorage.app",
+
         messagingSenderId: "527535186997",
-        appId: "1:527535186997:web:fdd746c7a7428f6695bd7c"
+
+        appId:
+          "1:527535186997:web:fdd746c7a7428f6695bd7c"
       });
 
-      auth = getAuth(app);
+      auth = getAuth(firebaseApp);
 
       await setPersistence(
         auth,
@@ -545,70 +1111,147 @@
         prompt: "select_account"
       });
 
-      $("signIn").disabled = false;
-      $("signIn").textContent = "Continue with Google";
+      $("google").disabled = false;
+      $("google").textContent = "Continue with Google";
+      $("passwordButton").disabled = false;
 
-      $("signIn").addEventListener("click", async () => {
-        $("signIn").disabled = true;
+      $("google").onclick = async () => {
+        $("google").disabled = true;
 
         try {
-          if (auth.currentUser) {
-            await load();
-          } else {
-            await signInWithPopup(auth, provider);
-          }
+          await signInWithPopup(auth, provider);
 
         } catch (error) {
-          message(
-            "Sign-in failed: " +
-            (error.code || "unknown error"),
-            true
-          );
+          $("loginStatus").textContent =
+            "Google sign-in failed: " +
+            (error.code || "unknown");
 
         } finally {
-          $("signIn").disabled = false;
+          $("google").disabled = false;
         }
-      });
+      };
+
+      $("passwordLogin").onsubmit = async event => {
+        event.preventDefault();
+
+        const loginId =
+          $("loginId").value.trim().toLowerCase();
+
+        if (
+          !/^[a-z0-9][a-z0-9._-]{2,39}$/.test(loginId)
+        ) {
+          $("loginStatus").textContent =
+            "Enter your assigned Login ID.";
+
+          return;
+        }
+
+        $("passwordButton").disabled = true;
+
+        try {
+          await signInWithEmailAndPassword(
+            auth,
+
+            loginId +
+              "@repeat-contact-dashboard.firebaseapp.com",
+
+            $("loginPassword").value
+          );
+
+        } catch {
+          $("loginStatus").textContent =
+            "Sign-in failed. Check your Login ID/password " +
+            "and account activation.";
+
+        } finally {
+          $("loginPassword").value = "";
+          $("passwordButton").disabled = false;
+        }
+      };
 
       async function logout() {
         try {
           await signOut(auth);
         } catch {
-          message("Sign-out failed. Please retry.", true);
+          status("Sign-out failed. Please retry.", true);
         }
       }
 
-      $("signOut").addEventListener("click", logout);
-      $("switchAccount").addEventListener("click", logout);
+      $("logout").onclick = logout;
+      $("switchAccount").onclick = logout;
 
-      onAuthStateChanged(auth, user => {
-        requestVersion++;
+      onAuthStateChanged(auth, async user => {
+        const currentGeneration = ++generation;
+
+        me = null;
         records = [];
-
-        $("app").hidden = true;
-        $("login").hidden = false;
+        users = [];
 
         $("rows").innerHTML = "";
         $("cards").innerHTML = "";
+        $("userRows").innerHTML = "";
+        $("reportInfo").textContent = "";
+        $("status").textContent = "";
 
+        $("app").hidden = true;
+        $("login").hidden = false;
         $("switchAccount").hidden = !user;
 
-        if (user) {
-          $("signIn").textContent = "Retry report connection";
-          message("Checking access and reading the private Sheet…");
-          load();
+        if ($("resetDialog").open) {
+          $("resetDialog").close();
+        }
 
-        } else {
-          $("signIn").textContent = "Continue with Google";
-          message("Sign in with the configured test administrator.");
+        if (!user) {
+          $("loginStatus").textContent =
+            "Sign in with an approved account.";
+
+          return;
+        }
+
+        $("loginStatus").textContent =
+          "Checking account access…";
+
+        try {
+          const result = await api("/api/me");
+
+          if (currentGeneration !== generation) {
+            return;
+          }
+
+          me = result.user;
+
+          $("account").textContent =
+            me.name + " · " +
+            (me.loginId || me.email) + " · " +
+            me.role;
+
+          $("usersTab").hidden = me.role !== "admin";
+
+          showTab(false);
+
+          $("login").hidden = true;
+          $("app").hidden = false;
+
+          await loadReport();
+
+        } catch (error) {
+          if (currentGeneration !== generation) {
+            return;
+          }
+
+          if (me) {
+            status(error.message, true);
+          } else {
+            $("loginStatus").textContent =
+              error.message;
+          }
         }
       });
 
     } catch {
-      message(
-        "Firebase could not initialise. Check SDK loading and configuration.",
-        true
-      );
+      $("loginStatus").textContent =
+        "Firebase could not initialise. " +
+        "Check SDK loading and configuration.";
     }
   </script>
 </body>
