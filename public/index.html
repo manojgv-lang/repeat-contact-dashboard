@@ -1591,3 +1591,26 @@
           if (currentGeneration !== generation) {
             return;
           }
+
+          if (me) {
+            status(error.message, true);
+          } else {
+            $("loginStatus").textContent =
+              error.message;
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error(
+        "Frontend initialisation failed:",
+        error?.code || error?.name || "unknown"
+      );
+
+      $("loginStatus").textContent =
+        "Firebase could not initialise. " +
+        "Check the browser Console and Firebase SDK requests.";
+    }
+  </script>
+</body>
+</html>
