@@ -7,504 +7,500 @@
 
 <style>
 :root {
-  --ink: #172b40;
-  --muted: #68798c;
-  --line: #e3eaf0;
-  --bg: #f3f6fa;
-  --brand: #087f78;
-  --nav: #102b37;
-  --shadow: 0 6px 22px #182e4010;
+  --ink:#172b40;
+  --muted:#68798c;
+  --line:#e3eaf0;
+  --bg:#f3f6fa;
+  --brand:#087f78;
+  --nav:#102b37;
+  --shadow:0 6px 22px #182e4010;
 }
 
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
+* { box-sizing:border-box; }
+[hidden] { display:none !important; }
 
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font: 14px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:14px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
-button, input, select, textarea {
-  font: inherit;
-  color: inherit;
-  border: 1px solid #d5dfe7;
-  border-radius: 9px;
-  padding: 10px 13px;
-  background: white;
+button,input,select,textarea {
+  font:inherit;
+  color:inherit;
+  border:1px solid #d5dfe7;
+  border-radius:9px;
+  padding:10px 13px;
+  background:white;
 }
 
-button {
-  cursor: pointer;
-  font-weight: 600;
-}
-
-button:hover:not(:disabled) { background: #edf5f5; }
-button:disabled { opacity: .5; cursor: not-allowed; }
+button { cursor:pointer; font-weight:600; }
+button:hover:not(:disabled) { background:#edf5f5; }
+button:disabled { opacity:.5; cursor:not-allowed; }
 
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 3px solid #3bbcac70;
-  outline-offset: 2px;
+  outline:3px solid #3bbcac70;
+  outline-offset:2px;
 }
 
 .primary {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: white;
+  background:var(--brand);
+  border-color:var(--brand);
+  color:white;
 }
 
-.primary:hover:not(:disabled) { background: #066a64; }
-.danger { color: #b42318; border-color: #efc3c0; }
+.primary:hover:not(:disabled) { background:#066a64; }
+.danger { color:#b42318; border-color:#efc3c0; }
 
-h1, h2, h3, p { margin-top: 0; }
-h1 { font-size: 27px; letter-spacing: -.7px; margin-bottom: 6px; }
-h2 { font-size: 21px; }
-small, .muted { color: var(--muted); }
+h1,h2,h3,p { margin-top:0; }
+h1 { font-size:27px; letter-spacing:-.7px; margin-bottom:6px; }
+h2 { font-size:21px; }
+small,.muted { color:var(--muted); }
 
 .topbar {
-  padding: 18px 28px;
-  background: var(--nav);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
+  padding:18px 28px;
+  background:var(--nav);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
 }
 
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand { display:flex; align-items:center; gap:12px; }
 
 .monogram {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  background: #ffffff16;
-  color: #70e1cc;
-  font-weight: 800;
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:#ffffff16;
+  color:#70e1cc;
+  font-weight:800;
 }
 
-.brand strong { display: block; font-size: 17px; }
-.brand small { color: #b6cbd5; font-size: 12px; }
+.brand strong { display:block; font-size:17px; }
+.brand small { color:#b6cbd5; font-size:12px; }
 
 .top-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 .topbar button {
-  background: #ffffff12;
-  color: white;
-  border-color: #ffffff30;
+  background:#ffffff12;
+  color:white;
+  border-color:#ffffff30;
 }
 
-.topbar button:hover:not(:disabled) { background: #ffffff22; }
+.topbar button:hover:not(:disabled) { background:#ffffff22; }
 
 #account {
-  color: #d9e8ee;
-  font-size: 12px;
-  max-width: 460px;
-  overflow-wrap: anywhere;
+  color:#d9e8ee;
+  font-size:12px;
+  max-width:460px;
+  overflow-wrap:anywhere;
 }
 
-.shell { max-width: 1600px; margin: auto; padding: 28px; }
+.shell { max-width:1600px; margin:auto; padding:28px; }
 
 .heading {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-bottom: 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:18px;
+  flex-wrap:wrap;
+  margin-bottom:22px;
 }
 
 .eyebrow {
-  color: var(--brand);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-size: 11px;
-  font-weight: 800;
-  margin-bottom: 8px;
+  color:var(--brand);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  font-size:11px;
+  font-weight:800;
+  margin-bottom:8px;
 }
 
 .panel {
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 15px;
-  box-shadow: var(--shadow);
-  margin-bottom: 20px;
-  overflow: hidden;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:15px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+  overflow:hidden;
 }
 
-.panel-pad { padding: 23px; }
+.panel-pad { padding:23px; }
 
 .tabs {
-  display: flex;
-  gap: 6px;
-  padding: 6px;
-  background: #e8eef3;
-  border-radius: 12px;
-  width: max-content;
-  max-width: 100%;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+  display:flex;
+  gap:6px;
+  padding:6px;
+  background:#e8eef3;
+  border-radius:12px;
+  width:max-content;
+  max-width:100%;
+  flex-wrap:wrap;
+  margin-bottom:20px;
 }
 
 .tabs button {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  padding: 11px 18px;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:11px 18px;
 }
 
 .tabs button.active {
-  background: white;
-  color: var(--ink);
-  box-shadow: 0 2px 7px #102b3710;
+  background:white;
+  color:var(--ink);
+  box-shadow:0 2px 7px #102b3710;
 }
 
 .tab-count {
-  font-size: 11px;
-  background: #e9f0f4;
-  padding: 2px 7px;
-  border-radius: 20px;
-  margin-left: 5px;
+  font-size:11px;
+  background:#e9f0f4;
+  padding:2px 7px;
+  border-radius:20px;
+  margin-left:5px;
 }
 
 .cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin-bottom: 22px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:22px;
 }
 
 .card {
-  padding: 19px 21px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: white;
-  box-shadow: var(--shadow);
-  position: relative;
+  padding:19px 21px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:white;
+  box-shadow:var(--shadow);
+  position:relative;
 }
 
 .card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 20px;
-  bottom: 20px;
-  width: 3px;
-  border-radius: 4px;
-  background: var(--accent, #087f78);
+  content:"";
+  position:absolute;
+  left:0;
+  top:20px;
+  bottom:20px;
+  width:3px;
+  border-radius:4px;
+  background:var(--accent,#087f78);
 }
 
-.card-label { color: var(--muted); font-size: 12px; }
+.card-label { color:var(--muted); font-size:12px; }
 
 .card strong {
-  display: block;
-  font-size: 30px;
-  letter-spacing: -1px;
-  margin: 7px 0;
+  display:block;
+  font-size:30px;
+  letter-spacing:-1px;
+  margin:7px 0;
 }
 
-.card small { font-size: 11px; }
+.card small { font-size:11px; }
 
 .filters {
-  padding: 18px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  border-bottom: 1px solid var(--line);
+  padding:18px 20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
 }
 
-#search { flex: 1; min-width: 230px; }
+#search { flex:1; min-width:230px; }
 
 .list-heading {
-  padding: 17px 21px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  padding:17px 21px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
 }
 
-.list-heading h2 { font-size: 15px; margin: 0; }
-.scroll { overflow: auto; }
-table { width: 100%; border-collapse: collapse; }
+.list-heading h2 { font-size:15px; margin:0; }
+.scroll { overflow:auto; }
+table { width:100%; border-collapse:collapse; }
 
 th {
-  text-align: left;
-  background: #f7f9fc;
-  color: #718194;
-  font-size: 10px;
-  letter-spacing: .7px;
-  padding: 13px 16px;
-  white-space: nowrap;
+  text-align:left;
+  background:#f7f9fc;
+  color:#718194;
+  font-size:10px;
+  letter-spacing:.7px;
+  padding:13px 16px;
+  white-space:nowrap;
 }
 
 td {
-  padding: 16px;
-  border-bottom: 1px solid #edf1f5;
-  vertical-align: middle;
-  font-size: 12px;
+  padding:16px;
+  border-bottom:1px solid #edf1f5;
+  vertical-align:middle;
+  font-size:12px;
 }
 
-tbody tr.case-row:hover { background: #fcfefe; }
+tbody tr.case-row:hover { background:#fcfefe; }
 
 td.customer {
-  min-width: 200px;
-  max-width: 280px;
-  overflow-wrap: anywhere;
+  min-width:200px;
+  max-width:280px;
+  overflow-wrap:anywhere;
 }
 
-.customer strong { display: block; font-size: 12px; margin-bottom: 5px; }
-.customer small { display: block; }
-.date-cell { white-space: nowrap; }
-.assignee { max-width: 170px; overflow-wrap: anywhere; }
+.customer strong { display:block; font-size:12px; margin-bottom:5px; }
+.customer small { display:block; }
+.date-cell { white-space:nowrap; }
+.assignee { max-width:170px; overflow-wrap:anywhere; }
 
 .latest {
-  min-width: 130px;
-  max-width: 240px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  color: var(--muted);
+  min-width:130px;
+  max-width:240px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  color:var(--muted);
 }
 
-.latest:empty::after { content: "—"; }
+.latest:empty::after { content:"—"; }
 
 .row-actions {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-  min-width: 225px;
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-wrap:wrap;
+  min-width:225px;
 }
 
-.row-actions button { font-size: 11px; padding: 8px 10px; }
+.row-actions button { font-size:11px; padding:8px 10px; }
 
 .row-actions .assign-button {
-  color: var(--brand);
-  background: #effaf7;
-  border-color: #cfe9e2;
+  color:var(--brand);
+  background:#effaf7;
+  border-color:#cfe9e2;
 }
 
 .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 30px;
-  padding: 5px 9px;
-  font-size: 10px;
-  font-weight: 750;
-  white-space: nowrap;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  border-radius:30px;
+  padding:5px 9px;
+  font-size:10px;
+  font-weight:750;
+  white-space:nowrap;
 }
 
 .badge::before {
-  content: "";
-  width: 5px;
-  height: 5px;
-  background: currentColor;
-  border-radius: 50%;
+  content:"";
+  width:5px;
+  height:5px;
+  background:currentColor;
+  border-radius:50%;
 }
 
-.s-open { background: #eaf1ff; color: #3465ba; }
-.s-follow-up { background: #fff5df; color: #9b6c0d; }
-.s-resolved { background: #e6f7ef; color: #16784b; }
-.s-closed { background: #edf0f4; color: #647384; }
+.s-open { background:#eaf1ff; color:#3465ba; }
+.s-follow-up { background:#fff5df; color:#9b6c0d; }
+.s-resolved { background:#e6f7ef; color:#16784b; }
+.s-closed { background:#edf0f4; color:#647384; }
 
 .channel {
-  font-size: 10px;
-  letter-spacing: .5px;
-  font-weight: 800;
-  color: #6b7e90;
+  font-size:10px;
+  letter-spacing:.5px;
+  font-weight:800;
+  color:#6b7e90;
 }
 
-.details-cell { padding: 20px; background: #f7fafc; }
+.details-cell { padding:20px; background:#f7fafc; }
 
 .detail-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 17px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:17px;
 }
 
-.detail-item { min-width: 0; overflow-wrap: anywhere; }
+.detail-item { min-width:0; overflow-wrap:anywhere; }
 
 .detail-item small {
-  display: block;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: .5px;
-  margin-bottom: 6px;
+  display:block;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  margin-bottom:6px;
 }
 
 .detail-item div {
-  font-size: 12px;
-  line-height: 1.6;
-  white-space: pre-wrap;
+  font-size:12px;
+  line-height:1.6;
+  white-space:pre-wrap;
 }
 
-.wide { grid-column: 1 / -1; }
+.wide { grid-column:1 / -1; }
 
 .footer {
-  padding: 14px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  padding:14px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
-.pager { display: flex; gap: 8px; align-items: center; }
-.pager button { font-size: 11px; padding: 7px 10px; }
-.empty { text-align: center; padding: 50px !important; color: var(--muted); }
+.pager { display:flex; gap:8px; align-items:center; }
+.pager button { font-size:11px; padding:7px 10px; }
+.empty { text-align:center; padding:50px !important; color:var(--muted); }
 
 #status {
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-  line-height: 1.6;
-  margin-bottom: 18px;
-  font-size: 13px;
+  white-space:pre-line;
+  overflow-wrap:anywhere;
+  line-height:1.6;
+  margin-bottom:18px;
+  font-size:13px;
 }
 
 #status:not(:empty) {
-  background: #e8f6ef;
-  border: 1px solid #cce7d9;
-  border-radius: 10px;
-  padding: 12px 16px;
+  background:#e8f6ef;
+  border:1px solid #cce7d9;
+  border-radius:10px;
+  padding:12px 16px;
 }
 
 #status.error {
-  background: #fff0ee;
-  border-color: #f1cfca;
-  color: #a33329;
+  background:#fff0ee;
+  border-color:#f1cfca;
+  color:#a33329;
 }
 
-.flex { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.flex { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
 }
 
-label { display: grid; gap: 7px; font-size: 12px; font-weight: 650; }
-input, select, textarea { min-width: 0; }
-label small { font-weight: 400; line-height: 1.6; }
+label { display:grid; gap:7px; font-size:12px; font-weight:650; }
+input,select,textarea { min-width:0; }
+label small { font-weight:400; line-height:1.6; }
 
 .notice {
-  padding: 14px 16px;
-  border-radius: 10px;
-  background: #fff8e9;
-  border: 1px solid #efdfba;
-  font-size: 12px;
-  line-height: 1.7;
-  margin: 16px 0;
+  padding:14px 16px;
+  border-radius:10px;
+  background:#fff8e9;
+  border:1px solid #efdfba;
+  font-size:12px;
+  line-height:1.7;
+  margin:16px 0;
 }
 
-.error { color: #b42318; }
-.user-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-.user-actions button { padding: 7px 9px; font-size: 11px; }
+.error { color:#b42318; }
+.user-actions { display:flex; gap:6px; flex-wrap:wrap; }
+.user-actions button { padding:7px 9px; font-size:11px; }
 
 #login {
-  max-width: 470px;
-  margin: 9vh auto;
-  padding: 32px;
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
+  max-width:470px;
+  margin:9vh auto;
+  padding:32px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:var(--shadow);
 }
 
-#login h1 { font-size: 25px; }
-#login input, #login button { width: 100%; margin-bottom: 12px; }
-#loginStatus { white-space: pre-line; line-height: 1.6; font-size: 12px; }
-#login .monogram { background: var(--nav); margin-bottom: 20px; }
-.separator { text-align: center; font-size: 12px; color: var(--muted); margin: 18px 0; }
+#login h1 { font-size:25px; }
+#login input,#login button { width:100%; margin-bottom:12px; }
+#loginStatus { white-space:pre-line; line-height:1.6; font-size:12px; }
+#login .monogram { background:var(--nav); margin-bottom:20px; }
+.separator { text-align:center; font-size:12px; color:var(--muted); margin:18px 0; }
 
 dialog {
-  width: min(720px, 95vw);
-  max-height: 90vh;
-  overflow: auto;
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  padding: 26px;
-  box-shadow: 0 24px 100px #0c263140;
+  width:min(720px,95vw);
+  max-height:90vh;
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:26px;
+  box-shadow:0 24px 100px #0c263140;
 }
 
 dialog::backdrop {
-  background: #0d26356b;
-  backdrop-filter: blur(3px);
+  background:#0d26356b;
+  backdrop-filter:blur(3px);
 }
 
-dialog h2 { margin-bottom: 7px; }
-dialog p { line-height: 1.7; }
-dialog select, dialog textarea, dialog input { width: 100%; }
-dialog textarea { min-height: 120px; resize: vertical; }
+dialog h2 { margin-bottom:7px; }
+dialog p { line-height:1.7; }
+dialog select,dialog textarea,dialog input { width:100%; }
+dialog textarea { min-height:120px; resize:vertical; }
 
 .modal-info {
-  padding: 16px;
-  background: #f5f8fb;
-  border-radius: 10px;
-  margin: 17px 0;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  line-height: 1.8;
-  font-size: 12px;
+  padding:16px;
+  background:#f5f8fb;
+  border-radius:10px;
+  margin:17px 0;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.8;
+  font-size:12px;
 }
 
 .modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 9px;
-  margin-top: 22px;
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  margin-top:22px;
 }
 
 .remark-block {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  font-size: 12px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  font-size:12px;
 }
 
-.timeline-entry { padding: 16px 0; border-bottom: 1px solid var(--line); }
-.timeline-entry small { display: block; margin-bottom: 6px; }
-.timeline-entry strong { display: block; font-size: 12px; margin-bottom: 7px; }
+.timeline-entry { padding:16px 0; border-bottom:1px solid var(--line); }
+.timeline-entry small { display:block; margin-bottom:6px; }
+.timeline-entry strong { display:block; font-size:12px; margin-bottom:7px; }
 
 .timeline-entry p {
-  margin: 6px 0 0;
-  font-size: 12px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  margin:6px 0 0;
+  font-size:12px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
 
-@media (max-width: 900px) {
-  .shell { padding: 18px; }
-  .cards { grid-template-columns: repeat(2, 1fr); }
-  .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .topbar { padding: 16px; }
+@media(max-width:900px) {
+  .shell { padding:18px; }
+  .cards { grid-template-columns:repeat(2,1fr); }
+  .detail-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .topbar { padding:16px; }
 }
 
-@media (max-width: 550px) {
-  .grid, .detail-grid { grid-template-columns: 1fr; }
-  .shell { padding: 12px; }
-  .heading { margin-top: 10px; }
-  h1 { font-size: 23px; }
-  .tabs { width: 100%; }
-  .tabs button { flex: 1; padding: 10px; }
-  .filters { padding: 13px; }
-  .filters > * { flex: 1; }
-  .card { padding: 15px; }
-  .card strong { font-size: 26px; }
-  #login { margin: 20px 12px; }
-  .top-actions { width: 100%; }
-  #account { flex: 1; }
-  dialog { padding: 20px; }
+@media(max-width:550px) {
+  .grid,.detail-grid { grid-template-columns:1fr; }
+  .shell { padding:12px; }
+  .heading { margin-top:10px; }
+  h1 { font-size:23px; }
+  .tabs { width:100%; }
+  .tabs button { flex:1; padding:10px; }
+  .filters { padding:13px; }
+  .filters > * { flex:1; }
+  .card { padding:15px; }
+  .card strong { font-size:26px; }
+  #login { margin:20px 12px; }
+  .top-actions { width:100%; }
+  #account { flex:1; }
+  dialog { padding:20px; }
 }
 </style>
 </head>
@@ -598,9 +594,7 @@ dialog textarea { min-height: 120px; resize: vertical; }
                  placeholder="Search customer, contact, user or remark"
                  aria-label="Search cases">
 
-          <input id="date"
-                 type="date"
-                 aria-label="Reporting date">
+          <input id="date" type="date" aria-label="Reporting date">
 
           <select id="channel" aria-label="Channel">
             <option value="">All channels</option>
@@ -642,7 +636,6 @@ dialog textarea { min-height: 120px; resize: vertical; }
                 <th>ACTIONS</th>
               </tr>
             </thead>
-
             <tbody id="rows"></tbody>
           </table>
         </div>
@@ -706,6 +699,11 @@ dialog textarea { min-height: 120px; resize: vertical; }
               <input id="newId"
                      autocomplete="off"
                      placeholder="e.g. agent01">
+
+              <small>
+                3–40 characters: lowercase letters, numbers,
+                dots, underscores or hyphens. No spaces.
+              </small>
             </label>
 
             <label id="passField" hidden>
@@ -714,12 +712,12 @@ dialog textarea { min-height: 120px; resize: vertical; }
               <input id="newPassword"
                      type="password"
                      autocomplete="new-password"
-                     minlength="12"
-                     maxlength="128">
+                     minlength="6"
+                     maxlength="4096">
 
               <small>
-                12–128 characters: uppercase, lowercase,
-                number and symbol.
+                6–4096 characters. No uppercase, number
+                or symbol requirement.
               </small>
             </label>
           </div>
@@ -761,7 +759,6 @@ dialog textarea { min-height: 120px; resize: vertical; }
                 <th>ACTIONS</th>
               </tr>
             </thead>
-
             <tbody id="userRows"></tbody>
           </table>
         </div>
@@ -779,7 +776,6 @@ dialog textarea { min-height: 120px; resize: vertical; }
 
     <label>
       Assign to
-
       <select id="assignUser" required>
         <option value="">Select active user</option>
       </select>
@@ -806,7 +802,6 @@ dialog textarea { min-height: 120px; resize: vertical; }
 
     <label>
       Status
-
       <select id="caseStatus">
         <option>Open</option>
         <option>Follow-up</option>
@@ -821,7 +816,6 @@ dialog textarea { min-height: 120px; resize: vertical; }
 
     <label>
       New remark
-
       <textarea id="remark"
                 maxlength="2000"
                 placeholder="Record your action or next follow-up"></textarea>
@@ -844,7 +838,6 @@ dialog textarea { min-height: 120px; resize: vertical; }
 <dialog id="historyDialog">
   <div class="eyebrow">Audit trail</div>
   <h2>Case history</h2>
-
   <div id="historyContent"></div>
 
   <div class="modal-footer">
@@ -859,24 +852,22 @@ dialog textarea { min-height: 120px; resize: vertical; }
 
     <label>
       New password
-
       <input id="replacementPassword"
              type="password"
              autocomplete="new-password"
-             minlength="12"
-             maxlength="128"
+             minlength="6"
+             maxlength="4096"
              required>
     </label>
 
     <p class="muted">
-      Use uppercase, lowercase, a number and a symbol.
+      6–4096 characters. No uppercase, number or symbol requirement.
       Existing sessions will be revoked.
       Share the replacement privately.
     </p>
 
     <div class="modal-footer">
       <button id="cancelReset" type="button">Cancel</button>
-
       <button id="resetSubmit" class="primary">
         Confirm password reset
       </button>
@@ -885,7 +876,7 @@ dialog textarea { min-height: 120px; resize: vertical; }
 </dialog>
 
 <script>
-window.addEventListener("error", function (event) {
+window.addEventListener("error", function(event) {
   const box = document.getElementById("loginStatus");
 
   if (box && document.getElementById("google").disabled) {
@@ -898,7 +889,7 @@ window.addEventListener("error", function (event) {
   }
 });
 
-window.addEventListener("unhandledrejection", function (event) {
+window.addEventListener("unhandledrejection", function(event) {
   const box = document.getElementById("loginStatus");
 
   if (box && document.getElementById("google").disabled) {
@@ -914,19 +905,23 @@ window.addEventListener("unhandledrejection", function (event) {
 <script type="module">
 const $ = id => document.getElementById(id);
 
-const escapeHTML = value => String(value ?? "").replace(
-  /[&<>"']/g,
-  character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[character]
-);
+function escapeHTML(value) {
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    character => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    })[character]
+  );
+}
 
-const COMPLETE = new Set(["Resolved", "Closed"]);
+const COMPLETE = new Set(["Resolved","Closed"]);
 const PAGE_SIZE = 25;
+const PASSWORD_MESSAGE =
+  "Use 6–4096 characters. No uppercase, number or symbol requirement.";
 
 let auth;
 let me = null;
@@ -954,18 +949,9 @@ function setBusy(value) {
   busy = value;
 
   [
-    "refresh",
-    "logout",
-    "createButton",
-    "reloadUsers",
-    "resetSubmit",
-    "cancelReset",
-    "caseSave",
-    "caseCancel",
-    "assignSubmit",
-    "assignCancel",
-    "assignUser",
-    "usersTab"
+    "refresh","logout","createButton","reloadUsers",
+    "resetSubmit","cancelReset","caseSave","caseCancel",
+    "assignSubmit","assignCancel","assignUser","usersTab"
   ].forEach(id => {
     $(id).disabled = value;
   });
@@ -985,7 +971,7 @@ async function run(task) {
 
   try {
     await task(current);
-  } catch (error) {
+  } catch(error) {
     if (current === generation) {
       status(error.message, true);
     }
@@ -1000,9 +986,7 @@ async function api(path, options = {}) {
   const current = generation;
   const account = auth.currentUser;
 
-  if (!account) {
-    throw new Error("Please sign in.");
-  }
+  if (!account) throw new Error("Please sign in.");
 
   const token = await account.getIdToken();
 
@@ -1019,17 +1003,14 @@ async function api(path, options = {}) {
   try {
     const response = await fetch(path, {
       ...options,
-
       headers: {
-        Authorization: "Bearer " + token,
-
+        Authorization:"Bearer " + token,
         ...(options.body
-          ? { "Content-Type": "application/json" }
+          ? {"Content-Type":"application/json"}
           : {})
       },
-
-      cache: "no-store",
-      signal: controller.signal
+      cache:"no-store",
+      signal:controller.signal
     });
 
     const type = response.headers.get("content-type") || "";
@@ -1055,7 +1036,7 @@ async function api(path, options = {}) {
     }
 
     return result;
-  } catch (error) {
+  } catch(error) {
     if (error.name === "AbortError") {
       throw new Error(
         "Request timed out. A save may have completed. " +
@@ -1071,32 +1052,32 @@ async function api(path, options = {}) {
 
 function workflow(action, data = {}, requestId) {
   return api("/api/workflow", {
-    method: "POST",
-
-    body: JSON.stringify({
+    method:"POST",
+    body:JSON.stringify({
       action,
       data,
-      ...(requestId ? { requestId } : {})
+      ...(requestId ? {requestId} : {})
     })
   });
 }
 
 function postUser(body) {
   return api("/api/users", {
-    method: "POST",
-    body: JSON.stringify(body)
+    method:"POST",
+    body:JSON.stringify(body)
   });
 }
 
 function passwordValid(password) {
   return (
-    password.length >= 12 &&
-    password.length <= 128 &&
-    /[a-z]/.test(password) &&
-    /[A-Z]/.test(password) &&
-    /[0-9]/.test(password) &&
-    /[^A-Za-z0-9]/.test(password)
+    typeof password === "string" &&
+    password.length >= 6 &&
+    password.length <= 4096
   );
+}
+
+function loginIdValid(loginId) {
+  return /^[a-z0-9][a-z0-9._-]{2,39}$/.test(loginId);
 }
 
 function reportKey(row) {
@@ -1111,9 +1092,7 @@ function badge(statusValue) {
   return (
     '<span class="badge s-' +
     escapeHTML(String(statusValue).toLowerCase()) +
-    '">' +
-    escapeHTML(statusValue) +
-    "</span>"
+    '">' + escapeHTML(statusValue) + "</span>"
   );
 }
 
@@ -1143,13 +1122,8 @@ function filteredRecords() {
     (
       !query ||
       [
-        row.identity,
-        row.customer,
-        row.handler,
-        row.agentName,
-        row.agentId,
-        row.remark,
-        row.ticket
+        row.identity,row.customer,row.handler,row.agentName,
+        row.agentId,row.remark,row.ticket
       ].join(" ").toLowerCase().includes(query)
     )
   );
@@ -1157,33 +1131,28 @@ function filteredRecords() {
 
 function detailsHTML(row) {
   const entries = [
-    ["Contacts", row.count],
-    ["Weekday", row.weekday],
-    ["Source handler", row.handler],
-    ["First — IST", row.first],
-    ["Last — IST", row.last],
-    ["Last workflow update — IST", row.updatedAt],
-    ["Source owner", row.owner],
-    ["Form time — IST / Ticket modified — API raw", row.modified],
-    ["Marvin ticket", row.ticket],
-    ["Disposition", row.disposition],
-    ["Latest remark", row.remark]
+    ["Contacts",row.count],
+    ["Weekday",row.weekday],
+    ["Source handler",row.handler],
+    ["First — IST",row.first],
+    ["Last — IST",row.last],
+    ["Last workflow update — IST",row.updatedAt],
+    ["Source owner",row.owner],
+    ["Form time — IST / Ticket modified — API raw",row.modified],
+    ["Marvin ticket",row.ticket],
+    ["Disposition",row.disposition],
+    ["Latest remark",row.remark]
   ];
 
-  return (
-    '<div class="detail-grid">' +
-    entries.map(([label, value]) => `
+  return '<div class="detail-grid">' +
+    entries.map(([label,value]) => `
       <div class="detail-item ${
-        ["Disposition", "Latest remark"].includes(label)
-          ? "wide"
-          : ""
+        ["Disposition","Latest remark"].includes(label) ? "wide" : ""
       }">
         <small>${escapeHTML(label)}</small>
         <div>${escapeHTML(value || "Unavailable")}</div>
       </div>
-    `).join("") +
-    "</div>"
-  );
+    `).join("") + "</div>";
 }
 
 function render() {
@@ -1213,13 +1182,11 @@ function render() {
   $("usersTab").classList.toggle("active", view === "users");
 
   $("activeTab").setAttribute(
-    "aria-current",
-    view === "active" ? "page" : "false"
+    "aria-current", view === "active" ? "page" : "false"
   );
 
   $("resolvedTab").setAttribute(
-    "aria-current",
-    view === "resolved" ? "page" : "false"
+    "aria-current", view === "resolved" ? "page" : "false"
   );
 
   $("casesSection").hidden = view === "users";
@@ -1246,11 +1213,11 @@ function render() {
         : "Open and follow-up cases. Work directly or manage ownership from each row.";
 
   $("cards").innerHTML = [
-    ["Active cases", active, "Open + Follow-up", "#087f78"],
-    ["Follow-up", follow, "Cases requiring the next action", "#c08b21"],
-    ["Resolved", resolved, "Successfully resolved cases", "#24845c"],
-    ["Closed", closed, "Closed case records", "#69829a"]
-  ].map(([label, count, note, color]) => `
+    ["Active cases",active,"Open + Follow-up","#087f78"],
+    ["Follow-up",follow,"Cases requiring the next action","#c08b21"],
+    ["Resolved",resolved,"Successfully resolved cases","#24845c"],
+    ["Closed",closed,"Closed case records","#69829a"]
+  ].map(([label,count,note,color]) => `
     <div class="card" style="--accent:${color}">
       <div class="card-label">${label}</div>
       <strong>${count}</strong>
@@ -1259,12 +1226,7 @@ function render() {
   `).join("");
 
   const filtered = filteredRecords();
-
-  const pages = Math.max(
-    1,
-    Math.ceil(filtered.length / PAGE_SIZE)
-  );
-
+  const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   page = Math.min(Math.max(page, 1), pages);
 
   const rows = filtered.slice(
@@ -1273,17 +1235,12 @@ function render() {
   );
 
   $("listTitle").textContent =
-    view === "resolved"
-      ? "Resolved & Closed cases"
-      : "Active cases";
+    view === "resolved" ? "Resolved & Closed cases" : "Active cases";
 
   $("caseCount").textContent =
-    filtered.length + " matching · " +
-    records.length + " accessible";
+    filtered.length + " matching · " + records.length + " accessible";
 
-  $("pageInfo").textContent =
-    "Page " + page + " of " + pages;
-
+  $("pageInfo").textContent = "Page " + page + " of " + pages;
   $("previous").disabled = busy || page <= 1;
   $("next").disabled = busy || page >= pages;
   $("reportInfo").textContent = reportNote;
@@ -1296,23 +1253,16 @@ function render() {
       </td>
 
       <td class="customer">
-        <strong>
-          ${escapeHTML(row.customer || row.identity)}
-        </strong>
-
-        <small>
-          ${
-            row.customer
-              ? escapeHTML(row.identity)
-              : escapeHTML(row.count) + " contacts"
-          }
-        </small>
+        <strong>${escapeHTML(row.customer || row.identity)}</strong>
+        <small>${
+          row.customer
+            ? escapeHTML(row.identity)
+            : escapeHTML(row.count) + " contacts"
+        }</small>
       </td>
 
       <td>
-        <span class="channel">
-          ${escapeHTML(row.channel)}
-        </span>
+        <span class="channel">${escapeHTML(row.channel)}</span>
       </td>
 
       <td class="assignee">
@@ -1320,7 +1270,6 @@ function render() {
       </td>
 
       <td>${badge(row.status)}</td>
-
       <td class="latest">${escapeHTML(row.remark)}</td>
 
       <td>
@@ -1358,22 +1307,12 @@ function render() {
 
     <tr id="detail-${escapeHTML(row.id)}"
         ${expanded.has(row.id) ? "" : "hidden"}>
-      <td colspan="7" class="details-cell">
-        ${detailsHTML(row)}
-      </td>
+      <td colspan="7" class="details-cell">${detailsHTML(row)}</td>
     </tr>
   `).join("") ||
-    `
-      <tr>
-        <td colspan="7" class="empty">
-          ${
-            ready
-              ? "No cases match this view."
-              : "Refresh to load cases."
-          }
-        </td>
-      </tr>
-    `;
+    `<tr><td colspan="7" class="empty">${
+      ready ? "No cases match this view." : "Refresh to load cases."
+    }</td></tr>`;
 }
 
 async function loadDashboard() {
@@ -1400,10 +1339,7 @@ async function loadDashboard() {
 
   const data = results[0].value;
 
-  if (
-    !Array.isArray(data.cases) ||
-    !Array.isArray(data.users)
-  ) {
+  if (!Array.isArray(data.cases) || !Array.isArray(data.users)) {
     records = [];
     render();
 
@@ -1439,19 +1375,14 @@ async function loadDashboard() {
         metadata.set(reportKey(row), row);
       });
 
-      if (report.value.warning) {
-        notes.push(report.value.warning);
-      }
+      if (report.value.warning) notes.push(report.value.warning);
 
       if (report.value.possiblyTruncated) {
         notes.push("Source-detail read limit reached.");
       }
     } else {
       partial = true;
-
-      notes.push(
-        "Extra source details unavailable; refresh to retry."
-      );
+      notes.push("Extra source details unavailable; refresh to retry.");
     }
   } else {
     notes.push(
@@ -1466,8 +1397,8 @@ async function loadDashboard() {
     return {
       ...extra,
       ...row,
-      customer: row.customer || extra.customer || "",
-      disposition: row.disposition || extra.disposition || ""
+      customer:row.customer || extra.customer || "",
+      disposition:row.disposition || extra.disposition || ""
     };
   });
 
@@ -1477,7 +1408,7 @@ async function loadDashboard() {
   reportNote =
     "Updated " +
     new Date().toLocaleTimeString("en-GB", {
-      timeZone: "Asia/Kolkata"
+      timeZone:"Asia/Kolkata"
     }) +
     " IST. " +
     notes.join(" ");
@@ -1497,19 +1428,14 @@ async function saveWorkflow(action, data) {
   let result;
 
   try {
-    result = await workflow(
-      action,
-      data,
-      crypto.randomUUID()
-    );
-  } catch (error) {
+    result = await workflow(action, data, crypto.randomUUID());
+  } catch(error) {
     if (current === generation) {
       records = [];
       render();
 
       status(
-        error.message +
-        "\nClick Refresh before another save.",
+        error.message + "\nClick Refresh before another save.",
         true
       );
     }
@@ -1532,7 +1458,7 @@ async function saveWorkflow(action, data) {
         )
       );
     }
-  } catch (error) {
+  } catch(error) {
     if (current === generation) {
       status(
         result.message +
@@ -1575,10 +1501,7 @@ $("usersTab").onclick = () => {
   if (me?.role !== "admin" || busy) return;
 
   setView("users");
-
-  run(async () => {
-    await loadUsers();
-  });
+  run(async () => { await loadUsers(); });
 };
 
 $("refresh").onclick = () => {
@@ -1595,13 +1518,7 @@ $("refresh").onclick = () => {
   });
 };
 
-[
-  "search",
-  "date",
-  "channel",
-  "statusFilter",
-  "ownerFilter"
-].forEach(id => {
+["search","date","channel","statusFilter","ownerFilter"].forEach(id => {
   $(id).oninput = () => {
     page = 1;
     render();
@@ -1609,13 +1526,7 @@ $("refresh").onclick = () => {
 });
 
 $("clear").onclick = () => {
-  [
-    "search",
-    "date",
-    "channel",
-    "statusFilter",
-    "ownerFilter"
-  ].forEach(id => {
+  ["search","date","channel","statusFilter","ownerFilter"].forEach(id => {
     $(id).value = "";
   });
 
@@ -1658,26 +1569,15 @@ $("rows").onclick = event => {
   if (detail) {
     const id = detail.dataset.detail;
 
-    if (expanded.has(id)) {
-      expanded.delete(id);
-    } else {
-      expanded.add(id);
-    }
+    if (expanded.has(id)) expanded.delete(id);
+    else expanded.add(id);
 
     const row = $("detail-" + id);
 
-    if (row) {
-      row.hidden = !expanded.has(id);
-    }
+    if (row) row.hidden = !expanded.has(id);
 
-    detail.textContent =
-      expanded.has(id) ? "Less" : "Details";
-
-    detail.setAttribute(
-      "aria-expanded",
-      String(expanded.has(id))
-    );
-
+    detail.textContent = expanded.has(id) ? "Less" : "Details";
+    detail.setAttribute("aria-expanded", String(expanded.has(id)));
     return;
   }
 
@@ -1686,15 +1586,12 @@ $("rows").onclick = event => {
   const edit = event.target.closest("[data-edit]");
 
   if (edit) {
-    editing = records.find(
-      row => row.id === edit.dataset.edit
-    );
+    editing = records.find(row => row.id === edit.dataset.edit);
 
     if (!editing) return;
 
     $("caseDetails").textContent = caseText(editing);
     $("caseStatus").value = editing.status;
-
     $("latestRemark").textContent =
       "Latest remark: " + (editing.remark || "None");
 
@@ -1707,17 +1604,14 @@ $("rows").onclick = event => {
   const assign = event.target.closest("[data-assign]");
 
   if (assign && me?.role === "admin") {
-    assigning = records.find(
-      row => row.id === assign.dataset.assign
-    );
+    assigning = records.find(row => row.id === assign.dataset.assign);
 
     if (!assigning) return;
 
     $("assignDetails").textContent =
       assigning.date + " · " + assigning.channel +
       "\n" + assigning.identity +
-      "\nCurrent owner: " +
-      (assigning.agentName || "Unassigned");
+      "\nCurrent owner: " + (assigning.agentName || "Unassigned");
 
     $("assignUser").innerHTML =
       '<option value="">Select active user</option>' +
@@ -1730,11 +1624,7 @@ $("rows").onclick = event => {
         </option>
       `).join("");
 
-    if (
-      assignees.some(
-        user => user.uid === assigning.assignedUid
-      )
-    ) {
+    if (assignees.some(user => user.uid === assigning.assignedUid)) {
       $("assignUser").value = assigning.assignedUid;
     }
 
@@ -1747,7 +1637,7 @@ $("rows").onclick = event => {
   if (history) {
     run(async current => {
       const result = await workflow("history", {
-        id: history.dataset.history
+        id:history.dataset.history
       });
 
       if (current !== generation) return;
@@ -1756,23 +1646,15 @@ $("rows").onclick = event => {
         result.history.slice().reverse().map(row => `
           <div class="timeline-entry">
             <small>
-              ${escapeHTML(row[10])} IST ·
-              ${escapeHTML(row[9])}
+              ${escapeHTML(row[10])} IST · ${escapeHTML(row[9])}
             </small>
-
             <strong>${escapeHTML(row[2])}</strong>
-
             <div>
               ${escapeHTML(row[3] || "—")}
               →
               ${escapeHTML(row[4] || "—")}
             </div>
-
-            ${
-              row[7]
-                ? "<p>" + escapeHTML(row[7]) + "</p>"
-                : ""
-            }
+            ${row[7] ? "<p>" + escapeHTML(row[7]) + "</p>" : ""}
           </div>
         `).join("") ||
         '<p class="muted">No changes saved yet.</p>';
@@ -1785,14 +1667,7 @@ $("rows").onclick = event => {
 $("assignForm").onsubmit = event => {
   event.preventDefault();
 
-  if (
-    busy ||
-    !ready ||
-    !assigning ||
-    me?.role !== "admin"
-  ) {
-    return;
-  }
+  if (busy || !ready || !assigning || me?.role !== "admin") return;
 
   const user = assignees.find(
     item => item.uid === $("assignUser").value
@@ -1801,31 +1676,26 @@ $("assignForm").onsubmit = event => {
   if (!user) return;
 
   const data = {
-    cases: [{
-      id: assigning.id,
-      expectedVersion: assigning.version
+    cases:[{
+      id:assigning.id,
+      expectedVersion:assigning.version
     }],
-    targetUid: user.uid
+    targetUid:user.uid
   };
 
-  const approved = confirm(
-    "Assign this case to " +
-    user.name + " (" + user.role + ")?\n\n" +
+  if (!confirm(
+    "Assign this case to " + user.name + " (" + user.role + ")?\n\n" +
     assigning.date + " · " + assigning.identity +
     "\n\nThe current owner will be replaced. " +
     "Status and remarks will be kept."
-  );
-
-  if (!approved) return;
+  )) return;
 
   $("assignDialog").close();
 
   run(async current => {
     const saved = await saveWorkflow("assign", data);
 
-    if (saved && current === generation) {
-      assigning = null;
-    }
+    if (saved && current === generation) assigning = null;
   });
 };
 
@@ -1842,16 +1712,13 @@ $("caseForm").onsubmit = event => {
   if (busy || !ready || !editing) return;
 
   const data = {
-    id: editing.id,
-    expectedVersion: editing.version,
-    status: $("caseStatus").value,
-    remark: $("remark").value.trim()
+    id:editing.id,
+    expectedVersion:editing.version,
+    status:$("caseStatus").value,
+    remark:$("remark").value.trim()
   };
 
-  if (
-    data.status === editing.status &&
-    !data.remark
-  ) {
+  if (data.status === editing.status && !data.remark) {
     $("caseMessage").textContent =
       "Change the status or enter a remark.";
     return;
@@ -1877,9 +1744,7 @@ $("caseCancel").onclick = () => {
   }
 };
 
-$("historyClose").onclick = () => {
-  $("historyDialog").close();
-};
+$("historyClose").onclick = () => $("historyDialog").close();
 
 function renderUsers() {
   $("userRows").innerHTML = users.map(user => {
@@ -1935,13 +1800,7 @@ function renderUsers() {
       </tr>
     `;
   }).join("") ||
-    `
-      <tr>
-        <td colspan="7" class="empty">
-          No application users found.
-        </td>
-      </tr>
-    `;
+    '<tr><td colspan="7" class="empty">No application users found.</td></tr>';
 }
 
 async function loadUsers() {
@@ -1967,10 +1826,8 @@ function updateMethodFields() {
 
   $("newEmail").required = !password;
   $("newEmail").disabled = password;
-
   $("newId").required = password;
   $("newId").disabled = !password;
-
   $("newPassword").required = password;
   $("newPassword").disabled = !password;
 }
@@ -1982,9 +1839,7 @@ $("reloadUsers").onclick = () => {
   run(async current => {
     await loadUsers();
 
-    if (current === generation) {
-      status("User list refreshed.");
-    }
+    if (current === generation) status("User list refreshed.");
   });
 };
 
@@ -1996,11 +1851,11 @@ $("createUser").onsubmit = event => {
   const method = $("newMethod").value;
 
   const body = {
-    action: "create",
-    name: $("newName").value.trim(),
-    agentId: $("newAgent").value.trim(),
-    role: $("newRole").value,
-    loginMethod: method
+    action:"create",
+    name:$("newName").value.trim(),
+    agentId:$("newAgent").value.trim(),
+    role:$("newRole").value,
+    loginMethod:method
   };
 
   if (method === "google") {
@@ -2010,25 +1865,24 @@ $("createUser").onsubmit = event => {
     body.password = $("newPassword").value;
 
     if (!passwordValid(body.password)) {
-      status(
-        "Use 12–128 characters with uppercase, lowercase, " +
-        "a number and a symbol.",
-        true
-      );
+      status(PASSWORD_MESSAGE, true);
+      delete body.password;
       return;
     }
 
-    if (!/^[a-z0-9][a-z0-9._-]{2,39}$/.test(body.loginId)) {
+    if (!loginIdValid(body.loginId)) {
       status(
         "Login ID must be 3–40 lowercase letters, numbers, " +
-        "dots, underscores or hyphens, starting with a letter or number.",
+        "dots, underscores or hyphens, starting with a letter or number. " +
+        "Do not enter an email address or spaces.",
         true
       );
+      delete body.password;
       return;
     }
   }
 
-  const approved = confirm(
+  if (!confirm(
     "Create / approve this active account?\n\n" +
     "Name: " + body.name + "\n" +
     "Agent ID: " + body.agentId + "\n" +
@@ -2036,9 +1890,7 @@ $("createUser").onsubmit = event => {
     "Login method: " + method + "\n" +
     "Identity: " + (body.email || body.loginId) +
     "\n\nThe password will not be displayed again."
-  );
-
-  if (!approved) {
+  )) {
     delete body.password;
     return;
   }
@@ -2058,8 +1910,7 @@ $("createUser").onsubmit = event => {
       } catch {
         if (current === generation) {
           status(
-            result.message +
-            " Click Refresh users to reload.",
+            result.message + " Click Refresh users to reload.",
             true
           );
         }
@@ -2067,9 +1918,7 @@ $("createUser").onsubmit = event => {
     } finally {
       delete body.password;
 
-      if (current === generation) {
-        $("newPassword").value = "";
-      }
+      if (current === generation) $("newPassword").value = "";
     }
   });
 };
@@ -2105,7 +1954,6 @@ $("userRows").onclick = event => {
 
   if (button.dataset.reset) {
     resetTarget = user;
-
     $("resetName").textContent =
       user.name + " (" + user.loginId + ")";
 
@@ -2116,20 +1964,14 @@ $("userRows").onclick = event => {
 
   if (button.dataset.delete) {
     if (user.active) {
-      status(
-        "Deactivate the account before deleting it.",
-        true
-      );
+      status("Deactivate the account before deleting it.", true);
       return;
     }
 
     const identity = user.loginId || user.email;
 
     if (!identity) {
-      status(
-        "Cannot identify this account. Refresh users.",
-        true
-      );
+      status("Cannot identify this account. Refresh users.", true);
       return;
     }
 
@@ -2150,21 +1992,14 @@ $("userRows").onclick = event => {
       confirmation.trim().toLowerCase() !==
       identity.trim().toLowerCase()
     ) {
-      status(
-        "Deletion cancelled: confirmation did not match.",
-        true
-      );
+      status("Deletion cancelled: confirmation did not match.", true);
       return;
     }
 
     run(async current => {
       const result = await api("/api/delete-user", {
-        method: "POST",
-
-        body: JSON.stringify({
-          uid: user.uid,
-          confirmation
-        })
+        method:"POST",
+        body:JSON.stringify({uid:user.uid,confirmation})
       });
 
       if (current !== generation) return;
@@ -2178,8 +2013,7 @@ $("userRows").onclick = event => {
       } catch {
         if (current === generation) {
           status(
-            result.message +
-            " Click Refresh users to reload.",
+            result.message + " Click Refresh users to reload.",
             true
           );
         }
@@ -2189,18 +2023,16 @@ $("userRows").onclick = event => {
     return;
   }
 
-  const approved = confirm(
+  if (!confirm(
     (user.active ? "Deactivate " : "Activate ") +
     user.name + " (" + (user.loginId || user.email) + ")?"
-  );
-
-  if (!approved) return;
+  )) return;
 
   run(async current => {
     const result = await postUser({
-      action: "active",
-      uid: user.uid,
-      active: !user.active
+      action:"active",
+      uid:user.uid,
+      active:!user.active
     });
 
     if (current !== generation) return;
@@ -2214,8 +2046,7 @@ $("userRows").onclick = event => {
     } catch {
       if (current === generation) {
         status(
-          result.message +
-          " Click Refresh users to reload.",
+          result.message + " Click Refresh users to reload.",
           true
         );
       }
@@ -2224,15 +2055,11 @@ $("userRows").onclick = event => {
 };
 
 $("cancelReset").onclick = () => {
-  if (!busy) {
-    $("resetDialog").close();
-  }
+  if (!busy) $("resetDialog").close();
 };
 
 $("resetDialog").addEventListener("cancel", event => {
-  if (busy) {
-    event.preventDefault();
-  }
+  if (busy) event.preventDefault();
 });
 
 $("resetDialog").addEventListener("close", () => {
@@ -2243,21 +2070,12 @@ $("resetDialog").addEventListener("close", () => {
 $("resetForm").onsubmit = event => {
   event.preventDefault();
 
-  if (
-    busy ||
-    !resetTarget ||
-    me?.role !== "admin"
-  ) {
-    return;
-  }
+  if (busy || !resetTarget || me?.role !== "admin") return;
 
   const password = $("replacementPassword").value;
 
   if (!passwordValid(password)) {
-    alert(
-      "Use 12–128 characters with uppercase, lowercase, " +
-      "a number and a symbol."
-    );
+    alert(PASSWORD_MESSAGE);
     return;
   }
 
@@ -2266,7 +2084,7 @@ $("resetForm").onsubmit = event => {
   run(async current => {
     try {
       const result = await postUser({
-        action: "resetPassword",
+        action:"resetPassword",
         uid,
         password
       });
@@ -2275,11 +2093,8 @@ $("resetForm").onsubmit = event => {
         $("resetDialog").close();
         status(result.message);
       }
-    } catch (error) {
-      if (current === generation) {
-        $("resetDialog").close();
-      }
-
+    } catch(error) {
+      if (current === generation) $("resetDialog").close();
       throw error;
     } finally {
       if (current === generation) {
@@ -2295,8 +2110,7 @@ async function withTimeout(promise, milliseconds, message) {
   try {
     return await Promise.race([
       promise,
-
-      new Promise((resolve, reject) => {
+      new Promise((resolve,reject) => {
         timer = setTimeout(
           () => reject(new Error(message)),
           milliseconds
@@ -2309,25 +2123,18 @@ async function withTimeout(promise, milliseconds, message) {
 }
 
 try {
-  $("loginStatus").textContent =
-    "Loading Firebase sign-in…";
+  $("loginStatus").textContent = "Loading Firebase sign-in…";
 
   const modules = await withTimeout(
     Promise.all([
-      import(
-        "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js"
-      ),
-
-      import(
-        "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js"
-      )
+      import("https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js")
     ]),
     20000,
-    "Firebase scripts did not load. " +
-    "Check the browser Console and reload."
+    "Firebase scripts did not load. Check the browser Console and reload."
   );
 
-  const { initializeApp } = modules[0];
+  const {initializeApp} = modules[0];
 
   const {
     getAuth,
@@ -2341,27 +2148,22 @@ try {
   } = modules[1];
 
   auth = getAuth(initializeApp({
-    apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
-    authDomain: "repeat-contact-dashboard.firebaseapp.com",
-    projectId: "repeat-contact-dashboard",
-    storageBucket:
-      "repeat-contact-dashboard.firebasestorage.app",
-    messagingSenderId: "527535186997",
-    appId: "1:527535186997:web:fdd746c7a7428f6695bd7c"
+    apiKey:"AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
+    authDomain:"repeat-contact-dashboard.firebaseapp.com",
+    projectId:"repeat-contact-dashboard",
+    storageBucket:"repeat-contact-dashboard.firebasestorage.app",
+    messagingSenderId:"527535186997",
+    appId:"1:527535186997:web:fdd746c7a7428f6695bd7c"
   }));
 
   await withTimeout(
-    setPersistence(auth, browserSessionPersistence),
+    setPersistence(auth,browserSessionPersistence),
     20000,
-    "Could not initialise the browser sign-in session. " +
-    "Reload to retry."
+    "Could not initialise the browser sign-in session. Reload to retry."
   );
 
   const provider = new GoogleAuthProvider();
-
-  provider.setCustomParameters({
-    prompt: "select_account"
-  });
+  provider.setCustomParameters({prompt:"select_account"});
 
   $("google").disabled = false;
   $("google").textContent = "Continue with Google";
@@ -2371,8 +2173,8 @@ try {
     $("google").disabled = true;
 
     try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
+      await signInWithPopup(auth,provider);
+    } catch(error) {
       $("loginStatus").textContent =
         "Google sign-in failed: " +
         (error.code || error.message || "unknown");
@@ -2384,12 +2186,11 @@ try {
   $("passwordLogin").onsubmit = async event => {
     event.preventDefault();
 
-    const loginId =
-      $("loginId").value.trim().toLowerCase();
+    const loginId = $("loginId").value.trim().toLowerCase();
 
-    if (!/^[a-z0-9][a-z0-9._-]{2,39}$/.test(loginId)) {
+    if (!loginIdValid(loginId)) {
       $("loginStatus").textContent =
-        "Enter your assigned Login ID.";
+        "Enter your assigned Login ID, not an email address.";
       return;
     }
 
@@ -2398,14 +2199,12 @@ try {
     try {
       await signInWithEmailAndPassword(
         auth,
-        loginId +
-          "@repeat-contact-dashboard.firebaseapp.com",
+        loginId + "@repeat-contact-dashboard.firebaseapp.com",
         $("loginPassword").value
       );
     } catch {
       $("loginStatus").textContent =
-        "Sign-in failed. Check Login ID/password " +
-        "and account activation.";
+        "Sign-in failed. Check Login ID/password and account activation.";
     } finally {
       $("loginPassword").value = "";
       $("passwordButton").disabled = false;
@@ -2431,7 +2230,7 @@ try {
   $("logout").onclick = logout;
   $("switchAccount").onclick = logout;
 
-  onAuthStateChanged(auth, async user => {
+  onAuthStateChanged(auth,async user => {
     const current = ++generation;
 
     me = null;
@@ -2453,24 +2252,15 @@ try {
     status("");
 
     [
-      "newPassword",
-      "loginPassword",
-      "remark",
-      "replacementPassword",
-      "search",
-      "date",
-      "channel",
-      "ownerFilter"
+      "newPassword","loginPassword","remark",
+      "replacementPassword","search","date","channel","ownerFilter"
     ].forEach(id => {
       $(id).value = "";
     });
 
     [
-      "caseDetails",
-      "assignDetails",
-      "historyContent",
-      "latestRemark",
-      "caseMessage"
+      "caseDetails","assignDetails","historyContent",
+      "latestRemark","caseMessage"
     ].forEach(id => {
       $(id).textContent = "";
     });
@@ -2484,28 +2274,20 @@ try {
     $("switchAccount").hidden = !user;
 
     [
-      "resetDialog",
-      "caseDialog",
-      "assignDialog",
-      "historyDialog"
+      "resetDialog","caseDialog","assignDialog","historyDialog"
     ].forEach(id => {
-      if ($(id).open) {
-        $(id).close();
-      }
+      if ($(id).open) $(id).close();
     });
 
     setView("active");
     setBusy(false);
 
     if (!user) {
-      $("loginStatus").textContent =
-        "Sign in with an approved account.";
+      $("loginStatus").textContent = "Sign in with an approved account.";
       return;
     }
 
-    $("loginStatus").textContent =
-      "Checking account access…";
-
+    $("loginStatus").textContent = "Checking account access…";
     setBusy(true);
 
     try {
@@ -2526,28 +2308,18 @@ try {
 
       const text = await loadDashboard();
 
-      if (current === generation) {
-        status(text);
-      }
-    } catch (error) {
+      if (current === generation) status(text);
+    } catch(error) {
       if (current !== generation) return;
 
-      if (me) {
-        status(error.message, true);
-      } else {
-        $("loginStatus").textContent = error.message;
-      }
+      if (me) status(error.message,true);
+      else $("loginStatus").textContent = error.message;
     } finally {
-      if (current === generation) {
-        setBusy(false);
-      }
+      if (current === generation) setBusy(false);
     }
   });
-} catch (error) {
-  console.error(
-    "Frontend initialisation failed:",
-    error
-  );
+} catch(error) {
+  console.error("Frontend initialisation failed:",error);
 
   $("loginStatus").textContent =
     "Sign-in could not initialise: " +
