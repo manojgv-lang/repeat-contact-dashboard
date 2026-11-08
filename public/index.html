@@ -1,167 +1,2029 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Repeat Contact Dashboard</title>
-<style>
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-body { margin:0; background:#f3f6fb; color:#172b4d; font:15px Arial,sans-serif; }
-header { background:#10264a; color:white; padding:24px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
-h1 { margin:0 0 12px; } h2 { font-size:20px; }
-main { padding:22px; }
-button,input,select,textarea { font:inherit; padding:11px; border:1px solid #ccd7e7; border-radius:7px; background:white; color:#172b4d; }
-button { cursor:pointer; } button:disabled { opacity:.5; cursor:not-allowed; }
-.primary { background:#2563eb; color:white; border-color:#2563eb; }
-.danger { color:#b42318; border-color:#b42318; }
-.panel { background:white; border:1px solid #dce4ef; border-radius:12px; padding:20px; margin-bottom:18px; }
-.notice { background:#fff8e8; border:1px solid #efd395; padding:15px; line-height:1.6; border-radius:9px; margin:15px 0; }
-.error { color:#b42318; }
-.flex,.actions { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-.actions { gap:8px; }
-.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px; }
-label { display:grid; gap:7px; }
-#login { max-width:500px; margin:8vh auto; padding:28px; }
-#login input,#login button { width:100%; margin-bottom:12px; }
-table { border-collapse:collapse; width:100%; white-space:nowrap; }
-td,th { text-align:left; padding:13px; border-bottom:1px solid #e6edf5; font-size:13px; }
-th { background:#eef3fb; }
-.scroll { overflow:auto; }
-#search { min-width:220px; flex:1; }
-.cards { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
-.card { background:white; border:1px solid #dce4ef; border-radius:10px; padding:18px; }
-.card strong { display:block; font-size:28px; margin-top:10px; }
-.details { white-space:normal; overflow-wrap:anywhere; line-height:1.8; background:#f7f9fd; }
-#status,#loginStatus,#caseMessage { white-space:pre-line; line-height:1.6; overflow-wrap:anywhere; }
-small { color:#64748b; }
-dialog { width:min(760px,95vw); max-height:90vh; overflow:auto; border:1px solid #ccd7e7; border-radius:12px; padding:24px; }
-dialog::backdrop { background:#0006; }
-dialog input { width:100%; }
-textarea { width:100%; min-height:120px; margin:12px 0; }
-pre { white-space:pre-wrap; overflow-wrap:anywhere; font:14px Arial,sans-serif; line-height:1.7; }
-.remark { max-width:260px; min-width:140px; white-space:pre-wrap; overflow-wrap:anywhere; }
-@media(max-width:650px) { .grid { grid-template-columns:1fr; } .cards { grid-template-columns:repeat(2,1fr); } #login { margin:20px 12px; } main { padding:12px; } }
-</style>
-</head>
-<body>
-<section id="login" class="panel">
-  <h1>Repeat Contact Dashboard</h1>
-  <p>Sign in using your approved account.</p>
-  <button id="google" class="primary" disabled>Loading sign-in…</button>
-  <p>Or use your administrator-issued Login ID</p>
-  <form id="passwordLogin">
-    <input id="loginId" placeholder="Login ID" autocomplete="username" required>
-    <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" required>
-    <button id="passwordButton" disabled>Sign in</button>
-  </form>
-  <p id="loginStatus" role="status" aria-live="polite"></p>
-  <button id="switchAccount" hidden>Sign out / use another account</button>
-</section>
-<div id="app" hidden>
-  <header>
-    <div><h1>Repeat Contact Dashboard</h1><div id="account"></div></div>
-    <div class="flex"><button id="refresh">Refresh</button><button id="logout">Sign out</button></div>
-  </header>
-  <main>
-    <div class="flex" style="margin-bottom:18px">
-      <button id="reportTab">Report / cases</button>
-      <button id="usersTab" hidden>User management</button>
-    </div>
-    <p id="status" role="status" aria-live="polite"></p>
-    <section id="report">
-      <div id="assignmentPanel" class="panel" hidden>
-        <div class="flex">
-          <select id="assignee" aria-label="Assign to user"><option value="">Select user</option></select>
-          <button id="assign" class="primary" disabled>Assign / reassign selected</button>
-        </div>
-        <p>Assign cases from any date to any active admin or agent, including yourself. To work on a case directly, click Open case. Reassignment keeps its status and remarks.</p>
-      </div>
-      <div id="cards" class="cards"></div>
-      <div class="panel">
-        <div class="flex">
-          <input id="search" placeholder="Search phone, email, name, handler or remarks" aria-label="Search report">
-          <input id="date" type="date" aria-label="Reporting date">
-          <select id="channel" aria-label="Channel"><option value="">All channels</option><option>CALL</option><option>EMAIL</option><option>CHAT</option></select>
-          <select id="statusFilter" aria-label="Case status"><option value="">All statuses</option><option>Open</option><option>Follow-up</option><option>Resolved</option><option>Closed</option></select>
-          <select id="ownerFilter" aria-label="Assigned user filter"><option value="">All assignments</option><option value="unassigned">Unassigned</option><option value="mine">Assigned to me</option></select>
-          <button id="clear">Clear filters</button>
-        </div>
-        <p id="selectionInfo"></p>
-        <div class="scroll" style="margin-top:18px">
-          <table>
-            <thead><tr>
-              <th><input id="selectAll" type="checkbox" aria-label="Select up to 50 visible cases" disabled></th>
-              <th>DATE</th><th>WEEKDAY</th><th>CHANNEL</th><th>CUSTOMER</th><th>CONTACTS</th><th>FIRST — IST</th><th>LAST — IST</th><th>SOURCE HANDLER</th><th>ASSIGNED TO</th><th>STATUS</th><th>LATEST REMARK</th><th>UPDATED — IST</th><th>ACTIONS</th>
-            </tr></thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
-        <p id="reportInfo"></p>
-      </div>
-    </section>
-    <section id="users" hidden>
-      <div class="panel">
-        <h2>Add / approve user</h2>
-        <p>Choose a login method. Agents can view and update cases assigned to them. Administrators can work on all cases.</p>
-        <form id="createUser">
-          <div class="grid">
-            <label>Name<input id="newName" maxlength="100" required></label>
-            <label>Agent ID — internal identifier<input id="newAgent" maxlength="50" required></label>
-            <label>Role<select id="newRole"><option value="agent">Agent</option><option value="admin">Administrator</option></select></label>
-            <label>Login method<select id="newMethod"><option value="google">Google work account</option><option value="password">Login ID and password</option></select></label>
-            <label id="emailField">Approved work email<input id="newEmail" type="email" required></label>
-            <label id="idField" hidden>Login ID<input id="newId" autocomplete="off" placeholder="e.g. agent01"></label>
-            <label id="passField" hidden>Initial password<input id="newPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128"><small>12–128 characters: uppercase, lowercase, number and symbol.</small></label>
-          </div>
-          <p>Administrators can see all cases and manage other users. New accounts are active after creation.</p>
-          <button id="createButton" class="primary">Review and create user</button>
-        </form>
-      </div>
-      <div class="panel">
-        <h2>Application users</h2>
-        <div class="notice">Deactivate an account before deleting it. Deletion removes its login and application-user entry, not historical case records, logs or backups. Your own account and the bootstrap administrator are protected. Reassign its cases before removing an account.</div>
-        <button id="reloadUsers">Refresh users</button>
-        <div class="scroll"><table>
-          <thead><tr><th>NAME</th><th>AGENT ID</th><th>ROLE</th><th>LOGIN METHOD</th><th>EMAIL / LOGIN ID</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
-          <tbody id="userRows"></tbody>
-        </table></div>
-      </div>
-    </section>
-  </main>
-</div>
-<dialog id="caseDialog">
-  <form id="caseForm">
-    <h2>Work on case</h2>
-    <pre id="caseDetails"></pre>
-    <label>Status<select id="caseStatus"><option>Open</option><option>Follow-up</option><option>Resolved</option><option>Closed</option></select></label>
-    <p id="latestRemark"></p>
-    <label>New remark<textarea id="remark" maxlength="2000" placeholder="Enter a remark"></textarea></label>
-    <p id="caseMessage" role="status"></p>
-    <div class="flex"><button id="caseSave" class="primary">Save</button><button id="caseCancel" type="button">Cancel</button></div>
-  </form>
-</dialog>
-<dialog id="historyDialog"><h2>Case history</h2><pre id="historyText"></pre><button id="historyClose">Close</button></dialog>
-<dialog id="resetDialog">
-  <form id="resetForm">
-    <h2>Reset password</h2><p id="resetName"></p>
-    <label>New password<input id="replacementPassword" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label>
-    <p>Use uppercase, lowercase, a number and a symbol. Existing sessions will be revoked. Share the replacement privately.</p>
-    <div class="flex"><button id="resetSubmit" class="primary">Confirm password reset</button><button id="cancelReset" type="button">Cancel</button></div>
-  </form>
-</dialog>
-<script type="module">
-const $ = id => document.getElementById(id);
-const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
-let auth, me = null, records = [], users = [], assignees = [];
-let generation = 0, busy = false, ready = false, resetTarget = null, editing = null;
-const selected = new Set();
-const expanded = new Set();
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repeat Contact Dashboard</title>
 
-function status(text, error = false) {
-  $('status').textContent = text;
-  $('status').classList.toggle('error', error);
-}
-function setBusy(value) {
-  busy = value;
-  ['refresh','logout','createButton','reloadUsers','resetSubmit','cancelReset','caseSave','caseCancel','assignee','usersTab'].forEach(id => { $
+  <style>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      background: #f3f6fb;
+      color: #172b4d;
+      font: 15px Arial, sans-serif;
+    }
+
+    header {
+      background: #10264a;
+      color: white;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    h1 { margin: 0 0 12px; }
+    h2 { font-size: 20px; }
+    main { padding: 22px; }
+
+    button, input, select, textarea {
+      font: inherit;
+      padding: 11px;
+      border: 1px solid #ccd7e7;
+      border-radius: 7px;
+      background: white;
+      color: #172b4d;
+    }
+
+    button { cursor: pointer; }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
+
+    .danger {
+      color: #b42318;
+      border-color: #b42318;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #dce4ef;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .notice {
+      background: #fff8e8;
+      border: 1px solid #efd395;
+      padding: 15px;
+      line-height: 1.6;
+      border-radius: 9px;
+      margin: 15px 0;
+    }
+
+    .error { color: #b42318; }
+
+    .flex, .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .actions { gap: 8px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+    }
+
+    #login {
+      max-width: 500px;
+      margin: 8vh auto;
+      padding: 28px;
+    }
+
+    #login input, #login button {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    td, th {
+      text-align: left;
+      padding: 13px;
+      border-bottom: 1px solid #e6edf5;
+      font-size: 13px;
+    }
+
+    th { background: #eef3fb; }
+    .scroll { overflow: auto; }
+
+    #search {
+      min-width: 220px;
+      flex: 1;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #dce4ef;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .card strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 10px;
+    }
+
+    .details {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      line-height: 1.8;
+      background: #f7f9fd;
+    }
+
+    #status, #loginStatus, #caseMessage {
+      white-space: pre-line;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    small { color: #64748b; }
+
+    dialog {
+      width: min(760px, 95vw);
+      max-height: 90vh;
+      overflow: auto;
+      border: 1px solid #ccd7e7;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    dialog::backdrop { background: #0006; }
+    dialog input { width: 100%; }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      margin: 12px 0;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font: 14px Arial, sans-serif;
+      line-height: 1.7;
+    }
+
+    .remark {
+      max-width: 260px;
+      min-width: 140px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 650px) {
+      .grid { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      #login { margin: 20px 12px; }
+      main { padding: 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="login" class="panel">
+    <h1>Repeat Contact Dashboard</h1>
+    <p>Sign in using your approved account.</p>
+
+    <button id="google" class="primary" disabled>
+      Loading sign-in…
+    </button>
+
+    <p>Or use your administrator-issued Login ID</p>
+
+    <form id="passwordLogin">
+      <input id="loginId"
+             placeholder="Login ID"
+             autocomplete="username"
+             required>
+
+      <input id="loginPassword"
+             type="password"
+             placeholder="Password"
+             autocomplete="current-password"
+             required>
+
+      <button id="passwordButton" disabled>Sign in</button>
+    </form>
+
+    <p id="loginStatus" role="status" aria-live="polite"></p>
+
+    <button id="switchAccount" hidden>
+      Sign out / use another account
+    </button>
+  </section>
+
+  <div id="app" hidden>
+    <header>
+      <div>
+        <h1>Repeat Contact Dashboard</h1>
+        <div id="account"></div>
+      </div>
+
+      <div class="flex">
+        <button id="refresh">Refresh</button>
+        <button id="logout">Sign out</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="flex" style="margin-bottom:18px">
+        <button id="reportTab">Report / cases</button>
+        <button id="usersTab" hidden>User management</button>
+      </div>
+
+      <p id="status" role="status" aria-live="polite"></p>
+
+      <section id="report">
+        <div id="assignmentPanel" class="panel" hidden>
+          <div class="flex">
+            <select id="assignee" aria-label="Assign to user">
+              <option value="">Select user</option>
+            </select>
+
+            <button id="assign" class="primary" disabled>
+              Assign / reassign selected
+            </button>
+          </div>
+
+          <p>
+            Assign cases from any date to any active admin or agent,
+            including yourself. To work directly, click Open case.
+            Reassignment keeps the status and remarks.
+          </p>
+        </div>
+
+        <div id="cards" class="cards"></div>
+
+        <div class="panel">
+          <div class="flex">
+            <input id="search"
+                   placeholder="Search phone, email, name, handler or remarks"
+                   aria-label="Search report">
+
+            <input id="date"
+                   type="date"
+                   aria-label="Reporting date">
+
+            <select id="channel" aria-label="Channel">
+              <option value="">All channels</option>
+              <option>CALL</option>
+              <option>EMAIL</option>
+              <option>CHAT</option>
+            </select>
+
+            <select id="statusFilter" aria-label="Case status">
+              <option value="">All statuses</option>
+              <option>Open</option>
+              <option>Follow-up</option>
+              <option>Resolved</option>
+              <option>Closed</option>
+            </select>
+
+            <select id="ownerFilter" aria-label="Assignment filter">
+              <option value="">All assignments</option>
+              <option value="unassigned">Unassigned</option>
+              <option value="mine">Assigned to me</option>
+            </select>
+
+            <button id="clear">Clear filters</button>
+          </div>
+
+          <p id="selectionInfo"></p>
+
+          <div class="scroll" style="margin-top:18px">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    <input id="selectAll"
+                           type="checkbox"
+                           aria-label="Select up to 50 visible cases"
+                           disabled>
+                  </th>
+                  <th>DATE</th>
+                  <th>WEEKDAY</th>
+                  <th>CHANNEL</th>
+                  <th>CUSTOMER</th>
+                  <th>CONTACTS</th>
+                  <th>FIRST — IST</th>
+                  <th>LAST — IST</th>
+                  <th>SOURCE HANDLER</th>
+                  <th>ASSIGNED TO</th>
+                  <th>STATUS</th>
+                  <th>LATEST REMARK</th>
+                  <th>UPDATED — IST</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+
+          <p id="reportInfo"></p>
+        </div>
+      </section>
+
+      <section id="users" hidden>
+        <div class="panel">
+          <h2>Add / approve user</h2>
+
+          <p>
+            Agents can view and update assigned cases.
+            Administrators can work on all cases.
+          </p>
+
+          <form id="createUser">
+            <div class="grid">
+              <label>
+                Name
+                <input id="newName" maxlength="100" required>
+              </label>
+
+              <label>
+                Agent ID — internal identifier
+                <input id="newAgent" maxlength="50" required>
+              </label>
+
+              <label>
+                Role
+                <select id="newRole">
+                  <option value="agent">Agent</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </label>
+
+              <label>
+                Login method
+                <select id="newMethod">
+                  <option value="google">Google work account</option>
+                  <option value="password">Login ID and password</option>
+                </select>
+              </label>
+
+              <label id="emailField">
+                Approved work email
+                <input id="newEmail" type="email" required>
+              </label>
+
+              <label id="idField" hidden>
+                Login ID
+                <input id="newId"
+                       autocomplete="off"
+                       placeholder="e.g. agent01">
+              </label>
+
+              <label id="passField" hidden>
+                Initial password
+                <input id="newPassword"
+                       type="password"
+                       autocomplete="new-password"
+                       minlength="12"
+                       maxlength="128">
+
+                <small>
+                  12–128 characters: uppercase, lowercase,
+                  number and symbol.
+                </small>
+              </label>
+            </div>
+
+            <p>
+              Administrators can see all cases and manage users.
+              New accounts are active after creation.
+            </p>
+
+            <button id="createButton" class="primary">
+              Review and create user
+            </button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Application users</h2>
+
+          <div class="notice">
+            Deactivate an account before deleting it.
+            Deletion removes its login, not historical case records.
+            Your own account and the bootstrap administrator are
+            protected. Reassign cases before removing an account.
+          </div>
+
+          <button id="reloadUsers">Refresh users</button>
+
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>AGENT ID</th>
+                  <th>ROLE</th>
+                  <th>LOGIN METHOD</th>
+                  <th>EMAIL / LOGIN ID</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="userRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="caseDialog">
+    <form id="caseForm">
+      <h2>Work on case</h2>
+      <pre id="caseDetails"></pre>
+
+      <label>
+        Status
+        <select id="caseStatus">
+          <option>Open</option>
+          <option>Follow-up</option>
+          <option>Resolved</option>
+          <option>Closed</option>
+        </select>
+      </label>
+
+      <p id="latestRemark"></p>
+
+      <label>
+        New remark
+        <textarea id="remark"
+                  maxlength="2000"
+                  placeholder="Enter a remark"></textarea>
+      </label>
+
+      <p id="caseMessage" role="status"></p>
+
+      <div class="flex">
+        <button id="caseSave" class="primary">Save</button>
+        <button id="caseCancel" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="historyDialog">
+    <h2>Case history</h2>
+    <pre id="historyText"></pre>
+    <button id="historyClose">Close</button>
+  </dialog>
+
+  <dialog id="resetDialog">
+    <form id="resetForm">
+      <h2>Reset password</h2>
+      <p id="resetName"></p>
+
+      <label>
+        New password
+        <input id="replacementPassword"
+               type="password"
+               autocomplete="new-password"
+               minlength="12"
+               maxlength="128"
+               required>
+      </label>
+
+      <p>
+        Use uppercase, lowercase, a number and a symbol.
+        Existing sessions will be revoked.
+        Share the replacement privately.
+      </p>
+
+      <div class="flex">
+        <button id="resetSubmit" class="primary">
+          Confirm password reset
+        </button>
+        <button id="cancelReset" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    window.addEventListener("error", function (event) {
+      const box = document.getElementById("loginStatus");
+
+      if (box && document.getElementById("google").disabled) {
+        box.textContent =
+          "Page script error: " +
+          (event.message || "Unknown error") +
+          (event.lineno ? " — line " + event.lineno : "");
+
+        box.classList.add("error");
+      }
+    });
+
+    window.addEventListener("unhandledrejection", function (event) {
+      const box = document.getElementById("loginStatus");
+
+      if (box && document.getElementById("google").disabled) {
+        box.textContent =
+          "Initialisation error: " +
+          (event.reason?.message || String(event.reason));
+
+        box.classList.add("error");
+      }
+    });
+  </script>
+
+  <script type="module">
+    const $ = id => document.getElementById(id);
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[character]);
+    }
+
+    let auth;
+    let me = null;
+    let records = [];
+    let users = [];
+    let assignees = [];
+    let generation = 0;
+    let busy = false;
+    let ready = false;
+    let resetTarget = null;
+    let editing = null;
+
+    const selected = new Set();
+    const expanded = new Set();
+
+    function status(text, error = false) {
+      $("status").textContent = text || "";
+      $("status").classList.toggle("error", error);
+    }
+
+    function setBusy(value) {
+      busy = value;
+
+      [
+        "refresh",
+        "logout",
+        "createButton",
+        "reloadUsers",
+        "resetSubmit",
+        "cancelReset",
+        "caseSave",
+        "caseCancel",
+        "assignee",
+        "usersTab"
+      ].forEach(id => {
+        $(id).disabled = value;
+      });
+
+      $("userRows").querySelectorAll("button").forEach(button => {
+        button.disabled = value;
+      });
+
+      renderReport();
+    }
+
+    async function run(task) {
+      if (busy) return;
+
+      const current = generation;
+      setBusy(true);
+
+      try {
+        await task(current);
+      } catch (error) {
+        if (current === generation) {
+          status(error.message, true);
+        }
+      } finally {
+        if (current === generation) {
+          setBusy(false);
+        }
+      }
+    }
+
+    async function api(path, options = {}) {
+      const current = generation;
+      const account = auth.currentUser;
+
+      if (!account) {
+        throw new Error("Please sign in.");
+      }
+
+      const token = await account.getIdToken();
+
+      if (
+        current !== generation ||
+        account.uid !== auth.currentUser?.uid
+      ) {
+        throw new Error("Sign-in changed.");
+      }
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 35000);
+
+      try {
+        const response = await fetch(path, {
+          ...options,
+          headers: {
+            Authorization: "Bearer " + token,
+            ...(options.body
+              ? { "Content-Type": "application/json" }
+              : {})
+          },
+          cache: "no-store",
+          signal: controller.signal
+        });
+
+        const type = response.headers.get("content-type") || "";
+
+        if (!type.includes("application/json")) {
+          throw new Error(
+            "Backend did not return JSON. Check the API files " +
+            "and latest Vercel deployment."
+          );
+        }
+
+        const result = await response.json();
+
+        if (
+          current !== generation ||
+          account.uid !== auth.currentUser?.uid
+        ) {
+          throw new Error("Sign-in changed.");
+        }
+
+        if (!response.ok) {
+          throw new Error(result.message || "Request failed.");
+        }
+
+        return result;
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error(
+            "Request timed out. A save may have completed. " +
+            "Refresh before repeating it."
+          );
+        }
+
+        throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function workflow(action, data = {}, requestId) {
+      return api("/api/workflow", {
+        method: "POST",
+        body: JSON.stringify({
+          action,
+          data,
+          ...(requestId ? { requestId } : {})
+        })
+      });
+    }
+
+    function postUser(body) {
+      return api("/api/users", {
+        method: "POST",
+        body: JSON.stringify(body)
+      });
+    }
+
+    function passwordValid(password) {
+      return (
+        password.length >= 12 &&
+        password.length <= 128 &&
+        /[a-z]/.test(password) &&
+        /[A-Z]/.test(password) &&
+        /[0-9]/.test(password) &&
+        /[^A-Za-z0-9]/.test(password)
+      );
+    }
+
+    function reportKey(row) {
+      return JSON.stringify([
+        String(row.date || "").trim(),
+        String(row.channel || "").trim().toUpperCase(),
+        String(row.identity || "").trim().toLowerCase()
+      ]);
+    }
+
+    function visibleRecords() {
+      const query = $("search").value.trim().toLowerCase();
+
+      return records.filter(row =>
+        (!$("date").value || row.date === $("date").value) &&
+        (!$("channel").value || row.channel === $("channel").value) &&
+        (
+          !$("statusFilter").value ||
+          row.status === $("statusFilter").value
+        ) &&
+        (
+          $("ownerFilter").value !== "unassigned" ||
+          !row.assignedUid
+        ) &&
+        (
+          $("ownerFilter").value !== "mine" ||
+          row.assignedUid === me?.uid
+        ) &&
+        (
+          !query ||
+          [
+            row.identity,
+            row.customer,
+            row.handler,
+            row.ticket,
+            row.agentName,
+            row.agentId,
+            row.remark
+          ].join(" ").toLowerCase().includes(query)
+        )
+      );
+    }
+
+    function renderReport() {
+      const administrator = me?.role === "admin";
+      const filtered = visibleRecords();
+      const visibleIds = new Set(filtered.map(row => row.id));
+
+      $("assignmentPanel").hidden = !administrator;
+
+      for (const id of selected) {
+        if (!visibleIds.has(id)) {
+          selected.delete(id);
+        }
+      }
+
+      $("assign").disabled =
+        busy ||
+        !ready ||
+        !administrator ||
+        !selected.size ||
+        !$("assignee").value;
+
+      $("selectAll").disabled =
+        busy || !ready || !administrator || !filtered.length;
+
+      $("selectAll").checked =
+        filtered.length > 0 &&
+        filtered.every(row => selected.has(row.id));
+
+      $("selectionInfo").textContent =
+        filtered.length + " visible / " +
+        records.length + " accessible. " +
+        selected.size + " selected.";
+
+      const stats = [
+        ["Displayed entries", filtered.length],
+        ...["CALL", "EMAIL", "CHAT"].map(channel => [
+          channel + " entries",
+          filtered.filter(row => row.channel === channel).length
+        ])
+      ];
+
+      $("cards").innerHTML = stats.map(([label, count]) => `
+        <div class="card">
+          ${escapeHTML(label)}
+          <strong>${count}</strong>
+        </div>
+      `).join("");
+
+      $("rows").innerHTML = filtered.map(row => `
+        <tr>
+          <td>
+            ${
+              administrator
+                ? `<input type="checkbox"
+                    data-select="${escapeHTML(row.id)}"
+                    ${selected.has(row.id) ? "checked" : ""}
+                    ${busy || !ready ? "disabled" : ""}>`
+                : ""
+            }
+          </td>
+
+          <td>${escapeHTML(row.date)}</td>
+          <td>${escapeHTML(row.weekday || "—")}</td>
+          <td>${escapeHTML(row.channel)}</td>
+
+          <td>
+            ${escapeHTML(row.identity)}<br>
+            <small>${escapeHTML(row.customer)}</small>
+          </td>
+
+          <td>${escapeHTML(row.count)}</td>
+          <td>${escapeHTML(row.first || "Unavailable")}</td>
+          <td>${escapeHTML(row.last || "Unavailable")}</td>
+          <td>${escapeHTML(row.handler || "Unavailable")}</td>
+          <td>${escapeHTML(row.agentName || "Unassigned")}</td>
+          <td>${escapeHTML(row.status)}</td>
+          <td class="remark">${escapeHTML(row.remark)}</td>
+          <td>${escapeHTML(row.updatedAt)}</td>
+
+          <td>
+            <div class="actions">
+              <button data-edit="${escapeHTML(row.id)}"
+                      ${busy || !ready ? "disabled" : ""}>
+                Open case
+              </button>
+
+              <button data-history="${escapeHTML(row.id)}"
+                      ${busy || !ready ? "disabled" : ""}>
+                History
+              </button>
+
+              <button data-detail="${escapeHTML(row.id)}"
+                      aria-expanded="${expanded.has(row.id)}">
+                ${expanded.has(row.id) ? "Hide" : "Details"}
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <tr id="detail-${escapeHTML(row.id)}"
+            ${expanded.has(row.id) ? "" : "hidden"}>
+          <td colspan="14" class="details">
+            Disposition:
+            ${escapeHTML(row.disposition || "Unavailable")}<br>
+
+            Source owner:
+            ${escapeHTML(row.owner || "Unavailable")}<br>
+
+            Form time — IST / Ticket modified — API raw:
+            ${escapeHTML(row.modified || "Unavailable")}<br>
+
+            Marvin ticket:
+            ${escapeHTML(row.ticket || "Unavailable")}<br>
+
+            Assigned to:
+            ${escapeHTML(row.agentName || "Unassigned")}<br>
+
+            Status: ${escapeHTML(row.status)}<br>
+
+            Latest remark: ${escapeHTML(row.remark || "None")}
+          </td>
+        </tr>
+      `).join("") ||
+        '<tr><td colspan="14">No visible records.</td></tr>';
+    }
+
+    async function loadDashboard() {
+      const current = generation;
+      ready = false;
+      selected.clear();
+      renderReport();
+
+      const jobs = [workflow("read")];
+
+      // The legacy full report is requested only for administrators.
+      if (me?.role === "admin") {
+        jobs.push(api("/api/cases"));
+      }
+
+      const results = await Promise.allSettled(jobs);
+
+      if (current !== generation) return "";
+
+      if (results[0].status !== "fulfilled") {
+        records = [];
+        assignees = [];
+        renderReport();
+        throw results[0].reason;
+      }
+
+      const data = results[0].value;
+
+      if (
+        !Array.isArray(data.cases) ||
+        !Array.isArray(data.users)
+      ) {
+        records = [];
+        renderReport();
+
+        throw new Error(
+          "Workflow API is not the updated version. " +
+          "Replace api/workflow.js with the simplified version."
+        );
+      }
+
+      if (
+        data.user?.uid !== me.uid ||
+        data.user?.role !== me.role
+      ) {
+        records = [];
+        renderReport();
+
+        throw new Error(
+          "Account permissions changed. Sign out and sign in again."
+        );
+      }
+
+      const metadata = new Map();
+      const notes = [];
+      let partialDetails = false;
+
+      if (me.role === "admin") {
+        const report = results[1];
+
+        if (
+          report.status === "fulfilled" &&
+          Array.isArray(report.value.cases)
+        ) {
+          report.value.cases.forEach(row => {
+            metadata.set(reportKey(row), row);
+          });
+
+          if (report.value.warning) {
+            notes.push(report.value.warning);
+          }
+
+          if (report.value.possiblyTruncated) {
+            notes.push(
+              "Source-detail read limit reached; some details may be missing."
+            );
+          }
+
+          const fetched = new Date(report.value.fetchedAt);
+
+          if (!Number.isNaN(fetched.getTime())) {
+            notes.push(
+              "Report details fetched " +
+              fetched.toLocaleString("en-GB", {
+                timeZone: "Asia/Kolkata"
+              }) +
+              " IST; not the source-sync completion time."
+            );
+          }
+        } else {
+          partialDetails = true;
+          notes.push(
+            "Extra report details could not be loaded. Refresh to retry."
+          );
+        }
+      } else {
+        notes.push(
+          "Showing your assigned cases. Additional source fields " +
+          "not supplied by the workflow API appear as Unavailable."
+        );
+      }
+
+      records = data.cases.map(row => {
+        const extra = metadata.get(reportKey(row)) || {};
+
+        return {
+          ...extra,
+          ...row,
+          customer: row.customer || extra.customer || "",
+          disposition: row.disposition || extra.disposition || ""
+        };
+      });
+
+      const previousAssignee = $("assignee").value;
+      assignees = data.users;
+
+      $("assignee").innerHTML =
+        '<option value="">Select user</option>' +
+        assignees.map(user => `
+          <option value="${escapeHTML(user.uid)}">
+            ${escapeHTML(user.name)}
+            ${user.uid === me.uid ? " — me" : ""}
+            ${user.agentId ? "(" + escapeHTML(user.agentId) + ")" : ""}
+            — ${escapeHTML(user.role)}
+          </option>
+        `).join("");
+
+      if (
+        assignees.some(user => user.uid === previousAssignee)
+      ) {
+        $("assignee").value = previousAssignee;
+      }
+
+      ready = true;
+
+      $("reportInfo").textContent =
+        "Loaded " + records.length + " cases. " + notes.join(" ");
+
+      renderReport();
+
+      return partialDetails
+        ? "Cases loaded; some source details are unavailable."
+        : "Cases loaded.";
+    }
+
+    async function saveWorkflow(action, data) {
+      const current = generation;
+      ready = false;
+      renderReport();
+
+      let result;
+
+      try {
+        result = await workflow(
+          action,
+          data,
+          crypto.randomUUID()
+        );
+      } catch (error) {
+        if (current === generation) {
+          records = [];
+          selected.clear();
+          renderReport();
+
+          status(
+            error.message +
+            "\nClick Refresh before trying another save.",
+            true
+          );
+        }
+
+        return false;
+      }
+
+      if (current !== generation) return false;
+
+      try {
+        await loadDashboard();
+
+        if (current === generation) {
+          status(result.message);
+        }
+      } catch (error) {
+        if (current === generation) {
+          status(
+            result.message +
+            "\nRefresh failed: " + error.message +
+            "\nClick Refresh; do not repeat the saved action.",
+            true
+          );
+        }
+      }
+
+      return true;
+    }
+
+    function renderUsers() {
+      $("userRows").innerHTML = users.map(user => {
+        const protectedAccount =
+          user.bootstrap || user.uid === me?.uid;
+
+        return `
+          <tr>
+            <td>${escapeHTML(user.name)}</td>
+            <td>${escapeHTML(user.agentId)}</td>
+            <td>${escapeHTML(user.role)}</td>
+            <td>${escapeHTML(user.loginMethod)}</td>
+            <td>${escapeHTML(user.loginId || user.email)}</td>
+            <td>${user.active ? "Active" : "Inactive"}</td>
+
+            <td>
+              ${
+                protectedAccount
+                  ? "Protected"
+                  : `
+                    <div class="actions">
+                      <button data-active="${escapeHTML(user.uid)}"
+                              ${busy ? "disabled" : ""}>
+                        ${user.active ? "Deactivate" : "Activate"}
+                      </button>
+
+                      ${
+                        user.loginMethod === "password"
+                          ? `
+                            <button data-reset="${escapeHTML(user.uid)}"
+                                    ${busy ? "disabled" : ""}>
+                              Reset password
+                            </button>
+                          `
+                          : ""
+                      }
+
+                      ${
+                        !user.active
+                          ? `
+                            <button class="danger"
+                                    data-delete="${escapeHTML(user.uid)}"
+                                    ${busy ? "disabled" : ""}>
+                              Delete user
+                            </button>
+                          `
+                          : ""
+                      }
+                    </div>
+                  `
+              }
+            </td>
+          </tr>
+        `;
+      }).join("") ||
+        '<tr><td colspan="7">No application users found.</td></tr>';
+    }
+
+    async function loadUsers() {
+      const current = generation;
+      const result = await api("/api/users");
+
+      if (current !== generation) return;
+
+      if (!Array.isArray(result.users)) {
+        throw new Error("Invalid user-list response.");
+      }
+
+      users = result.users;
+      renderUsers();
+    }
+
+    function showTab(showUsers) {
+      $("users").hidden = !showUsers;
+      $("report").hidden = showUsers;
+    }
+
+    function updateMethodFields() {
+      const password = $("newMethod").value === "password";
+
+      $("emailField").hidden = password;
+      $("idField").hidden = !password;
+      $("passField").hidden = !password;
+
+      $("newEmail").required = !password;
+      $("newEmail").disabled = password;
+
+      $("newId").required = password;
+      $("newId").disabled = !password;
+
+      $("newPassword").required = password;
+      $("newPassword").disabled = !password;
+    }
+
+    $("newMethod").onchange = updateMethodFields;
+    updateMethodFields();
+
+    $("reportTab").onclick = () => showTab(false);
+
+    $("usersTab").onclick = () => {
+      if (me?.role !== "admin") return;
+
+      showTab(true);
+
+      run(async () => {
+        await loadUsers();
+      });
+    };
+
+    $("reloadUsers").onclick = () => {
+      run(async current => {
+        await loadUsers();
+
+        if (current === generation) {
+          status("User list refreshed.");
+        }
+      });
+    };
+
+    $("refresh").onclick = () => {
+      run(async current => {
+        const text = await loadDashboard();
+
+        if (current !== generation) return;
+
+        status(text);
+
+        if (!$("users").hidden && me?.role === "admin") {
+          await loadUsers();
+        }
+      });
+    };
+
+    [
+      "search",
+      "date",
+      "channel",
+      "statusFilter",
+      "ownerFilter"
+    ].forEach(id => {
+      $(id).oninput = () => {
+        selected.clear();
+        renderReport();
+      };
+    });
+
+    $("clear").onclick = () => {
+      [
+        "search",
+        "date",
+        "channel",
+        "statusFilter",
+        "ownerFilter"
+      ].forEach(id => {
+        $(id).value = "";
+      });
+
+      selected.clear();
+      renderReport();
+    };
+
+    $("assignee").onchange = renderReport;
+
+    $("selectAll").onchange = () => {
+      if (busy || !ready || me?.role !== "admin") return;
+
+      const checked = $("selectAll").checked;
+      selected.clear();
+
+      if (checked) {
+        visibleRecords().slice(0, 50).forEach(row => {
+          selected.add(row.id);
+        });
+      }
+
+      renderReport();
+    };
+
+    $("rows").onchange = event => {
+      const checkbox = event.target.closest("[data-select]");
+
+      if (
+        !checkbox ||
+        busy ||
+        !ready ||
+        me?.role !== "admin"
+      ) {
+        return;
+      }
+
+      if (checkbox.checked) {
+        if (selected.size >= 50) {
+          checkbox.checked = false;
+          status("Select up to 50 cases per batch.", true);
+          return;
+        }
+
+        selected.add(checkbox.dataset.select);
+      } else {
+        selected.delete(checkbox.dataset.select);
+      }
+
+      renderReport();
+    };
+
+    $("assign").onclick = () => {
+      if (busy || !ready || me?.role !== "admin") return;
+
+      const target = assignees.find(
+        user => user.uid === $("assignee").value
+      );
+
+      const cases = records
+        .filter(row => selected.has(row.id))
+        .map(row => ({
+          id: row.id,
+          expectedVersion: row.version
+        }));
+
+      if (!target || !cases.length || cases.length > 50) {
+        return;
+      }
+
+      const approved = confirm(
+        "Assign/reassign " + cases.length + " case(s) to " +
+        target.name + " (" + target.role + ")?\n\n" +
+        "Existing owners will be replaced. " +
+        "Statuses and remarks will be kept."
+      );
+
+      if (!approved) return;
+
+      run(async () => {
+        await saveWorkflow("assign", {
+          cases,
+          targetUid: target.uid
+        });
+      });
+    };
+
+    $("rows").onclick = event => {
+      const detail = event.target.closest("[data-detail]");
+
+      if (detail) {
+        const id = detail.dataset.detail;
+
+        if (expanded.has(id)) {
+          expanded.delete(id);
+        } else {
+          expanded.add(id);
+        }
+
+        const row = $("detail-" + id);
+
+        if (row) {
+          row.hidden = !expanded.has(id);
+        }
+
+        detail.textContent = expanded.has(id)
+          ? "Hide"
+          : "Details";
+
+        detail.setAttribute(
+          "aria-expanded",
+          String(expanded.has(id))
+        );
+
+        return;
+      }
+
+      if (busy || !ready) return;
+
+      const edit = event.target.closest("[data-edit]");
+
+      if (edit) {
+        editing = records.find(
+          row => row.id === edit.dataset.edit
+        );
+
+        if (!editing) return;
+
+        $("caseDetails").textContent = [
+          "Date: " + editing.date + " · " + (editing.weekday || ""),
+          "Channel: " + editing.channel,
+          "Customer: " + (editing.customer || "—"),
+          "Phone / email: " + editing.identity,
+          "Contacts: " + editing.count,
+          "First — IST: " + (editing.first || "Unavailable"),
+          "Last — IST: " + (editing.last || "Unavailable"),
+          "Source handler: " + (editing.handler || "Unavailable"),
+          "Source owner: " + (editing.owner || "Unavailable"),
+          "Disposition: " + (editing.disposition || "Unavailable"),
+          "Marvin ticket: " + (editing.ticket || "Unavailable"),
+          "Assigned to: " + (editing.agentName || "Unassigned")
+        ].join("\n");
+
+        $("caseStatus").value = editing.status;
+
+        $("latestRemark").textContent =
+          "Latest remark: " + (editing.remark || "None");
+
+        $("remark").value = "";
+        $("caseMessage").textContent = "";
+        $("caseDialog").showModal();
+        return;
+      }
+
+      const history = event.target.closest("[data-history]");
+
+      if (history) {
+        run(async current => {
+          const result = await workflow("history", {
+            id: history.dataset.history
+          });
+
+          if (current !== generation) return;
+
+          $("historyText").textContent =
+            result.history.map(row => [
+              row[10] + " IST · " + row[9],
+              row[2],
+              "Status: " + (row[3] || "—") +
+                " → " + (row[4] || "—"),
+              row[7] || ""
+            ].join("\n")).join("\n\n") ||
+            "No changes saved yet.";
+
+          $("historyDialog").showModal();
+        });
+      }
+    };
+
+    $("caseForm").onsubmit = event => {
+      event.preventDefault();
+
+      if (busy || !ready || !editing) return;
+
+      const data = {
+        id: editing.id,
+        expectedVersion: editing.version,
+        status: $("caseStatus").value,
+        remark: $("remark").value.trim()
+      };
+
+      if (
+        data.status === editing.status &&
+        !data.remark
+      ) {
+        $("caseMessage").textContent =
+          "Change the status or enter a remark.";
+        return;
+      }
+
+      $("caseDialog").close();
+
+      run(async current => {
+        const saved = await saveWorkflow("update", data);
+
+        if (saved && current === generation) {
+          $("remark").value = "";
+          editing = null;
+        }
+      });
+    };
+
+    $("caseCancel").onclick = () => {
+      if (busy) return;
+
+      $("caseDialog").close();
+      $("remark").value = "";
+      editing = null;
+    };
+
+    $("historyClose").onclick = () => {
+      $("historyDialog").close();
+    };
+
+    $("createUser").onsubmit = event => {
+      event.preventDefault();
+
+      if (busy || me?.role !== "admin") return;
+
+      const method = $("newMethod").value;
+
+      const body = {
+        action: "create",
+        name: $("newName").value.trim(),
+        agentId: $("newAgent").value.trim(),
+        role: $("newRole").value,
+        loginMethod: method
+      };
+
+      if (method === "google") {
+        body.email = $("newEmail").value.trim().toLowerCase();
+      } else {
+        body.loginId = $("newId").value.trim().toLowerCase();
+        body.password = $("newPassword").value;
+
+        if (!passwordValid(body.password)) {
+          status(
+            "Use 12–128 characters with uppercase, lowercase, " +
+            "a number and a symbol.",
+            true
+          );
+          return;
+        }
+
+        if (!/^[a-z0-9][a-z0-9._-]{2,39}$/.test(body.loginId)) {
+          status(
+            "Login ID must be 3–40 lowercase letters, numbers, " +
+            "dots, underscores or hyphens, starting with a letter or number.",
+            true
+          );
+          return;
+        }
+      }
+
+      const approved = confirm(
+        "Create / approve this active account?\n\n" +
+        "Name: " + body.name + "\n" +
+        "Agent ID: " + body.agentId + "\n" +
+        "Role: " + body.role + "\n" +
+        "Login method: " + method + "\n" +
+        "Identity: " + (body.email || body.loginId) + "\n\n" +
+        "The password will not be displayed again."
+      );
+
+      if (!approved) {
+        delete body.password;
+        return;
+      }
+
+      run(async current => {
+        try {
+          const result = await postUser(body);
+
+          if (current !== generation) return;
+
+          $("createUser").reset();
+          updateMethodFields();
+          status(result.message);
+
+          try {
+            await loadUsers();
+          } catch {
+            if (current === generation) {
+              status(
+                result.message +
+                " Click Refresh users to reload the list.",
+                true
+              );
+            }
+          }
+        } finally {
+          delete body.password;
+
+          if (current === generation) {
+            $("newPassword").value = "";
+          }
+        }
+      });
+    };
+
+    $("userRows").onclick = event => {
+      if (busy || me?.role !== "admin") return;
+
+      const button = event.target.closest(
+        "[data-delete],[data-reset],[data-active]"
+      );
+
+      if (!button) return;
+
+      const uid =
+        button.dataset.delete ||
+        button.dataset.reset ||
+        button.dataset.active;
+
+      const user = users.find(item => item.uid === uid);
+
+      if (!user) {
+        status(
+          "Refresh users; this account is no longer in the list.",
+          true
+        );
+        return;
+      }
+
+      if (user.bootstrap || user.uid === me.uid) {
+        status("This account is protected.", true);
+        return;
+      }
+
+      if (button.dataset.reset) {
+        resetTarget = user;
+
+        $("resetName").textContent =
+          user.name + " (" + user.loginId + ")";
+
+        $("resetForm").reset();
+        $("resetDialog").showModal();
+        return;
+      }
+
+      if (button.dataset.delete) {
+        if (user.active) {
+          status(
+            "Deactivate the account before deleting it.",
+            true
+          );
+          return;
+        }
+
+        const identity = user.loginId || user.email;
+
+        if (!identity) {
+          status(
+            "Cannot identify this account. Refresh users.",
+            true
+          );
+          return;
+        }
+
+        const confirmation = prompt(
+          "Permanently delete this login account?\n\n" +
+          "Name: " + user.name + "\n" +
+          "Role: " + user.role + "\n" +
+          "Identity: " + identity + "\n\n" +
+          "Reassign its cases first. Historical case records, " +
+          "logs and backups will not be erased.\n\n" +
+          "Type this Login ID or email to confirm:\n" +
+          identity
+        );
+
+        if (confirmation === null) return;
+
+        if (
+          confirmation.trim().toLowerCase() !==
+          identity.trim().toLowerCase()
+        ) {
+          status(
+            "Deletion cancelled: confirmation did not match.",
+            true
+          );
+          return;
+        }
+
+        run(async current => {
+          const result = await api("/api/delete-user", {
+            method: "POST",
+            body: JSON.stringify({
+              uid: user.uid,
+              confirmation
+            })
+          });
+
+          if (current !== generation) return;
+
+          users = users.filter(item => item.uid !== user.uid);
+          renderUsers();
+          status(result.message);
+
+          try {
+            await loadUsers();
+          } catch {
+            if (current === generation) {
+              status(
+                result.message +
+                " Click Refresh users to reload the list.",
+                true
+              );
+            }
+          }
+        });
+
+        return;
+      }
+
+      const approved = confirm(
+        (user.active ? "Deactivate " : "Activate ") +
+        user.name + " (" + (user.loginId || user.email) + ")?"
+      );
+
+      if (!approved) return;
+
+      run(async current => {
+        const result = await postUser({
+          action: "active",
+          uid: user.uid,
+          active: !user.active
+        });
+
+        if (current !== generation) return;
+
+        user.active = !user.active;
+        renderUsers();
+        status(result.message);
+
+        try {
+          await loadUsers();
+        } catch {
+          if (current === generation) {
+            status(
+              result.message +
+              " Click Refresh users to reload the list.",
+              true
+            );
+          }
+        }
+      });
+    };
+
+    $("cancelReset").onclick = () => {
+      if (!busy) {
+        $("resetDialog").close();
+      }
+    };
+
+    $("resetDialog").addEventListener("cancel", event => {
+      if (busy) {
+        event.preventDefault();
+      }
+    });
+
+    $("resetDialog").addEventListener("close", () => {
+      $("replacementPassword").value = "";
+      resetTarget = null;
+    });
+
+    $("resetForm").onsubmit = event => {
+      event.preventDefault();
+
+      if (busy || !resetTarget || me?.role !== "admin") return;
+
+      const password = $("replacementPassword").value;
+
+      if (!passwordValid(password)) {
+        alert(
+          "Use 12–128 characters with uppercase, lowercase, " +
+          "a number and a symbol."
+        );
+        return;
+      }
+
+      const uid = resetTarget.uid;
+
+      run(async current => {
+        try {
+          const result = await postUser({
+            action: "resetPassword",
+            uid,
+            password
+          });
+
+          if (current === generation) {
+            $("resetDialog").close();
+            status(result.message);
+          }
+        } catch (error) {
+          if (current === generation) {
+            $("resetDialog").close();
+          }
+
+          throw error;
+        } finally {
+          if (current === generation) {
+            $("replacementPassword").value = "";
+          }
+        }
+      });
+    };
+
+    async function withTimeout(promise, milliseconds, message) {
+      let timer;
+
+      try {
+        return await Promise.race([
+          promise,
+          new Promise((resolve, reject) => {
+            timer = setTimeout(
+              () => reject(new Error(message)),
+              milliseconds
+            );
+          })
+        ]);
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    try {
+      $("loginStatus").textContent = "Loading Firebase sign-in…";
+
+      const modules = await withTimeout(
+        Promise.all([
+          import(
+            "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js"
+          ),
+          import(
+            "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js"
+          )
+        ]),
+        20000,
+        "Firebase scripts did not load within 20 seconds. " +
+        "Check the browser Console and network, then reload."
+      );
+
+      const { initializeApp } = modules[0];
+
+      const {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut,
+        setPersistence,
+        browserSessionPersistence
+      } = modules[1];
+
+      const firebaseApp = initializeApp({
+        apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
+        authDomain: "repeat-contact-dashboard.firebaseapp.com",
+        projectId: "repeat-contact-dashboard",
+        storageBucket:
+          "repeat-contact-dashboard.firebasestorage.app",
+        messagingSenderId: "527535186997",
+        appId: "1:527535186997:web:fdd746c7a7428f6695bd7c"
+      });
+
+      auth = getAuth(firebaseApp);
+
+      await withTimeout(
+        setPersistence(auth, browserSessionPersistence),
+        20000,
+        "Could not initialise the browser sign-in session. " +
+        "Check the browser Console and reload."
+      );
+
+      const provider = new GoogleAuthProvider();
+
+      provider.setCustomParameters({
+        prompt: "select_account"
+      });
+
+      $("google").disabled = false;
+      $("google").textContent = "Continue with Google";
+      $("passwordButton").disabled = false;
+      $("loginStatus").textContent = "Sign in with an approved account.";
+
+      $("google").onclick = async () => {
+        $("google").disabled = true;
+
+        try {
+          await signInWithPopup(auth, provider);
+        } catch (error) {
+          $("loginStatus").textContent =
+            "Google sign-in failed: " +
+            (error.code || error.message || "unknown");
+        } finally {
+          $("google").disabled = false;
+        }
+      };
+
+      $("passwordLogin").onsubmit = async event => {
+        event.preventDefault();
+
+        const loginId = $("loginId").value.trim().toLowerCase();
+
+        if (!/^[a-z0-9][a-z0-9._-]{2,39}$/.test(loginId)) {
+          $("loginStatus").textContent =
+            "Enter your assigned Login ID.";
+          return;
+        }
+
+        $("passwordButton").disabled = true;
+
+        try {
+          await signInWithEmailAndPassword(
+            auth,
+            loginId + "@repeat-contact-dashboard.firebaseapp.com",
+            $("loginPassword").value
+          );
+        } catch {
+          $("loginStatus").textContent =
+            "Sign-in failed. Check your Login ID/password " +
+            "and account activation.";
+        } finally {
+          $("loginPassword").value = "";
+          $("passwordButton").disabled = false;
+        }
+      };
+
+      async function logout() {
+        if (busy) {
+          status(
+            "Wait for the current request to finish before signing out.",
+            true
+          );
+          return;
+        }
+
+        try {
+          await signOut(auth);
+        } catch {
+          status("Sign-out failed. Please retry.", true);
+        }
+      }
+
+      $("logout").onclick = logout;
+      $("switchAccount").onclick = logout;
+
+      onAuthStateChanged(auth, async user => {
+        const current = ++generation;
+
+        me = null;
+        records = [];
+        users = [];
+        assignees = [];
+        ready = false;
+        busy = false;
+        editing = null;
+
+        selected.clear();
+        expanded.clear();
+
+        ["rows", "cards", "userRows"].forEach(id => {
+          $(id).innerHTML = "";
+        });
+
+        [
+          "reportInfo",
+          "status",
+          "account",
+          "historyText",
+          "caseDetails",
+          "latestRemark",
+          "caseMessage"
+        ].forEach(id => {
+          $(id).textContent = "";
+        });
+
+        [
+          "newPassword",
+          "loginPassword",
+          "remark",
+          "replacementPassword",
+          "search",
+          "date",
+          "channel",
+          "statusFilter",
+          "ownerFilter"
+        ].forEach(id => {
+          $(id).value = "";
+        });
+
+        $("assignee").innerHTML =
+          '<option value="">Select user</option>';
+
+        $("usersTab").hidden = true;
+        $("assignmentPanel").hidden = true;
+        $("app").hidden = true;
+        $("login").hidden = false;
+        $("switchAccount").hidden = !user;
+
+        [
+          "resetDialog",
+          "caseDialog",
+          "historyDialog"
+        ].forEach(id => {
+          if ($(id).open) {
+            $(id).close();
+          }
+        });
+
+        setBusy(false);
+
+        if (!user) {
+          $("loginStatus").textContent =
+            "Sign in with an approved account.";
+          return;
+        }
+
+        $("loginStatus").textContent =
+          "Checking account access…";
+
+        setBusy(true);
+
+        try {
+          const result = await api("/api/me");
+
+          if (current !== generation) return;
+
+          me = result.user;
+
+          $("account").textContent =
+            me.name + " · " +
+            (me.loginId || me.email || "") +
+            " · " + me.role;
+
+          $("usersTab").hidden = me.role !== "admin";
+
+          showTab(false);
+
+          $("login").hidden = true;
+          $("app").hidden = false;
+
+          const message = await loadDashboard();
+
+          if (current === generation) {
+            status(message);
+          }
+        } catch (error) {
+          if (current !== generation) return;
+
+          if (me) {
+            status(error.message, true);
+          } else {
+            $("loginStatus").textContent = error.message;
+          }
+        } finally {
+          if (current === generation) {
+            setBusy(false);
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Frontend initialisation failed:", error);
+
+      $("loginStatus").textContent =
+        "Sign-in could not initialise: " +
+        (error.message || error.code || "Unknown error");
+
+      $("loginStatus").classList.add("error");
+      $("google").textContent = "Reload page to retry";
+      $("google").disabled = false;
+      $("google").onclick = () => location.reload();
+      $("passwordButton").disabled = true;
+    }
+  </script>
+</body>
+</html>
