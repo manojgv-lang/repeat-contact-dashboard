@@ -292,9 +292,10 @@
     <main>
       <div class="notice">
         Assignment mode: PAUSED.
-        Stage 1: user management only.
+        User management and report reading are available.
+        The administrator can run a separate Sheet write test.
         Go Live, manual assignment, case status, remarks and
-        Sheet history are not implemented yet.
+        workflow-history writes are not implemented yet.
         The source report remains read-only.
       </div>
 
@@ -303,6 +304,10 @@
 
         <button id="usersTab" hidden>
           User management
+        </button>
+
+        <button id="writeTest" hidden>
+          Test Sheet writing
         </button>
       </div>
 
@@ -556,10 +561,15 @@
     function setBusy(value) {
       busy = value;
 
-      $("createButton").disabled = value;
-      $("reloadUsers").disabled = value;
-      $("resetSubmit").disabled = value;
-      $("cancelReset").disabled = value;
+      [
+        "createButton",
+        "reloadUsers",
+        "resetSubmit",
+        "cancelReset",
+        "writeTest"
+      ].forEach(id => {
+        $(id).disabled = value;
+      });
 
       $("userRows").querySelectorAll("button").forEach(
         button => {
@@ -604,7 +614,8 @@
         if (!type.includes("application/json")) {
           throw new Error(
             "Backend returned a non-JSON response. " +
-            "Check Vercel runtime logs and API deployment."
+            "Check that the required API file exists " +
+            "and the latest Vercel deployment is ready."
           );
         }
 
@@ -621,8 +632,8 @@
       } catch (error) {
         if (error.name === "AbortError") {
           throw new Error(
-            "Request timed out. Refresh the relevant list " +
-            "before repeating a create, update or delete action."
+            "Request timed out. Check the Sheet or refresh " +
+            "the relevant list before repeating a write action."
           );
         }
 
@@ -971,8 +982,6 @@
           return;
         }
 
-        // The server confirmed deletion. Remove the entry
-        // locally even if the following list refresh fails.
         users = users.filter(
           user => user.uid !== selectedUser.uid
         );
@@ -1003,6 +1012,54 @@
       }
     }
 
+    $("writeTest").onclick = async () => {
+      if (busy || me?.role !== "admin") {
+        return;
+      }
+
+      const approved = confirm(
+        "Run the Sheet write test?\n\n" +
+        "This will overwrite Workflow_Test!A1:C2 with:\n" +
+        "• A test result\n" +
+        "• Your administrator email\n" +
+        "• The current UTC timestamp\n\n" +
+        "It will not assign cases, enable Go Live, " +
+        "or modify Repeated_Users, Case_Tracker " +
+        "or Case_History."
+      );
+
+      if (!approved) {
+        return;
+      }
+
+      const currentGeneration = generation;
+      setBusy(true);
+
+      status("Testing Sheet writing…");
+
+      try {
+        const result = await api("/api/workflow-test", {
+          method: "POST",
+
+          body: JSON.stringify({
+            action: "write-test"
+          })
+        });
+
+        if (currentGeneration === generation) {
+          status(result.message);
+        }
+
+      } catch (error) {
+        if (currentGeneration === generation) {
+          status(error.message, true);
+        }
+
+      } finally {
+        setBusy(false);
+      }
+    };
+
     $("newMethod").onchange = updateMethodFields;
     updateMethodFields();
 
@@ -1011,7 +1068,7 @@
     };
 
     $("usersTab").onclick = async () => {
-      if (me?.role !== "admin") {
+      if (busy || me?.role !== "admin") {
         return;
       }
 
@@ -1042,6 +1099,10 @@
     };
 
     $("refresh").onclick = async () => {
+      if (busy) {
+        return;
+      }
+
       $("refresh").disabled = true;
 
       try {
@@ -1084,7 +1145,9 @@
       }
 
       row.hidden = !row.hidden;
-      button.textContent = row.hidden ? "View" : "Hide";
+
+      button.textContent =
+        row.hidden ? "View" : "Hide";
 
       button.setAttribute(
         "aria-expanded",
@@ -1507,8 +1570,8 @@
       async function logout() {
         if (busy) {
           status(
-            "Wait for the current user-management request " +
-            "to finish before signing out.",
+            "Wait for the current request to finish " +
+            "before signing out.",
             true
           );
           return;
@@ -1516,6 +1579,7 @@
 
         try {
           await signOut(auth);
+
         } catch {
           status(
             "Sign-out failed. Please retry.",
@@ -1546,6 +1610,8 @@
         $("loginPassword").value = "";
 
         $("usersTab").hidden = true;
+        $("writeTest").hidden = true;
+
         $("app").hidden = true;
         $("login").hidden = false;
         $("switchAccount").hidden = !user;
@@ -1578,6 +1644,9 @@
             me.role;
 
           $("usersTab").hidden =
+            me.role !== "admin";
+
+          $("writeTest").hidden =
             me.role !== "admin";
 
           showTab(false);
