@@ -1,6 +1,6 @@
 import {
   responseHeaders,
-  requireAdmin,
+  requireUser,
   sendError
 } from "../lib/server.js";
 
@@ -16,11 +16,12 @@ export default async function handler(req, res) {
   }
 
   try {
-    const user = await requireAdmin(req);
+    const user = await requireUser(req);
 
     return res.status(200).json({
       user,
-      mode: "read-only-live-test"
+      assignmentMode: "paused",
+      stage: 1
     });
 
   } catch (error) {
