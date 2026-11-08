@@ -11,6 +11,14 @@ import {
   checkPassword
 } from "../lib/server.js";
 
+function validEmail(email) {
+  return (
+    typeof email === "string" &&
+    email.length <= 254 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  );
+}
+
 export default async function handler(req, res) {
   responseHeaders(res);
 
@@ -25,6 +33,10 @@ export default async function handler(req, res) {
   try {
     const actor = await requireAdmin(req);
     const auth = adminAuth();
+
+    // ----------------------------------------------
+    // List application users
+    // ----------------------------------------------
 
     if (req.method === "GET") {
       const users = [];
@@ -59,7 +71,6 @@ export default async function handler(req, res) {
         }
 
         pageToken = page.pageToken;
-
       } while (pageToken);
 
       users.sort((a, b) =>
@@ -70,6 +81,10 @@ export default async function handler(req, res) {
     }
 
     const body = requestBody(req);
+
+    // ----------------------------------------------
+    // Create / approve an application user
+    // ----------------------------------------------
 
     if (body.action === "create") {
       const name = String(
@@ -97,44 +112,64 @@ export default async function handler(req, res) {
         );
       }
 
-      const loginId =
-        method === "password"
-          ? String(body.loginId || "").trim().toLowerCase()
-          : "";
+      let email = "";
+      let loginId = "";
 
-      if (
-        method === "password" &&
-        !/^[a-z0-9][a-z0-9._-]{2,39}$/.test(loginId)
-      ) {
-        throw httpError(
-          400,
-          "Login ID must contain 3–40 lowercase letters, " +
-          "numbers, dots, underscores or hyphens, and begin " +
-          "with a letter or number."
-        );
+      if (method === "google") {
+        email = String(
+          body.email || ""
+        ).trim().toLowerCase();
+
+      } else {
+        const enteredEmail = String(
+          body.email || ""
+        ).trim().toLowerCase();
+
+        const enteredLoginId = String(
+          body.loginId || ""
+        ).trim().toLowerCase();
+
+        if (enteredEmail) {
+          // Preferred: actual email + dashboard password.
+          email = enteredEmail;
+
+        } else if (enteredLoginId.includes("@")) {
+          // Accept an email sent by an older form under loginId.
+          email = enteredLoginId;
+
+        } else {
+          // Compatibility with the existing Login ID form.
+          if (
+            !/^[a-z0-9][a-z0-9._-]{2,39}$/.test(enteredLoginId)
+          ) {
+            throw httpError(
+              400,
+              "Enter the user's email address. " +
+              "For a legacy Login ID, use 3–40 lowercase " +
+              "letters, numbers, dots, underscores or hyphens."
+            );
+          }
+
+          loginId = enteredLoginId;
+          email = loginEmail(loginId);
+        }
+
+        checkPassword(body.password);
       }
 
-      const email =
-        method === "password"
-          ? loginEmail(loginId)
-          : String(body.email || "").trim().toLowerCase();
-
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (!validEmail(email)) {
         throw httpError(
           400,
-          "Enter a valid Google work email."
+          "Enter a valid email address."
         );
       }
 
       if (email === bootstrapEmail()) {
         throw httpError(
           400,
-          "Your bootstrap administrator already exists."
+          "The bootstrap administrator already exists. " +
+          "Continue using its Google sign-in."
         );
-      }
-
-      if (method === "password") {
-        checkPassword(body.password);
       }
 
       let user;
@@ -142,7 +177,6 @@ export default async function handler(req, res) {
 
       try {
         user = await auth.getUserByEmail(email);
-
       } catch (error) {
         if (error.code !== "auth/user-not-found") {
           throw error;
@@ -150,16 +184,18 @@ export default async function handler(req, res) {
       }
 
       if (user) {
-        const hasPasswordProvider =
-          user.providerData.some(
-            provider => provider.providerId === "password"
-          );
+        const providers = user.providerData || [];
 
-        const hasOtherProvider =
-          user.providerData.some(
-            provider => provider.providerId !== "google.com"
-          );
+        const hasPasswordProvider = providers.some(
+          provider => provider.providerId === "password"
+        );
 
+        const hasOtherProvider = providers.some(
+          provider => provider.providerId !== "google.com"
+        );
+
+        // Do not overwrite an existing account or password.
+        // The existing Google approval flow is preserved.
         if (
           method !== "google" ||
           user.customClaims?.appUser === true ||
@@ -168,7 +204,9 @@ export default async function handler(req, res) {
         ) {
           throw httpError(
             409,
-            "An account already exists for this identity."
+            "An account already exists for this email or Login ID. " +
+            "Use the existing account. For an existing password " +
+            "account, use Reset password instead."
           );
         }
 
@@ -231,14 +269,23 @@ export default async function handler(req, res) {
 
       return res.status(201).json({
         message:
-          "Account saved. Share credentials privately. " +
-          "Passwords are not returned.",
+          method === "password"
+            ? loginId
+              ? "Account saved. Sign in using the Login ID " +
+                "and dashboard password. Share credentials privately."
+              : "Account saved. Sign in using the email address " +
+                "and dashboard password. Share credentials privately."
+            : "Account approved. Use Continue with Google.",
 
         user: userProfile(
           await auth.getUser(user.uid)
         )
       });
     }
+
+    // ----------------------------------------------
+    // Activate, deactivate or reset password
+    // ----------------------------------------------
 
     if (
       !["active", "resetPassword"].includes(body.action)
@@ -252,7 +299,10 @@ export default async function handler(req, res) {
     const uid = String(body.uid || "");
 
     if (!uid) {
-      throw httpError(400, "User ID required.");
+      throw httpError(
+        400,
+        "User ID required."
+      );
     }
 
     const target = await auth.getUser(uid);
@@ -344,7 +394,7 @@ export default async function handler(req, res) {
     ) {
       error = httpError(
         409,
-        "Identity already exists."
+        "An account already exists for this identity."
       );
     }
 
@@ -360,6 +410,16 @@ export default async function handler(req, res) {
 
     if (
       !error.status &&
+      error.code === "auth/invalid-email"
+    ) {
+      error = httpError(
+        400,
+        "Enter a valid email address."
+      );
+    }
+
+    if (
+      !error.status &&
       [
         "auth/invalid-password",
         "auth/password-does-not-meet-requirements"
@@ -367,7 +427,9 @@ export default async function handler(req, res) {
     ) {
       error = httpError(
         400,
-        "Password does not meet the Firebase project password policy."
+        "Password was rejected by Firebase. " +
+        "Use at least 6 characters and check whether the " +
+        "Firebase project has a stricter password policy."
       );
     }
 
