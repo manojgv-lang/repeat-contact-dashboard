@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Repeat Contact — Workflow</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      font: 15px Arial, sans-serif;
+      color: #172b4d;
+      background: #f3f6fb;
+    }
+
+    header {
+      padding: 24px;
+      background: #10264a;
+      color: white;
+    }
+
+    h1 { margin: 0 0 12px; }
+    main { padding: 22px; }
+
+    button, input, select, textarea {
+      font: inherit;
+      padding: 10px;
+      border: 1px solid #ccd7e7;
+      border-radius: 7px;
+      background: white;
+      color: #172b4d;
+    }
+
+    button { cursor: pointer; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #dce4ef;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .flex {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .notice {
+      padding: 15px;
+      background: #fff8e8;
+      border: 1px solid #efd395;
+      border-radius: 8px;
+      margin: 15px 0;
+      line-height: 1.6;
+    }
+
+    .error { color: #b42318; }
+    .scroll { overflow: auto; }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      white-space: nowrap;
+    }
+
+    td, th {
+      padding: 12px;
+      border-bottom: 1px solid #e6edf5;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th { background: #eef3fb; }
+
+    #search { min-width: 220px; flex: 1; }
+
+    #message {
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    dialog {
+      width: min(650px, 95vw);
+      border: 1px solid #ccd7e7;
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    dialog::backdrop { background: #0006; }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      margin: 12px 0;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font: 13px Arial, sans-serif;
+      line-height: 1.7;
+    }
+
+    a { color: #2563eb; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Repeat Contact Workflow</h1>
+    <div id="account">Checking sign-in…</div>
+  </header>
+
+  <main>
+    <div class="panel">
+      <a href="/">Back to report / user management</a>
+
+      <p id="message" role="status" aria-live="polite">
+        Loading workflow…
+      </p>
+
+      <div class="notice" id="modeLabel">
+        Assignment is blocked until settings load.
+      </div>
+
+      <div class="flex">
+        <button id="refresh" disabled>Refresh workflow</button>
+
+        <div id="adminControls" class="flex" hidden>
+          <button id="live" class="primary">Go Live</button>
+          <button id="pause">Pause Assignments</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="assignmentPanel" class="panel" hidden>
+      <div class="flex">
+        <select id="agent" aria-label="Target agent"></select>
+
+        <button id="assign" class="primary">
+          Assign selected
+        </button>
+      </div>
+
+      <p>
+        Select up to 50 unassigned records for today.
+        Go Live enables manual assignment only.
+        It does not distribute cases automatically.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="flex">
+        <input id="search" placeholder="Search customer, identity or agent">
+        <input id="date" type="date" aria-label="Reporting date">
+
+        <select id="statusFilter">
+          <option value="">All statuses</option>
+          <option>Not tracked</option>
+          <option>Open</option>
+          <option>Closed</option>
+        </select>
+
+        <button id="clear">All dates / clear filters</button>
+      </div>
+
+      <p id="count"></p>
+
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                <input id="selectAll" type="checkbox"
+                       aria-label="Select eligible visible records">
+              </th>
+              <th>DATE</th>
+              <th>CHANNEL</th>
+              <th>CUSTOMER</th>
+              <th>CONTACTS</th>
+              <th>ASSIGNED AGENT</th>
+              <th>STATUS</th>
+              <th>UPDATED — IST</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <dialog id="editor">
+    <form id="editForm">
+      <h2>Update case</h2>
+      <p id="caseLabel"></p>
+      <p id="disposition"></p>
+      <p id="latestRemark"></p>
+
+      <label>
+        Status
+        <select id="caseStatus">
+          <option>Open</option>
+          <option>Closed</option>
+        </select>
+      </label>
+
+      <textarea id="remark" maxlength="2000"
+                placeholder="Add a new remark" required></textarea>
+
+      <div class="flex">
+        <button id="save" class="primary">Save status and remark</button>
+        <button id="cancel" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="historyDialog">
+    <h2>Case history</h2>
+    <pre id="historyText"></pre>
+    <button id="closeHistory">Close</button>
+  </dialog>
+
+  <script type="module">
+    const $ = id => document.getElementById(id);
+
+    const escapeHTML = value => String(value ?? "")
+      .replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[c]);
+
+    let auth;
+    let state;
+    let busy = false;
+    let selected = new Set();
+    let editing = null;
+    let firstLoad = true;
+
+    function message(text, error = false) {
+      $("message").textContent = text;
+      $("message").classList.toggle("error", error);
+    }
+
+    function lock(value) {
+      busy = value;
+
+      [
+        "refresh", "live", "pause", "assign",
+        "save", "cancel"
+      ].forEach(id => {
+        $(id).disabled = value;
+      });
+
+      render();
+    }
+
+    async function call(action, data = {}, requestId) {
+      if (!auth.currentUser) {
+        throw new Error("Sign in on the main dashboard first.");
+      }
+
+      const token = await auth.currentUser.getIdToken();
+      const controller = new AbortController();
+
+      const timer = setTimeout(
+        () => controller.abort(),
+        35000
+      );
+
+      try {
+        const response = await fetch("/api/workflow", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token,
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            action,
+            data,
+            ...(requestId ? { requestId } : {})
+          }),
+
+          cache: "no-store",
+          signal: controller.signal
+        });
+
+        if (
+          !(response.headers.get("content-type") || "")
+            .includes("application/json")
+        ) {
+          throw new Error(
+            "Workflow endpoint did not return JSON. Check deployment."
+          );
+        }
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || "Request failed.");
+        }
+
+        return result;
+
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error(
+            "Request timed out. It may have completed. " +
+            "Refresh workflow before submitting again."
+          );
+        }
+
+        throw error;
+
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function eligible(row) {
+      return (
+        state?.user.role === "admin" &&
+        state.mode.mode === "live" &&
+        row.date === state.today &&
+        row.sourcePresent &&
+        !row.assignedUid
+      );
+    }
+
+    function visibleRows() {
+      const search = $("search").value.trim().toLowerCase();
+
+      return (state?.cases || []).filter(row =>
+        (!$("date").value || row.date === $("date").value) &&
+        (!$("statusFilter").value ||
+          row.status === $("statusFilter").value) &&
+        (!search ||
+          [
+            row.identity,
+            row.customer,
+            row.agentName,
+            row.agentId
+          ].join(" ").toLowerCase().includes(search))
+      );
+    }
+
+    function render() {
+      if (!state) {
+        return;
+      }
+
+      const administrator = state.user.role === "admin";
+
+      $("account").textContent =
+        state.user.name + " · " + state.user.role;
+
+      $("adminControls").hidden = !administrator;
+      $("assignmentPanel").hidden = !administrator;
+
+      $("modeLabel").textContent =
+        "Assignment mode: " + state.mode.mode.toUpperCase() +
+        ". Today — IST: " + state.today + ". " +
+        (
+          state.mode.mode === "live"
+            ? "Manual assignment is enabled for today."
+            : "New assignments are blocked. Existing cases can still be updated."
+        );
+
+      $("live").disabled = busy || state.mode.mode === "live";
+      $("pause").disabled = busy || state.mode.mode === "paused";
+
+      const rows = visibleRows();
+
+      selected = new Set(
+        [...selected].filter(id =>
+          rows.some(row => row.id === id && eligible(row))
+        )
+      );
+
+      $("count").textContent =
+        rows.length + " visible / " +
+        state.cases.length + " accessible. " +
+        selected.size + " selected.";
+
+      $("assign").disabled =
+        busy ||
+        state.mode.mode !== "live" ||
+        !selected.size ||
+        !$("agent").value;
+
+      $("rows").innerHTML = rows.map(row => `
+        <tr>
+          <td>
+            ${
+              eligible(row)
+                ? `<input type="checkbox"
+                    data-select="${escapeHTML(row.id)}"
+                    ${selected.has(row.id) ? "checked" : ""}
+                    ${busy ? "disabled" : ""}>`
+                : ""
+            }
+          </td>
+
+          <td>${escapeHTML(row.date)}</td>
+          <td>${escapeHTML(row.channel)}</td>
+
+          <td>
+            ${escapeHTML(row.identity)}
+            <br>
+            ${escapeHTML(row.customer)}
+          </td>
+
+          <td>${escapeHTML(row.count)}</td>
+          <td>${escapeHTML(row.agentName || "Unassigned")}</td>
+          <td>${escapeHTML(row.status)}</td>
+          <td>${escapeHTML(row.updatedAt)}</td>
+
+          <td>
+            ${
+              row.assignedUid
+                ? `
+                  <button data-edit="${escapeHTML(row.id)}"
+                          ${busy ? "disabled" : ""}>
+                    Status / remark
+                  </button>
+
+                  <button data-history="${escapeHTML(row.id)}"
+                          ${busy ? "disabled" : ""}>
+                    History
+                  </button>
+                `
+                : "Not tracked"
+            }
+          </td>
+        </tr>
+      `).join("") ||
+        '<tr><td colspan="9">No matching cases.</td></tr>';
+
+      const selectable = rows.filter(eligible);
+
+      $("selectAll").disabled =
+        busy || !selectable.length;
+
+      $("selectAll").checked =
+        selectable.length > 0 &&
+        selectable.every(row => selected.has(row.id));
+    }
+
+    async function refresh() {
+      state = await call("read");
+
+      if (firstLoad) {
+        $("date").value = state.today;
+        firstLoad = false;
+      }
+
+      const previousAgent = $("agent").value;
+
+      $("agent").innerHTML =
+        '<option value="">Select active agent</option>' +
+        state.agents.map(agent => `
+          <option value="${escapeHTML(agent.uid)}">
+            ${escapeHTML(agent.name)}
+            (${escapeHTML(agent.agentId)})
+          </option>
+        `).join("");
+
+      if (state.agents.some(agent => agent.uid === previousAgent)) {
+        $("agent").value = previousAgent;
+      }
+
+      selected.clear();
+      render();
+    }
+
+    async function mutate(action, data, confirmation) {
+      if (busy || !confirm(confirmation)) {
+        return;
+      }
+
+      const requestId = crypto.randomUUID();
+      lock(true);
+
+      try {
+        const result = await call(action, data, requestId);
+        message(result.message);
+
+        try {
+          await refresh();
+        } catch {
+          message(
+            result.message +
+            " Refresh failed. Reload workflow before another write.",
+            true
+          );
+
+          state = null;
+          $("rows").innerHTML = "";
+        }
+
+      } catch (error) {
+        message(error.message, true);
+
+        try {
+          await refresh();
+        } catch {
+          state = null;
+          $("rows").innerHTML = "";
+        }
+
+      } finally {
+        lock(false);
+      }
+    }
+
+    $("refresh").onclick = async () => {
+      if (busy) return;
+      lock(true);
+
+      try {
+        await refresh();
+        message("Workflow refreshed.");
+      } catch (error) {
+        state = null;
+        $("rows").innerHTML = "";
+        message(error.message, true);
+      } finally {
+        lock(false);
+      }
+    };
+
+    $("live").onclick = () => {
+      if (!state) return;
+
+      mutate("mode", {
+        mode: "live",
+        expectedVersion: state.mode.version
+      },
+        "Enable manual assignment for today's unassigned records?\n\n" +
+        "No cases will be assigned automatically."
+      );
+    };
+
+    $("pause").onclick = () => {
+      if (!state) return;
+
+      mutate("mode", {
+        mode: "paused",
+        expectedVersion: state.mode.version
+      },
+        "Pause new assignments?\n\n" +
+        "Existing case ownership and updates will remain available."
+      );
+    };
+
+    $("assign").onclick = () => {
+      if (!state) return;
+
+      const agent = state.agents.find(
+        item => item.uid === $("agent").value
+      );
+
+      if (!agent || !selected.size) return;
+
+      if (selected.size > 50) {
+        message("Select no more than 50 cases per batch.", true);
+        return;
+      }
+
+      mutate("assign", {
+        ids: [...selected],
+        targetUid: agent.uid,
+        expectedModeVersion: state.mode.version
+      },
+        "Assign " + selected.size + " selected case(s) to:\n" +
+        agent.name + " (" + agent.agentId + ")?\n\n" +
+        "Only today's unassigned records are eligible."
+      );
+    };
+
+    $("rows").onchange = event => {
+      const checkbox = event.target.closest("[data-select]");
+      if (!checkbox || busy) return;
+
+      if (checkbox.checked) {
+        selected.add(checkbox.dataset.select);
+      } else {
+        selected.delete(checkbox.dataset.select);
+      }
+
+      render();
+    };
+
+    $("selectAll").onchange = () => {
+      if (busy) return;
+
+      const rows = visibleRows().filter(eligible);
+
+      selected = $("selectAll").checked
+        ? new Set(rows.slice(0, 50).map(row => row.id))
+        : new Set();
+
+      render();
+    };
+
+    $("rows").onclick = async event => {
+      if (busy || !state) return;
+
+      const edit = event.target.closest("[data-edit]");
+
+      if (edit) {
+        editing = state.cases.find(row => row.id === edit.dataset.edit);
+
+        $("caseLabel").textContent =
+          editing.date + " · " + editing.channel +
+          " · " + editing.identity;
+
+        $("disposition").textContent =
+          "Source disposition: " +
+          (editing.disposition || "Unavailable");
+
+        $("latestRemark").textContent =
+          "Latest saved remark: " +
+          (editing.remark || "None");
+
+        $("caseStatus").value = editing.status;
+        $("remark").value = "";
+        $("editor").showModal();
+        return;
+      }
+
+      const history = event.target.closest("[data-history]");
+
+      if (history) {
+        lock(true);
+
+        try {
+          const result = await call("history", {
+            id: history.dataset.history
+          });
+
+          $("historyText").textContent =
+            result.history.map(row =>
+              row[10] + " IST · " + row[9] + "\n" +
+              row[2] + ": " + row[3] + " → " + row[4] +
+              "\n" + (row[7] || "")
+            ).join("\n\n") || "No history.";
+
+          $("historyDialog").showModal();
+
+        } catch (error) {
+          message(error.message, true);
+        } finally {
+          lock(false);
+        }
+      }
+    };
+
+    $("editForm").onsubmit = async event => {
+      event.preventDefault();
+
+      if (busy || !editing || !state) return;
+
+      const remark = $("remark").value.trim();
+
+      if (!remark) return;
+
+      const data = {
+        id: editing.id,
+        expectedVersion: editing.version,
+        status: $("caseStatus").value,
+        remark
+      };
+
+      const approved = confirm(
+        "Save this case update?\n\n" +
+        editing.identity + "\n" +
+        "Status: " + data.status + "\n" +
+        "Remark: " + data.remark
+      );
+
+      if (!approved) return;
+
+      $("editor").close();
+
+      // Confirmation was already shown above.
+      lock(true);
+
+      try {
+        const result = await call(
+          "update",
+          data,
+          crypto.randomUUID()
+        );
+
+        message(result.message);
+        await refresh();
+
+      } catch (error) {
+        message(
+          error.message +
+          " Refresh before submitting another update.",
+          true
+        );
+
+        try {
+          await refresh();
+        } catch {
+          state = null;
+          $("rows").innerHTML = "";
+        }
+
+      } finally {
+        editing = null;
+        $("remark").value = "";
+        lock(false);
+      }
+    };
+
+    $("cancel").onclick = () => $("editor").close();
+
+    $("closeHistory").onclick = () =>
+      $("historyDialog").close();
+
+    $("agent").onchange = render;
+
+    ["search", "date", "statusFilter"].forEach(id => {
+      $(id).oninput = () => {
+        selected.clear();
+        render();
+      };
+    });
+
+    $("clear").onclick = () => {
+      $("search").value = "";
+      $("date").value = "";
+      $("statusFilter").value = "";
+      selected.clear();
+      render();
+    };
+
+    try {
+      const { initializeApp } = await import(
+        "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js"
+      );
+
+      const {
+        getAuth,
+        onAuthStateChanged,
+        setPersistence,
+        browserSessionPersistence
+      } = await import(
+        "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js"
+      );
+
+      auth = getAuth(initializeApp({
+        apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
+        authDomain: "repeat-contact-dashboard.firebaseapp.com",
+        projectId: "repeat-contact-dashboard",
+        messagingSenderId: "527535186997",
+        appId: "1:527535186997:web:fdd746c7a7428f6695bd7c"
+      }));
+
+      await setPersistence(auth, browserSessionPersistence);
+
+      onAuthStateChanged(auth, async user => {
+        state = null;
+        selected.clear();
+        $("rows").innerHTML = "";
+        $("adminControls").hidden = true;
+        $("assignmentPanel").hidden = true;
+
+        if (!user) {
+          $("account").textContent = "Not signed in";
+
+          message(
+            "Open the main dashboard, sign in, then return " +
+            "to this page in the same browser tab.",
+            true
+          );
+
+          return;
+        }
+
+        lock(true);
+
+        try {
+          await refresh();
+          message("Workflow loaded. Review mode before assigning.");
+        } catch (error) {
+          message(error.message, true);
+        } finally {
+          lock(false);
+        }
+      });
+
+    } catch {
+      message(
+        "Frontend could not initialise. Check browser Console.",
+        true
+      );
+    }
+  </script>
+</body>
+</html>
