@@ -27,20 +27,15 @@ export default async function handler(req, res) {
     const user = await requireUser(req);
     const body = requestBody(req);
 
-    const allowed = [
-      "read",
-      "history",
-      "mode",
-      "assign",
-      "update"
-    ];
-
-    if (!allowed.includes(body.action)) {
+    if (
+      !["read", "history", "assign", "update"]
+        .includes(body.action)
+    ) {
       throw httpError(400, "Unknown workflow action.");
     }
 
     if (
-      ["mode", "assign"].includes(body.action) &&
+      body.action === "assign" &&
       user.role !== "admin"
     ) {
       throw httpError(403, "Administrator access required.");
@@ -48,18 +43,18 @@ export default async function handler(req, res) {
 
     const data = { ...(body.data || {}) };
 
-    // Never trust a browser-supplied target profile.
+    // Target identity is always verified on the server.
     delete data.target;
 
     if (body.action === "assign") {
-      const targetUid = String(data.targetUid || "");
-
       let target;
 
       try {
-        target = await adminAuth().getUser(targetUid);
+        target = await adminAuth().getUser(
+          String(data.targetUid || "")
+        );
       } catch {
-        throw httpError(400, "Selected agent was not found.");
+        throw httpError(400, "Selected user was not found.");
       }
 
       const claims = target.customClaims || {};
@@ -67,27 +62,30 @@ export default async function handler(req, res) {
       if (
         target.disabled ||
         claims.appUser !== true ||
-        claims.appRole !== "agent"
+        !["admin", "agent"].includes(claims.appRole)
       ) {
-        throw httpError(
-          400,
-          "Select an active application agent."
-        );
+        throw httpError(400, "Select an active application user.");
       }
 
       data.target = {
         uid: target.uid,
-        name: target.displayName || claims.agentId || target.uid,
+        name:
+          target.displayName ||
+          claims.agentId ||
+          target.uid,
         agentId: claims.agentId || "",
-        role: "agent"
+        role: claims.appRole
       };
 
       delete data.targetUid;
     }
 
-    let agents = [];
+    const users = [];
 
-    if (body.action === "read" && user.role === "admin") {
+    if (
+      body.action === "read" &&
+      user.role === "admin"
+    ) {
       let pageToken;
 
       do {
@@ -102,24 +100,26 @@ export default async function handler(req, res) {
           if (
             !account.disabled &&
             claims.appUser === true &&
-            claims.appRole === "agent"
+            ["admin", "agent"].includes(claims.appRole)
           ) {
-            agents.push({
+            users.push({
               uid: account.uid,
               name:
                 account.displayName ||
                 claims.agentId ||
                 account.uid,
-              agentId: claims.agentId || ""
+              agentId: claims.agentId || "",
+              role: claims.appRole
             });
           }
         }
 
         pageToken = page.pageToken;
-
       } while (pageToken);
 
-      agents.sort((a, b) => a.name.localeCompare(b.name));
+      users.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
     }
 
     const url = process.env.WORKFLOW_URL || "";
@@ -129,17 +129,13 @@ export default async function handler(req, res) {
       !/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(url) ||
       secret.length < 32
     ) {
-      throw httpError(
-        503,
-        "Configure WORKFLOW_URL and WORKFLOW_SECRET."
-      );
+      throw httpError(503, "Workflow configuration is missing.");
     }
 
     const payload = JSON.stringify({
       action: body.action,
       data,
       requestId: body.requestId || randomUUID(),
-
       actor: {
         uid: user.uid,
         name: user.name,
@@ -148,7 +144,7 @@ export default async function handler(req, res) {
     });
 
     if (Buffer.byteLength(payload, "utf8") > 40000) {
-      throw httpError(413, "Workflow request is too large.");
+      throw httpError(413, "Request is too large.");
     }
 
     const timestamp = Date.now();
@@ -172,31 +168,26 @@ export default async function handler(req, res) {
         headers: {
           "Content-Type": "application/json"
         },
-
         body: JSON.stringify({
           timestamp,
           payload,
           signature
         }),
-
         redirect: "follow",
         signal: controller.signal
       });
 
       if (!response.ok) {
-        throw new Error("Workflow HTTP response failed.");
+        throw new Error("Workflow response failed.");
       }
 
       reply = await response.json();
-
     } catch {
       throw httpError(
         502,
-        "Workflow service did not return a valid response. " +
-        "Check the Apps Script deployment and executions. " +
-        "A timed-out write may have completed: refresh before retrying."
+        "Could not confirm the workflow response. " +
+        "Refresh before retrying: a save may have completed."
       );
-
     } finally {
       clearTimeout(timer);
     }
@@ -210,21 +201,19 @@ export default async function handler(req, res) {
         status <= 599
           ? status
           : 502,
-
         reply.message || "Workflow request failed."
       );
     }
 
     return res.status(200).json({
       ...reply.result,
-      agents,
+      users,
       user: {
         uid: user.uid,
         name: user.name,
         role: user.role
       }
     });
-
   } catch (error) {
     return sendError(res, error);
   }
