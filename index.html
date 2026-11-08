@@ -2,1199 +2,1069 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
 
   <title>Repeat Contact Dashboard</title>
 
   <style>
-    :root {
-      --navy: #10264a;
-      --blue: #2563eb;
-      --bg: #f3f6fb;
-      --border: #dce4ef;
-      --text: #172b4d;
-      --muted: #64748b;
+    * {
+      box-sizing: border-box;
     }
 
-    * { box-sizing: border-box; }
-
-    [hidden] { display: none !important; }
+    [hidden] {
+      display: none !important;
+    }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
+      background: #f3f6fb;
+      color: #172b4d;
+      font: 15px Arial, sans-serif;
     }
-
-    button, input, select, textarea {
-      font: inherit;
-    }
-
-    button {
-      padding: 11px 15px;
-      background: white;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    button:hover { background: #eef4ff; }
-
-    button:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-    }
-
-    .primary {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: white;
-    }
-
-    .primary:hover { background: #1d4ed8; }
-
-    input, select, textarea {
-      padding: 11px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      background: white;
-    }
-
-    input:focus, select:focus, textarea:focus,
-    button:focus-visible {
-      outline: 2px solid #7aa7ff;
-      outline-offset: 2px;
-    }
-
-    label {
-      display: block;
-      margin: 15px 0 7px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    p { line-height: 1.6; }
-
-    h1, h2, h3 { margin-top: 0; }
-
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .notice {
-      padding: 14px 16px;
-      border: 1px solid #efd395;
-      background: #fff8e8;
-      border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .message {
-      margin-top: 15px;
-      font-size: 14px;
-      line-height: 1.7;
-      white-space: pre-line;
-      overflow-wrap: anywhere;
-    }
-
-    .error { color: #b42318; }
-
-    /* LOGIN */
-
-    .login-page {
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-    }
-
-    .login-card {
-      width: min(490px, 100%);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      background: white;
-      box-shadow: 0 16px 50px #10264a12;
-    }
-
-    .login-heading {
-      padding: 28px;
-      background: var(--navy);
-      color: white;
-    }
-
-    .login-heading h1 {
-      font-size: 25px;
-      margin-bottom: 10px;
-    }
-
-    .login-heading p {
-      color: #c8d7ef;
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .login-content { padding: 25px; }
-
-    .login-content input,
-    .login-content button {
-      width: 100%;
-    }
-
-    .divider {
-      text-align: center;
-      color: var(--muted);
-      margin: 23px 0;
-      font-size: 12px;
-    }
-
-    .login-submit { margin-top: 18px; }
-
-    /* DASHBOARD */
 
     header {
-      background: var(--navy);
+      background: #10264a;
       color: white;
-      padding: 24px 30px;
+      padding: 24px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 20px;
       flex-wrap: wrap;
     }
 
-    header h1 {
-      font-size: 25px;
-      margin-bottom: 8px;
+    h1 {
+      margin: 0 0 12px;
     }
 
-    header p {
-      color: #c8d7ef;
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .account {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-
-    .account-info {
-      text-align: right;
-      font-size: 13px;
-      line-height: 1.8;
+    h2 {
+      font-size: 20px;
     }
 
     main {
-      max-width: 1550px;
-      margin: auto;
-      padding: 24px;
+      padding: 22px;
     }
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(110px, 1fr));
-      gap: 15px;
-      margin-bottom: 22px;
-    }
-
-    .card {
-      padding: 20px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    button,
+    input,
+    select {
+      font: inherit;
+      padding: 11px;
+      border: 1px solid #ccd7e7;
+      border-radius: 7px;
       background: white;
+      color: #172b4d;
     }
 
-    .card span {
-      font-size: 13px;
-      color: var(--muted);
+    button {
+      cursor: pointer;
     }
 
-    .card strong {
-      display: block;
-      font-size: 29px;
-      margin-top: 10px;
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .primary {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
     }
 
     .panel {
       background: white;
-      border: 1px solid var(--border);
+      border: 1px solid #dce4ef;
       border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .panel-top {
       padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
     }
 
-    .panel-top h2 {
-      font-size: 19px;
-      margin: 0;
+    .notice {
+      background: #fff8e8;
+      border: 1px solid #efd395;
+      padding: 15px;
+      line-height: 1.6;
+      border-radius: 9px;
+      margin: 15px 0;
     }
 
-    .filters {
+    .error {
+      color: #b42318;
+    }
+
+    .flex {
       display: flex;
       gap: 12px;
+      align-items: center;
       flex-wrap: wrap;
-      padding: 18px;
-      background: #fbfcfe;
     }
 
-    .filters input[type="search"] {
-      flex: 1;
-      min-width: 220px;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
     }
 
-    .table-wrap { overflow-x: auto; }
+    label {
+      display: grid;
+      gap: 7px;
+    }
+
+    #login {
+      max-width: 500px;
+      margin: 8vh auto;
+      padding: 28px;
+    }
+
+    #login input,
+    #login button {
+      width: 100%;
+      margin-bottom: 12px;
+    }
 
     table {
-      width: 100%;
       border-collapse: collapse;
+      width: 100%;
       white-space: nowrap;
     }
 
-    th, td {
+    td,
+    th {
       text-align: left;
-      padding: 15px 17px;
-      border-bottom: 1px solid #edf1f6;
-      font-size: 14px;
+      padding: 13px;
+      border-bottom: 1px solid #e6edf5;
+      font-size: 13px;
     }
 
     th {
-      background: #f6f8fc;
-      color: var(--muted);
-      font-size: 12px;
+      background: #eef3fb;
     }
 
-    td small {
+    .scroll {
+      overflow: auto;
+    }
+
+    #search {
+      min-width: 220px;
+      flex: 1;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #dce4ef;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .card strong {
       display: block;
-      margin-top: 5px;
-      color: var(--muted);
+      font-size: 28px;
+      margin-top: 10px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 20px;
-      background: #e8efff;
-      color: #244a9b;
-      font-size: 12px;
+    .details {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      line-height: 1.8;
+      background: #f7f9fd;
     }
 
-    .badge.pending {
-      background: #fff0cf;
-      color: #8b5c00;
-    }
-
-    .badge.resolved {
-      background: #def5e8;
-      color: #14683a;
-    }
-
-    .footer {
-      padding: 16px 20px;
-      color: var(--muted);
-      font-size: 13px;
+    #status,
+    #loginStatus {
+      white-space: pre-line;
       line-height: 1.6;
     }
 
-    /* CASE DIALOG */
+    small {
+      color: #64748b;
+    }
 
     dialog {
-      width: min(780px, 94vw);
-      max-height: 90vh;
-      padding: 0;
-      border: 0;
-      border-radius: 14px;
-      color: var(--text);
-      overflow-y: auto;
+      width: min(480px, 95vw);
+      border: 1px solid #ccd7e7;
+      border-radius: 12px;
+      padding: 24px;
     }
 
-    dialog::backdrop { background: #10264a99; }
-
-    .modal-head {
-      padding: 21px;
-      background: var(--navy);
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
+    dialog::backdrop {
+      background: #0006;
     }
 
-    .modal-head h2 {
-      margin: 0;
-      font-size: 19px;
-    }
-
-    .modal-body { padding: 22px; }
-
-    .details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .detail {
-      padding: 12px;
-      background: #f5f8fc;
-      border-radius: 8px;
-      overflow-wrap: anywhere;
-      line-height: 1.5;
-    }
-
-    .detail small {
-      display: block;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .modal-body input,
-    .modal-body select,
-    .modal-body textarea {
+    dialog input {
       width: 100%;
     }
 
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
+    @media (max-width: 650px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
 
-    .actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
 
-    .activity {
-      border-top: 1px solid var(--border);
-      padding-top: 18px;
-      margin-top: 22px;
-    }
+      #login {
+        margin: 20px 12px;
+      }
 
-    .activity p {
-      padding: 12px;
-      border-radius: 8px;
-      background: #f5f8fc;
-      font-size: 13px;
-      overflow-wrap: anywhere;
-    }
-
-    @media (max-width: 800px) {
-      .cards { grid-template-columns: repeat(2, 1fr); }
-      .details { grid-template-columns: 1fr; }
-      main { padding: 14px; }
-      header { padding: 20px; }
-      .account-info { text-align: left; }
+      main {
+        padding: 12px;
+      }
     }
   </style>
 </head>
 
 <body>
-  <section id="loginPage" class="login-page">
-    <div class="login-card">
-      <div class="login-heading">
-        <h1>Repeat Contact Dashboard</h1>
-        <p>Sign in to continue</p>
-      </div>
+  <section id="login" class="panel">
+    <h1>Repeat Contact Dashboard</h1>
 
-      <div class="login-content">
-        <div class="notice">
-          UNDER DEVELOPMENT · Fictional sample dashboard only.
-          Login-ID authentication and sheet-based permissions require
-          the protected backend to be configured.
-        </div>
+    <p>Sign in using your approved account.</p>
 
-        <button id="googleLogin" type="button" disabled>
-          Loading Google sign-in…
-        </button>
+    <button id="google" class="primary" disabled>
+      Loading sign-in…
+    </button>
 
-        <div class="divider">OR SIGN IN WITH YOUR ASSIGNED LOGIN ID</div>
+    <p>Or use your administrator-issued Login ID</p>
 
-        <form id="passwordForm">
-          <label for="loginId">Login ID</label>
-          <input
-            id="loginId"
-            name="username"
-            autocomplete="username"
-            maxlength="100"
-            required
-          >
+    <form id="passwordLogin">
+      <input
+        id="loginId"
+        placeholder="Login ID"
+        autocomplete="username"
+        required
+      >
 
-          <label for="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            maxlength="256"
-            required
-          >
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+        required
+      >
 
-          <button
-            id="passwordLogin"
-            class="primary login-submit"
-            type="submit"
-            disabled
-          >
-            Sign in
-          </button>
-        </form>
+      <button id="passwordButton" disabled>
+        Sign in
+      </button>
+    </form>
 
-        <p id="loginMessage" class="message"
-          role="status" aria-live="polite">
-          Initialising Firebase…
-        </p>
+    <p id="loginStatus" role="status"></p>
 
-        <p class="muted">
-          Google users do not need a separate application password.
-          Other users can use an administrator-provided login ID.
-          Passwords are never checked against a sheet in this browser.
-        </p>
-      </div>
-    </div>
+    <button id="switchAccount" hidden>
+      Sign out / use another account
+    </button>
   </section>
 
-  <div id="dashboard" hidden>
+  <div id="app" hidden>
     <header>
       <div>
         <h1>Repeat Contact Dashboard</h1>
-        <p>Daily customer contacts and follow-up case management</p>
+        <div id="account"></div>
       </div>
 
-      <div class="account">
-        <div class="account-info">
-          <div id="accountName"></div>
-          <div id="accountRole"></div>
-        </div>
-
-        <button id="logout" type="button">Sign out</button>
+      <div class="flex">
+        <button id="refresh">Refresh</button>
+        <button id="logout">Sign out</button>
       </div>
     </header>
 
     <main>
-      <div id="dashboardNotice" class="notice"></div>
+      <div class="notice">
+        Assignment mode: PAUSED.
+        Stage 1: user management only.
+        Go Live, manual assignment, case status, remarks and
+        Sheet history are not implemented yet.
+        The source report remains read-only.
+      </div>
 
-      <section id="cards" class="cards"></section>
+      <div class="flex" style="margin-bottom:18px">
+        <button id="reportTab">Report</button>
 
-      <section class="panel">
-        <div class="panel-top">
-          <h2 id="listTitle">Sample cases</h2>
+        <button id="usersTab" hidden>
+          User management
+        </button>
+      </div>
 
-          <span class="muted">
-            Assignment target: 5 PM IST · Scheduler not connected
-          </span>
+      <p id="status"
+         role="status"
+         aria-live="polite"></p>
+
+      <section id="report">
+        <div id="cards" class="cards"></div>
+
+        <div class="panel">
+          <div class="flex">
+            <input
+              id="search"
+              placeholder="Search phone, email, name or handler"
+            >
+
+            <input
+              id="date"
+              type="date"
+              aria-label="Reporting date"
+            >
+
+            <select id="channel" aria-label="Channel">
+              <option value="">All channels</option>
+              <option>CALL</option>
+              <option>EMAIL</option>
+              <option>CHAT</option>
+            </select>
+
+            <button id="clear">Clear filters</button>
+          </div>
+
+          <div class="scroll" style="margin-top:18px">
+            <table>
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>WEEKDAY</th>
+                  <th>CHANNEL</th>
+                  <th>CUSTOMER</th>
+                  <th>CONTACTS</th>
+                  <th>FIRST — IST</th>
+                  <th>LAST — IST</th>
+                  <th>SOURCE HANDLER</th>
+                  <th>DETAILS</th>
+                </tr>
+              </thead>
+
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+
+          <p id="reportInfo"></p>
+        </div>
+      </section>
+
+      <section id="users" hidden>
+        <div class="panel">
+          <h2>Add / approve user</h2>
+
+          <p>
+            Select a login method for this user.
+            Agent customer access remains blocked until
+            case assignment is implemented.
+          </p>
+
+          <form id="createUser">
+            <div class="grid">
+              <label>
+                Name
+                <input id="newName" maxlength="100" required>
+              </label>
+
+              <label>
+                Agent ID — internal identifier
+                <input id="newAgent" maxlength="50" required>
+              </label>
+
+              <label>
+                Role
+                <select id="newRole">
+                  <option value="agent">Agent</option>
+                  <option value="admin">Administrator</option>
+                </select>
+              </label>
+
+              <label>
+                Login method
+                <select id="newMethod">
+                  <option value="google">
+                    Google work account
+                  </option>
+
+                  <option value="password">
+                    Login ID and password
+                  </option>
+                </select>
+              </label>
+
+              <label id="emailField">
+                Approved work email
+                <input id="newEmail" type="email" required>
+              </label>
+
+              <label id="idField" hidden>
+                Login ID
+                <input
+                  id="newId"
+                  autocomplete="off"
+                  placeholder="e.g. agent01"
+                >
+              </label>
+
+              <label id="passField" hidden>
+                Initial password
+
+                <input
+                  id="newPassword"
+                  type="password"
+                  autocomplete="new-password"
+                  minlength="12"
+                  maxlength="128"
+                >
+
+                <small>
+                  12–128 characters: uppercase, lowercase,
+                  number and symbol.
+                </small>
+              </label>
+            </div>
+
+            <p>
+              Administrators can see all report records and
+              manage other users. New accounts are active
+              after creation.
+            </p>
+
+            <button id="createButton" class="primary">
+              Review and create user
+            </button>
+          </form>
         </div>
 
-        <div class="filters">
-          <input id="search" type="search"
-            placeholder="Search customer, phone, email or case ID">
+        <div class="panel">
+          <h2>Application users</h2>
 
-          <input id="date" type="date"
-            aria-label="Reporting date">
+          <button id="reloadUsers">
+            Refresh users
+          </button>
 
-          <select id="channel" aria-label="Channel">
-            <option value="">All channels</option>
-            <option>CALL</option>
-            <option>EMAIL</option>
-            <option>CHAT</option>
-          </select>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>AGENT ID</th>
+                  <th>ROLE</th>
+                  <th>LOGIN METHOD</th>
+                  <th>EMAIL / LOGIN ID</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
 
-          <select id="status" aria-label="Status">
-            <option value="">All statuses</option>
-            <option>Open</option>
-            <option>Pending follow-up</option>
-            <option>Resolved</option>
-          </select>
-
-          <button id="clear" type="button">Clear filters</button>
+              <tbody id="userRows"></tbody>
+            </table>
+          </div>
         </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>REPORTING DATE</th>
-                <th>CUSTOMER</th>
-                <th>CHANNEL</th>
-                <th>CONTACTS</th>
-                <th>FIRST / LAST — IST</th>
-                <th>CASE HANDLER</th>
-                <th>STATUS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
-
-        <div id="footer" class="footer"></div>
       </section>
     </main>
   </div>
 
-  <dialog id="caseDialog">
-    <div class="modal-head">
-      <h2 id="caseTitle">Case details</h2>
-      <button id="closeDialog" type="button">Close</button>
-    </div>
+  <dialog id="resetDialog">
+    <form id="resetForm">
+      <h2>Reset password</h2>
 
-    <div class="modal-body">
-      <div class="notice">
-        Sample record only. Changes made here are demonstrations
-        and reset when the page reloads or the user signs out.
-      </div>
+      <p id="resetName"></p>
 
-      <div id="details" class="details"></div>
+      <label>
+        New password
 
-      <label for="handler">Case handler — demo agents</label>
-      <select id="handler">
-        <option value="">Unassigned</option>
-        <option value="demo-agent-a">Demo Agent A</option>
-        <option value="demo-agent-b">Demo Agent B</option>
-      </select>
+        <input
+          id="replacementPassword"
+          type="password"
+          autocomplete="new-password"
+          minlength="12"
+          maxlength="128"
+          required
+        >
+      </label>
 
-      <label for="caseStatus">Status</label>
-      <select id="caseStatus">
-        <option>Open</option>
-        <option>Pending follow-up</option>
-        <option>Resolved</option>
-      </select>
+      <p>
+        Use uppercase, lowercase, a number and a symbol.
+        Existing sessions will be revoked.
+        Share the replacement privately.
+      </p>
 
-      <label for="followup">Follow-up date/time — IST</label>
-      <input id="followup" type="datetime-local">
+      <button class="primary">
+        Confirm password reset
+      </button>
 
-      <label for="remark">Remark / resolution / reopening reason</label>
-      <textarea id="remark" maxlength="2000"></textarea>
-
-      <p id="caseMessage" class="message"
-        role="status" aria-live="polite"></p>
-
-      <div class="actions">
-        <button id="reopen" type="button" hidden>
-          Reopen sample case
-        </button>
-
-        <button id="save" type="button" class="primary">
-          Save demo changes
-        </button>
-      </div>
-
-      <div class="activity">
-        <h3>Sample activity history</h3>
-        <div id="activity"></div>
-      </div>
-    </div>
+      <button type="button" id="cancelReset">
+        Cancel
+      </button>
+    </form>
   </dialog>
 
   <script type="module">
     const $ = id => document.getElementById(id);
 
-    const escapeHTML = value => String(value ?? "")
-      .replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      })[char]);
+    function escapeHTML(value) {
+      return String(value ?? "").replace(
+        /[&<>"']/g,
+        character => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        })[character]
+      );
+    }
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
-      authDomain: "repeat-contact-dashboard.firebaseapp.com",
-      projectId: "repeat-contact-dashboard",
-      storageBucket:
-        "repeat-contact-dashboard.firebasestorage.app",
-      messagingSenderId: "527535186997",
-      appId: "1:527535186997:web:fdd746c7a7428f6695bd7c"
-    };
+    let auth;
+    let me;
+    let records = [];
+    let users = [];
+    let generation = 0;
+    let resetTarget = null;
+    let busy = false;
 
-    const sampleCases = [
-      {
-        id: "DEMO-001",
-        date: "2026-11-07",
-        customer: "Sample Customer One",
-        identity: "customer.one@example.com",
-        channel: "EMAIL",
-        count: 5,
-        first: "09:15:00",
-        last: "16:20:00",
-        disposition: "Post Loan → Repayment → Status Enquiry",
-        owner: "Sample Ticket Owner",
-        modified: "2026-11-07 16:25:00",
-        ticket: "DEMO-TICKET-01",
-        handlerId: "demo-agent-a",
-        status: "Open",
-        followup: "",
-        activity: []
-      },
-      {
-        id: "DEMO-002",
-        date: "2026-11-07",
-        customer: "Sample Customer Two",
-        identity: "DEMO-PHONE-002",
-        channel: "CALL",
-        count: 4,
-        first: "10:05:00",
-        last: "15:40:00",
-        disposition: "Post Loan → Withdrawal → Status Enquiry",
-        owner: "Sample Form Submitter",
-        modified: "2026-11-07 15:45:00",
-        ticket: "",
-        handlerId: "",
-        status: "Open",
-        followup: "",
-        activity: []
-      },
-      {
-        id: "DEMO-003",
-        date: "2026-11-07",
-        customer: "Sample Customer Three",
-        identity: "customer.three@example.com",
-        channel: "EMAIL",
-        count: 3,
-        first: "11:10:00",
-        last: "14:30:00",
-        disposition:
-          "Post Loan → Foreclosure → Process Information",
-        owner: "Sample Ticket Owner",
-        modified: "2026-11-07 14:35:00",
-        ticket: "DEMO-TICKET-03",
-        handlerId: "demo-agent-b",
-        status: "Pending follow-up",
-        followup: "2026-11-09T10:00",
-        activity: [
-          "Demo setup: follow-up scheduled for 9 November, 10 AM IST."
-        ]
-      },
-      {
-        id: "DEMO-004",
-        date: "2026-11-06",
-        customer: "Sample Customer Four",
-        identity: "DEMO-PHONE-004",
-        channel: "CALL",
-        count: 6,
-        first: "09:30:00",
-        last: "17:10:00",
-        disposition: "Details Update → Phone Number Update",
-        owner: "Sample Form Submitter",
-        modified: "2026-11-06 17:15:00",
-        ticket: "",
-        handlerId: "demo-agent-a",
-        status: "Resolved",
-        followup: "",
-        activity: ["Demo setup: sample case resolved."]
-      },
-      {
-        id: "DEMO-005",
-        date: "2026-11-06",
-        customer: "Sample Customer Five",
-        identity: "DEMO-CHAT-005",
-        channel: "CHAT",
-        count: 3,
-        first: "",
-        last: "13:25:00",
-        disposition: "",
-        owner: "",
-        modified: "",
-        ticket: "",
-        handlerId: "demo-agent-a",
-        status: "Open",
-        followup: "",
-        activity: []
+    function status(text, error = false) {
+      $("status").textContent = text;
+      $("status").classList.toggle("error", error);
+    }
+
+    async function api(path, options = {}) {
+      if (!auth.currentUser) {
+        throw new Error("Please sign in.");
       }
-    ];
 
-    const agentNames = {
-      "demo-agent-a": "Demo Agent A",
-      "demo-agent-b": "Demo Agent B"
-    };
+      const token = await auth.currentUser.getIdToken();
 
-    let cases = structuredClone(sampleCases);
-    let selectedId = null;
-    let auth = null;
-    let profile = null;
-    let sessionVersion = 0;
-    let backendMessage = "";
-    let signingIn = false;
-
-    function setLoginMessage(text, error = false) {
-      $("loginMessage").textContent = text;
-      $("loginMessage").classList.toggle("error", error);
-    }
-
-    function setBusy(busy) {
-      signingIn = busy;
-      $("googleLogin").disabled = busy;
-      $("passwordLogin").disabled = busy;
-    }
-
-    async function apiJSON(path, options = {}) {
       const controller = new AbortController();
 
-      const timer = setTimeout(() => controller.abort(), 20000);
+      const timer = setTimeout(
+        () => controller.abort(),
+        30000
+      );
 
       try {
         const response = await fetch(path, {
           ...options,
+
+          headers: {
+            Authorization: "Bearer " + token,
+
+            ...(options.body
+              ? { "Content-Type": "application/json" }
+              : {})
+          },
+
           cache: "no-store",
           signal: controller.signal
         });
 
-        const type = response.headers.get("content-type") || "";
-
-        let data = {};
-
-        if (type.includes("application/json")) {
-          data = await response.json();
-        }
-
-        if (!response.ok) {
-          const error = new Error(
-            response.status === 404
-              ? "Backend endpoint is not deployed yet."
-              : data.message || "Request was not accepted."
-          );
-
-          error.status = response.status;
-          throw error;
-        }
+        const type =
+          response.headers.get("content-type") || "";
 
         if (!type.includes("application/json")) {
           throw new Error(
-            "Backend is not configured: expected a JSON response."
+            "Backend returned a non-JSON response. " +
+            "Check Vercel runtime logs."
           );
         }
 
-        return data;
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            result.message || "Request failed."
+          );
+        }
+
+        return result;
 
       } finally {
         clearTimeout(timer);
       }
     }
 
-    function authError(error) {
-      const errors = {
-        "auth/unauthorized-domain":
-          "Add repeat-contact-dashboard.vercel.app to " +
-          "Firebase Authentication → Settings → Authorized domains.",
-
-        "auth/operation-not-allowed":
-          "This Firebase sign-in method is not enabled.",
-
-        "auth/popup-blocked":
-          "Allow popups for this site, then try again.",
-
-        "auth/popup-closed-by-user":
-          "The Google sign-in window was closed.",
-
-        "auth/cancelled-popup-request":
-          "A sign-in window is already open.",
-
-        "auth/invalid-api-key":
-          "The Firebase Web API key is invalid.",
-
-        "auth/network-request-failed":
-          "The network request failed. Check your connection.",
-
-        "auth/invalid-custom-token":
-          "The login server returned an invalid Firebase token.",
-
-        "auth/custom-token-mismatch":
-          "The login token belongs to a different Firebase project."
-      };
-
-      return errors[error.code] ||
-        (error.name === "AbortError"
-          ? "The request timed out. Please retry."
-          : error.message || "Sign-in failed.");
+    function postUser(body) {
+      return api("/api/users", {
+        method: "POST",
+        body: JSON.stringify(body)
+      });
     }
 
-    function isAdmin() {
-      return profile?.role === "admin";
-    }
-
-    function scopedCases() {
-      if (!profile) return cases;
-
-      if (isAdmin()) return cases;
-
-      return cases.filter(
-        item => item.handlerId === profile.agentId
-      );
-    }
-
-    function canEdit(item) {
-      return Boolean(
-        profile &&
-        (isAdmin() || item.handlerId === profile.agentId)
-      );
-    }
-
-    function handlerName(id) {
-      return agentNames[id] || id || "Unassigned";
-    }
-
-    function badge(status) {
-      const kind = status === "Resolved"
-        ? "resolved"
-        : status === "Pending follow-up" ? "pending" : "";
-
+    function passwordValid(password) {
       return (
-        `<span class="badge ${kind}">` +
-        escapeHTML(status) +
-        "</span>"
+        password.length >= 12 &&
+        password.length <= 128 &&
+        /[a-z]/.test(password) &&
+        /[A-Z]/.test(password) &&
+        /[0-9]/.test(password) &&
+        /[^A-Za-z0-9]/.test(password)
       );
     }
 
-    function render() {
-      if (!auth?.currentUser) return;
+    function renderReport() {
+      const query =
+        $("search").value.trim().toLowerCase();
 
-      const user = auth.currentUser;
-      const scoped = scopedCases();
-
-      $("accountName").textContent =
-        profile?.name || user.email || user.displayName ||
-        "Signed-in user";
-
-      $("accountRole").textContent = profile
-        ? "Role: " + profile.role
-        : "Read-only sample preview · role setup pending";
-
-      $("dashboardNotice").textContent =
-        "UNDER DEVELOPMENT · All cases below are fictional samples. " +
-        "Real customer data, persistent remarks and the assignment " +
-        "scheduler are not connected. " +
-        (profile
-          ? "Permissions profile received from the backend. " +
-            "Enabled actions change samples in this browser only."
-          : "No application permissions have been granted. " +
-            "Sample records are read-only. " + backendMessage);
+      const filtered = records.filter(row =>
+        (
+          !$("date").value ||
+          row.date === $("date").value
+        ) &&
+        (
+          !$("channel").value ||
+          row.channel === $("channel").value
+        ) &&
+        (
+          !query ||
+          [
+            row.identity,
+            row.customer,
+            row.handler,
+            row.ticket
+          ].join(" ").toLowerCase().includes(query)
+        )
+      );
 
       const stats = [
-        ["Case entries", scoped.length],
-        ["Unassigned", scoped.filter(c => !c.handlerId).length],
-        ["Open", scoped.filter(c => c.status === "Open").length],
-        [
-          "Pending follow-up",
-          scoped.filter(c => c.status === "Pending follow-up").length
-        ],
-        [
-          "Resolved",
-          scoped.filter(c => c.status === "Resolved").length
-        ]
+        ["Displayed entries", filtered.length],
+
+        ...["CALL", "EMAIL", "CHAT"].map(channel => [
+          channel + " entries",
+          filtered.filter(
+            row => row.channel === channel
+          ).length
+        ])
       ];
 
-      $("cards").innerHTML = stats.map(([label, count]) =>
-        `<div class="card"><span>${escapeHTML(label)}</span>` +
-        `<strong>${count}</strong></div>`
+      $("cards").innerHTML = stats.map(
+        ([label, number]) => `
+          <div class="card">
+            ${escapeHTML(label)}
+            <strong>${number}</strong>
+          </div>
+        `
       ).join("");
 
-      $("listTitle").textContent = !profile
-        ? "Read-only sample cases"
-        : isAdmin()
-          ? "All sample cases"
-          : "Assigned sample cases";
-
-      const query = $("search").value.trim().toLowerCase();
-
-      const filtered = scoped.filter(item =>
-        (!query ||
-          [item.customer, item.identity, item.id]
-            .join(" ").toLowerCase().includes(query)) &&
-        (!$("date").value || item.date === $("date").value) &&
-        (!$("channel").value ||
-          item.channel === $("channel").value) &&
-        (!$("status").value ||
-          item.status === $("status").value)
-      );
-
-      $("rows").innerHTML = filtered.map(item => `
+      $("rows").innerHTML = filtered.map(row => `
         <tr>
-          <td>${escapeHTML(item.date)}</td>
+          <td>${escapeHTML(row.date)}</td>
+          <td>${escapeHTML(row.weekday)}</td>
+          <td>${escapeHTML(row.channel)}</td>
+
           <td>
-            ${escapeHTML(item.customer)}
-            <small>${escapeHTML(item.identity)}</small>
+            ${escapeHTML(row.identity)}
+            <br>
+            <small>${escapeHTML(row.customer)}</small>
           </td>
-          <td>${escapeHTML(item.channel)}</td>
-          <td>${item.count}</td>
+
+          <td>${row.count}</td>
+
           <td>
-            ${escapeHTML(item.first || "Not available")}
-            <small>
-              Last: ${escapeHTML(item.last)}
-              ${item.channel === "CHAT" ? " — closure time" : ""}
-            </small>
+            ${escapeHTML(row.first || "Unavailable")}
           </td>
-          <td>${escapeHTML(handlerName(item.handlerId))}</td>
-          <td>${badge(item.status)}</td>
+
           <td>
-            <button type="button" data-case="${item.id}">
-              View case
+            ${escapeHTML(row.last || "Unavailable")}
+          </td>
+
+          <td>
+            ${escapeHTML(row.handler || "Unassigned")}
+          </td>
+
+          <td>
+            <button data-detail="${row.id}">
+              View
             </button>
           </td>
         </tr>
+
+        <tr id="detail-${row.id}" hidden>
+          <td colspan="9" class="details">
+            Disposition:
+            ${escapeHTML(row.disposition || "Unavailable")}
+
+            <br>
+
+            Source owner:
+            ${escapeHTML(row.owner || "Unavailable")}
+
+            <br>
+
+            Form time — IST / Ticket modified — API raw:
+            ${escapeHTML(row.modified || "Unavailable")}
+
+            <br>
+
+            Marvin ticket:
+            ${escapeHTML(row.ticket || "Unavailable")}
+
+            <br>
+
+            Workflow status and remarks: not enabled.
+          </td>
+        </tr>
       `).join("") ||
-        '<tr><td colspan="8">No matching sample cases.</td></tr>';
-
-      $("footer").textContent =
-        `${filtered.length} displayed sample case entries. ` +
-        "Summary cards show your full sample scope before filters. " +
-        "Demo changes are not saved to a server.";
+        '<tr><td colspan="9">No visible records.</td></tr>';
     }
 
-    function selectedCase() {
-      return scopedCases().find(item => item.id === selectedId);
-    }
+    async function loadReport() {
+      const currentGeneration = generation;
 
-    function detail(label, value) {
-      return (
-        '<div class="detail"><small>' +
-        escapeHTML(label) +
-        "</small>" +
-        escapeHTML(value || "Not available") +
-        "</div>"
-      );
-    }
+      const result = await api("/api/cases");
 
-    function openCase(id, showDialog = true) {
-      selectedId = id;
-
-      const item = selectedCase();
-      if (!item) return;
-
-      $("caseTitle").textContent =
-        item.id + " · " + item.customer;
-
-      $("details").innerHTML = [
-        detail("Reporting date", item.date),
-        detail("Channel", item.channel),
-        detail("Customer phone / email", item.identity),
-        detail("Contacts on reporting date", item.count),
-        detail("First contact — IST", item.first),
-        detail(
-          item.channel === "CHAT"
-            ? "Last recorded closure — IST"
-            : "Last contact — IST",
-          item.last
-        ),
-        detail("Latest disposition", item.disposition),
-        detail("Form submitter / ticket owner", item.owner),
-        detail("Form time / ticket modified — demo IST", item.modified),
-        detail("Marvin ticket — sample", item.ticket)
-      ].join("");
-
-      $("handler").value = item.handlerId;
-      $("caseStatus").value = item.status;
-      $("followup").value = item.followup;
-      $("remark").value = "";
-      $("caseMessage").textContent = "";
-
-      const editable = canEdit(item);
-      const resolved = item.status === "Resolved";
-
-      $("handler").disabled = !isAdmin() || resolved;
-      $("caseStatus").disabled = !editable || resolved;
-      $("followup").disabled = !editable || resolved;
-
-      $("remark").disabled =
-        !editable || (resolved && !isAdmin());
-
-      $("save").disabled = !editable || resolved;
-      $("reopen").hidden = !(isAdmin() && resolved);
-
-      if (!editable) {
-        $("caseMessage").textContent =
-          "Read-only. No permission to change this sample case.";
-      }
-
-      $("activity").innerHTML = item.activity.length
-        ? item.activity.map(text =>
-            "<p>" + escapeHTML(text) + "</p>"
-          ).join("")
-        : "<p>No sample activity yet.</p>";
-
-      if (showDialog) $("caseDialog").showModal();
-    }
-
-    function stamp() {
-      return new Date().toLocaleString("en-GB", {
-        timeZone: "Asia/Kolkata",
-        hour12: false
-      }) + " IST";
-    }
-
-    $("rows").addEventListener("click", event => {
-      const button = event.target.closest("[data-case]");
-      if (button) openCase(button.dataset.case);
-    });
-
-    $("save").addEventListener("click", () => {
-      const item = selectedCase();
-
-      if (
-        !auth?.currentUser ||
-        !item ||
-        !canEdit(item) ||
-        item.status === "Resolved"
-      ) return;
-
-      const nextStatus = $("caseStatus").value;
-      const remark = $("remark").value.trim();
-      const followup = $("followup").value;
-
-      if (!remark) {
-        $("caseMessage").textContent = "Enter a remark.";
+      if (currentGeneration !== generation) {
         return;
       }
 
-      if (nextStatus === "Pending follow-up") {
-        const scheduled = new Date(followup + ":00+05:30");
+      records = result.cases;
+      renderReport();
 
-        if (
-          !followup ||
-          isNaN(scheduled.getTime()) ||
-          scheduled.getTime() <= Date.now()
-        ) {
-          $("caseMessage").textContent =
-            "Enter a future follow-up date/time in IST.";
+      const fetched = new Date(
+        result.fetchedAt
+      ).toLocaleString("en-GB", {
+        timeZone: "Asia/Kolkata"
+      });
+
+      $("reportInfo").textContent =
+        result.warning +
+        " Loaded " + records.length + " entries." +
+        " Fetched " + fetched + " IST." +
+        " This is not the source-sync completion time." +
+        (
+          result.possiblyTruncated
+            ? " Read limit reached; data may be truncated."
+            : ""
+        );
+    }
+
+    async function loadUsers() {
+      const currentGeneration = generation;
+      const result = await api("/api/users");
+
+      if (currentGeneration !== generation) {
+        return;
+      }
+
+      users = result.users;
+
+      $("userRows").innerHTML = users.map(user => {
+        const protectedAccount =
+          user.bootstrap || user.uid === me.uid;
+
+        const actions = protectedAccount
+          ? "Protected"
+          : `
+            <button data-active="${escapeHTML(user.uid)}">
+              ${user.active ? "Deactivate" : "Activate"}
+            </button>
+
+            ${
+              user.loginMethod === "password"
+                ? `
+                  <button data-reset="${escapeHTML(user.uid)}">
+                    Reset password
+                  </button>
+                `
+                : ""
+            }
+          `;
+
+        return `
+          <tr>
+            <td>${escapeHTML(user.name)}</td>
+            <td>${escapeHTML(user.agentId)}</td>
+            <td>${escapeHTML(user.role)}</td>
+            <td>${escapeHTML(user.loginMethod)}</td>
+
+            <td>
+              ${escapeHTML(user.loginId || user.email)}
+            </td>
+
+            <td>${user.active ? "Active" : "Inactive"}</td>
+            <td>${actions}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function showTab(showUsers) {
+      $("users").hidden = !showUsers;
+      $("report").hidden = showUsers;
+    }
+
+    function updateMethodFields() {
+      const isPassword =
+        $("newMethod").value === "password";
+
+      $("emailField").hidden = isPassword;
+      $("idField").hidden = !isPassword;
+      $("passField").hidden = !isPassword;
+
+      $("newEmail").required = !isPassword;
+      $("newId").required = isPassword;
+      $("newPassword").required = isPassword;
+    }
+
+    $("newMethod").onchange = updateMethodFields;
+
+    $("reportTab").onclick = () => {
+      showTab(false);
+    };
+
+    $("usersTab").onclick = async () => {
+      showTab(true);
+
+      try {
+        await loadUsers();
+      } catch (error) {
+        status(error.message, true);
+      }
+    };
+
+    $("reloadUsers").onclick = async () => {
+      try {
+        await loadUsers();
+        status("User list refreshed.");
+      } catch (error) {
+        status(error.message, true);
+      }
+    };
+
+    $("refresh").onclick = async () => {
+      $("refresh").disabled = true;
+
+      try {
+        await loadReport();
+        status("Report refreshed.");
+      } catch (error) {
+        status(error.message, true);
+      } finally {
+        $("refresh").disabled = false;
+      }
+    };
+
+    ["search", "date", "channel"].forEach(id => {
+      $(id).oninput = renderReport;
+    });
+
+    $("clear").onclick = () => {
+      ["search", "date", "channel"].forEach(id => {
+        $(id).value = "";
+      });
+
+      renderReport();
+    };
+
+    $("rows").onclick = event => {
+      const button = event.target.closest(
+        "[data-detail]"
+      );
+
+      if (!button) {
+        return;
+      }
+
+      const row = $(
+        "detail-" + button.dataset.detail
+      );
+
+      row.hidden = !row.hidden;
+      button.textContent = row.hidden ? "View" : "Hide";
+    };
+
+    $("createUser").onsubmit = async event => {
+      event.preventDefault();
+
+      if (busy) {
+        return;
+      }
+
+      const method = $("newMethod").value;
+
+      const body = {
+        action: "create",
+        name: $("newName").value.trim(),
+        agentId: $("newAgent").value.trim(),
+        role: $("newRole").value,
+        loginMethod: method
+      };
+
+      if (method === "google") {
+        body.email =
+          $("newEmail").value.trim().toLowerCase();
+
+      } else {
+        body.loginId =
+          $("newId").value.trim().toLowerCase();
+
+        body.password = $("newPassword").value;
+
+        if (!passwordValid(body.password)) {
+          status(
+            "Use 12–128 characters with uppercase, " +
+            "lowercase, a number and a symbol.",
+            true
+          );
+
           return;
         }
       }
 
-      const oldStatus = item.status;
-      const oldHandler = item.handlerId;
-
-      if (isAdmin()) {
-        item.handlerId = $("handler").value;
-      }
-
-      item.status = nextStatus;
-      item.followup = nextStatus === "Pending follow-up"
-        ? followup
-        : "";
-
-      const actor =
-        profile?.name || auth.currentUser.email || "User";
-
-      item.activity.push(
-        `${stamp()} · ${actor} · ${oldStatus} → ${nextStatus}` +
-        (oldHandler !== item.handlerId
-          ? ` · Handler: ${handlerName(oldHandler)} → ` +
-            handlerName(item.handlerId)
-          : "") +
-        (item.followup
-          ? ` · Follow-up: ${item.followup} IST`
-          : "") +
-        ` · ${remark}`
+      const approved = confirm(
+        "Create / approve this active account?\n\n" +
+        "Name: " + body.name + "\n" +
+        "Agent ID: " + body.agentId + "\n" +
+        "Role: " + body.role + "\n" +
+        "Login method: " + method + "\n" +
+        "Identity: " + (body.email || body.loginId) + "\n\n" +
+        "The password will not be displayed again."
       );
 
-      render();
-
-      if (selectedCase()) {
-        openCase(item.id, false);
-      } else {
-        $("caseDialog").close();
-      }
-    });
-
-    $("reopen").addEventListener("click", () => {
-      const item = selectedCase();
-
-      if (
-        !auth?.currentUser ||
-        !isAdmin() ||
-        !item ||
-        item.status !== "Resolved"
-      ) return;
-
-      const reason = $("remark").value.trim();
-
-      if (!reason) {
-        $("caseMessage").textContent =
-          "Enter the reopening reason in the remark box.";
+      if (!approved) {
         return;
       }
 
-      item.status = "Open";
+      busy = true;
+      $("createButton").disabled = true;
 
-      item.activity.push(
-        `${stamp()} · ${profile.name || "Admin"} ` +
-        `reopened this sample case · ${reason}`
-      );
+      try {
+        const result = await postUser(body);
 
-      render();
-      openCase(item.id, false);
-    });
+        $("createUser").reset();
+        updateMethodFields();
 
-    $("closeDialog").addEventListener("click", () =>
-      $("caseDialog").close()
-    );
+        status(result.message);
+        await loadUsers();
 
-    ["search", "date", "channel", "status"].forEach(id =>
-      $(id).addEventListener("input", render)
-    );
-
-    $("clear").addEventListener("click", () => {
-      ["search", "date", "channel", "status"].forEach(id => {
-        $(id).value = "";
-      });
-
-      render();
-    });
-
-    async function loadProfile(user) {
-      const token = await user.getIdToken();
-
-      const data = await apiJSON("/api/me", {
-        headers: {
-          Authorization: "Bearer " + token
-        }
-      });
-
-      const result = data.user;
-
-      if (
-        !result ||
-        result.active !== true ||
-        !["admin", "agent"].includes(result.role) ||
-        typeof result.uid !== "string" ||
-        result.uid !== user.uid ||
-        (
-          result.role === "agent" &&
-          (
-            typeof result.agentId !== "string" ||
-            !result.agentId
-          )
-        )
-      ) {
-        const error = new Error(
-          "Your account is not approved for application access."
+      } catch (error) {
+        status(
+          error.message +
+          " If the request timed out, refresh the user " +
+          "list before retrying.",
+          true
         );
 
-        error.status = 403;
-        throw error;
+      } finally {
+        delete body.password;
+        $("newPassword").value = "";
+        busy = false;
+        $("createButton").disabled = false;
+      }
+    };
+
+    $("userRows").onclick = async event => {
+      if (busy) {
+        return;
       }
 
-      return result;
-    }
+      const resetButton = event.target.closest(
+        "[data-reset]"
+      );
+
+      if (resetButton) {
+        resetTarget = users.find(
+          user => user.uid === resetButton.dataset.reset
+        );
+
+        $("resetName").textContent =
+          resetTarget.name +
+          " (" + resetTarget.loginId + ")";
+
+        $("resetForm").reset();
+        $("resetDialog").showModal();
+        return;
+      }
+
+      const activeButton = event.target.closest(
+        "[data-active]"
+      );
+
+      if (!activeButton) {
+        return;
+      }
+
+      const user = users.find(
+        item => item.uid === activeButton.dataset.active
+      );
+
+      const approved = confirm(
+        (user.active ? "Deactivate " : "Activate ") +
+        user.name +
+        " (" + (user.loginId || user.email) + ")?"
+      );
+
+      if (!approved) {
+        return;
+      }
+
+      busy = true;
+
+      try {
+        const result = await postUser({
+          action: "active",
+          uid: user.uid,
+          active: !user.active
+        });
+
+        status(result.message);
+        await loadUsers();
+
+      } catch (error) {
+        status(error.message, true);
+      } finally {
+        busy = false;
+      }
+    };
+
+    $("cancelReset").onclick = () => {
+      $("replacementPassword").value = "";
+      resetTarget = null;
+      $("resetDialog").close();
+    };
+
+    $("resetDialog").addEventListener("close", () => {
+      $("replacementPassword").value = "";
+      resetTarget = null;
+    });
+
+    $("resetForm").onsubmit = async event => {
+      event.preventDefault();
+
+      if (busy || !resetTarget) {
+        return;
+      }
+
+      const password =
+        $("replacementPassword").value;
+
+      if (!passwordValid(password)) {
+        alert(
+          "Use 12–128 characters with uppercase, " +
+          "lowercase, a number and a symbol."
+        );
+
+        return;
+      }
+
+      busy = true;
+
+      try {
+        const result = await postUser({
+          action: "resetPassword",
+          uid: resetTarget.uid,
+          password
+        });
+
+        $("resetDialog").close();
+        status(result.message);
+
+      } catch (error) {
+        $("resetDialog").close();
+        status(error.message, true);
+
+      } finally {
+        busy = false;
+        $("replacementPassword").value = "";
+      }
+    };
 
     try {
       const { initializeApp } = await import(
@@ -1205,7 +1075,7 @@
         getAuth,
         GoogleAuthProvider,
         signInWithPopup,
-        signInWithCustomToken,
+        signInWithEmailAndPassword,
         onAuthStateChanged,
         signOut,
         setPersistence,
@@ -1214,10 +1084,26 @@
         "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js"
       );
 
-      const app = initializeApp(firebaseConfig);
-      auth = getAuth(app);
+      const firebaseApp = initializeApp({
+        apiKey: "AIzaSyAoTmByzUm_WZ6lxHd3HYZGFCJiVmIFBvk",
+        authDomain: "repeat-contact-dashboard.firebaseapp.com",
+        projectId: "repeat-contact-dashboard",
 
-      await setPersistence(auth, browserSessionPersistence);
+        storageBucket:
+          "repeat-contact-dashboard.firebasestorage.app",
+
+        messagingSenderId: "527535186997",
+
+        appId:
+          "1:527535186997:web:fdd746c7a7428f6695bd7c"
+      });
+
+      auth = getAuth(firebaseApp);
+
+      await setPersistence(
+        auth,
+        browserSessionPersistence
+      );
 
       const provider = new GoogleAuthProvider();
 
@@ -1225,195 +1111,147 @@
         prompt: "select_account"
       });
 
-      $("googleLogin").textContent = "Continue with Google";
-      setBusy(false);
+      $("google").disabled = false;
+      $("google").textContent = "Continue with Google";
+      $("passwordButton").disabled = false;
 
-      $("googleLogin").addEventListener("click", async () => {
-        if (signingIn) return;
-
-        setBusy(true);
-        setLoginMessage("Opening Google sign-in…");
+      $("google").onclick = async () => {
+        $("google").disabled = true;
 
         try {
           await signInWithPopup(auth, provider);
 
         } catch (error) {
-          setLoginMessage(authError(error), true);
+          $("loginStatus").textContent =
+            "Google sign-in failed: " +
+            (error.code || "unknown");
 
         } finally {
-          setBusy(false);
+          $("google").disabled = false;
         }
-      });
+      };
 
-      $("passwordForm").addEventListener("submit", async event => {
+      $("passwordLogin").onsubmit = async event => {
         event.preventDefault();
 
-        if (signingIn) return;
+        const loginId =
+          $("loginId").value.trim().toLowerCase();
 
-        const loginId = $("loginId").value.trim();
-        const password = $("password").value;
+        if (
+          !/^[a-z0-9][a-z0-9._-]{2,39}$/.test(loginId)
+        ) {
+          $("loginStatus").textContent =
+            "Enter your assigned Login ID.";
 
-        if (!loginId || !password) return;
+          return;
+        }
 
-        setBusy(true);
-        setLoginMessage("Checking your login…");
+        $("passwordButton").disabled = true;
 
         try {
-          /*
-            Backend contract:
-            POST /api/login
-            Body: { loginId, password }
-            Success: { customToken: "..." }
+          await signInWithEmailAndPassword(
+            auth,
 
-            This endpoint must validate a salted password hash,
-            enforce rate limits, check Active status and create
-            the Firebase custom token on the server.
-          */
-          const data = await apiJSON("/api/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ loginId, password })
-          });
+            loginId +
+              "@repeat-contact-dashboard.firebaseapp.com",
 
-          if (
-            typeof data.customToken !== "string" ||
-            !data.customToken
-          ) {
-            throw new Error(
-              "The authentication server did not return a login token."
-            );
-          }
-
-          await signInWithCustomToken(auth, data.customToken);
-
-        } catch (error) {
-          setLoginMessage(
-            error.status === 404
-              ? "Login-ID sign-in is not connected yet. " +
-                "The secured /api/login backend must be deployed first."
-              : authError(error),
-            true
+            $("loginPassword").value
           );
 
+        } catch {
+          $("loginStatus").textContent =
+            "Sign-in failed. Check your Login ID/password " +
+            "and account activation.";
+
         } finally {
-          $("password").value = "";
-          setBusy(false);
+          $("loginPassword").value = "";
+          $("passwordButton").disabled = false;
         }
-      });
+      };
 
-      $("logout").addEventListener("click", async () => {
-        $("logout").disabled = true;
-
+      async function logout() {
         try {
           await signOut(auth);
-
-        } catch (error) {
-          $("dashboardNotice").textContent = authError(error);
-
-        } finally {
-          $("logout").disabled = false;
+        } catch {
+          status("Sign-out failed. Please retry.", true);
         }
-      });
+      }
 
-      onAuthStateChanged(
-        auth,
+      $("logout").onclick = logout;
+      $("switchAccount").onclick = logout;
 
-        async user => {
-          const version = ++sessionVersion;
+      onAuthStateChanged(auth, async user => {
+        const currentGeneration = ++generation;
 
-          profile = null;
-          selectedId = null;
-          cases = structuredClone(sampleCases);
+        me = null;
+        records = [];
+        users = [];
 
-          if ($("caseDialog").open) {
-            $("caseDialog").close();
-          }
+        $("rows").innerHTML = "";
+        $("cards").innerHTML = "";
+        $("userRows").innerHTML = "";
+        $("reportInfo").textContent = "";
+        $("status").textContent = "";
 
-          $("dashboard").hidden = true;
-          $("loginPage").hidden = false;
+        $("app").hidden = true;
+        $("login").hidden = false;
+        $("switchAccount").hidden = !user;
 
-          if (!user) {
-            $("password").value = "";
-            setLoginMessage("Choose a sign-in method.");
+        if ($("resetDialog").open) {
+          $("resetDialog").close();
+        }
+
+        if (!user) {
+          $("loginStatus").textContent =
+            "Sign in with an approved account.";
+
+          return;
+        }
+
+        $("loginStatus").textContent =
+          "Checking account access…";
+
+        try {
+          const result = await api("/api/me");
+
+          if (currentGeneration !== generation) {
             return;
           }
 
-          setLoginMessage("Signed in. Checking application access…");
+          me = result.user;
 
-          try {
-            const loadedProfile = await loadProfile(user);
+          $("account").textContent =
+            me.name + " · " +
+            (me.loginId || me.email) + " · " +
+            me.role;
 
-            if (
-              version !== sessionVersion ||
-              auth.currentUser?.uid !== user.uid
-            ) return;
+          $("usersTab").hidden = me.role !== "admin";
 
-            profile = loadedProfile;
-            backendMessage = "";
+          showTab(false);
 
-          } catch (error) {
-            if (
-              version !== sessionVersion ||
-              auth.currentUser?.uid !== user.uid
-            ) return;
+          $("login").hidden = true;
+          $("app").hidden = false;
 
-            if (error.status === 401 || error.status === 403) {
-              setLoginMessage(
-                "Your account is not approved, is inactive, " +
-                "or its session was rejected. No case access granted.",
-                true
-              );
+          await loadReport();
 
-              await signOut(auth);
-
-              setLoginMessage(
-                "Access denied. Ask the administrator to review your account.",
-                true
-              );
-
-              return;
-            }
-
-            /*
-              Safe prototype fallback:
-              only fictional hardcoded samples are shown.
-              No real-data request or write is made.
-            */
-            profile = null;
-
-            backendMessage =
-              "The permission backend is unavailable or not deployed. " +
-              "Only fictional read-only samples are displayed.";
+        } catch (error) {
+          if (currentGeneration !== generation) {
+            return;
           }
 
-          if (
-            version !== sessionVersion ||
-            auth.currentUser?.uid !== user.uid
-          ) return;
-
-          $("loginPage").hidden = true;
-          $("dashboard").hidden = false;
-
-          render();
-        },
-
-        error => {
-          setLoginMessage(authError(error), true);
+          if (me) {
+            status(error.message, true);
+          } else {
+            $("loginStatus").textContent =
+              error.message;
+          }
         }
-      );
+      });
 
-    } catch (error) {
-      $("googleLogin").textContent = "Sign-in unavailable";
-      $("googleLogin").disabled = true;
-      $("passwordLogin").disabled = true;
-
-      setLoginMessage(
-        "Firebase could not initialise. Check SDK loading, " +
-        "the Firebase configuration and network access.",
-        true
-      );
+    } catch {
+      $("loginStatus").textContent =
+        "Firebase could not initialise. " +
+        "Check SDK loading and configuration.";
     }
   </script>
 </body>
